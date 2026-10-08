@@ -2,6 +2,15 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.3.0
+[다운로드](dist/maya_style_v0.3.0.zip)
+- 마야식 우클릭 메뉴 추가: 오브젝트 위에서 우클릭을 누르고 있으면 열림
+  - 방사형 메뉴: Vertex, Edge, Face, Object Mode, UV ▸, Vertex Face, Multi
+  - 아래 목록: 오브젝트 이름(속성 보기), Select, Select All, Deselect All, Select Hierarchy, Invert Selection, Select Similar,
+    Inputs ▸, Paint ▸, UV Sets ▸, Material Attributes..., Assign New Material ▸, Assign Existing Material ▸
+  - 에딧 모드에서는 Select Shell, Edge Loop, Edge Ring, Grow, Shrink 같은 컴포넌트 선택 메뉴로 바뀜
+  - 빈 공간에서 우클릭하면 원래 블렌더 메뉴가 열림
+
 ## v0.2.0
 [다운로드](dist/maya_style_v0.2.0.zip)
 - 마야 단축키 추가

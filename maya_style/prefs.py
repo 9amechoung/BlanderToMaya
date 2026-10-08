@@ -47,6 +47,12 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         description="Show text next to the shelf icons",
         default=False,
     )
+    use_rmb_menu: BoolProperty(
+        name="Right-click Menu (hold on object)",
+        description="Hold Right-click on an object for Maya's Vertex / Edge / Face / Object Mode menu",
+        default=True,
+        update=_update_keymaps,
+    )
     use_marking_menu: BoolProperty(
         name="Marking Menu (Shift+Right-click)",
         description="Open Maya-style marking menus with Shift+Right-click in the 3D viewport",
@@ -80,6 +86,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
 
         box = layout.box()
         box.label(text="Hotkeys", icon='EVENT_SHIFT')
+        box.prop(self, "use_rmb_menu")
         box.prop(self, "use_marking_menu")
         box.prop(self, "use_maya_hotkeys")
 

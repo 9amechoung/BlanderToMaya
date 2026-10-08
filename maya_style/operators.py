@@ -75,6 +75,9 @@ class MAYA_OT_component_mode(bpy.types.Operator):
             ('VERT', "Vertex", ""),
             ('EDGE', "Edge", ""),
             ('FACE', "Face", ""),
+            ('VERT_FACE', "Vertex Face", "Vertex and face selection together"),
+            ('MULTI', "Multi", "Vertex, edge and face selection together"),
+            ('OBJECT', "Object Mode", ""),
         ),
         default='TOGGLE',
     )
@@ -89,10 +92,19 @@ class MAYA_OT_component_mode(bpy.types.Operator):
         if self.mode == 'TOGGLE':
             bpy.ops.object.mode_set(mode='OBJECT' if obj.mode == 'EDIT' else 'EDIT')
             return {'FINISHED'}
+        if self.mode == 'OBJECT':
+            if obj.mode != 'OBJECT':
+                bpy.ops.object.mode_set(mode='OBJECT')
+            return {'FINISHED'}
         if obj.mode != 'EDIT':
             bpy.ops.object.mode_set(mode='EDIT')
         if obj.type == 'MESH':
-            bpy.ops.mesh.select_mode(type=self.mode)
+            if self.mode == 'VERT_FACE':
+                context.tool_settings.mesh_select_mode = (True, False, True)
+            elif self.mode == 'MULTI':
+                context.tool_settings.mesh_select_mode = (True, True, True)
+            else:
+                bpy.ops.mesh.select_mode(type=self.mode)
         return {'FINISHED'}
 
 

@@ -4,7 +4,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.2.0.zip`](dist/maya_style_v0.2.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.3.0.zip`](dist/maya_style_v0.3.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.2 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -91,11 +91,38 @@
 
 아이콘에 마우스를 올리면 설명이 나와요. 글자를 같이 보고 싶으면 설정에서 **Show Button Labels**를 켜세요.
 
-### 3. 마킹 메뉴 (Shift+우클릭)
+### 3. 우클릭 메뉴 (오브젝트 위에서 우클릭을 누르고 있기)
+마야처럼 오브젝트 위에서 우클릭을 **누르고 있으면** 메뉴가 열려요. 원하는 항목 위에서 버튼을 떼면 실행돼요. 짧게 클릭하면 메뉴가 열린 채로 남아 있어요.
+
+```
+              [Edge]
+                         [Object Mode]
+ [Vertex]       ●          [UV ▸]
+ [Vertex Face]             [Multi]
+              [Face]
+          ┌───────────────────────┐
+          │ Cube...               │  ← 속성 보기 (Attribute Editor)
+          │ Select / Select All   │
+          │ Deselect All          │
+          │ Select Hierarchy      │
+          │ Invert Selection      │
+          │ Select Similar        │
+          │ Inputs ▸  Paint ▸     │
+          │ UV Sets ▸             │
+          │ Material Attributes...│
+          │ Assign New Material ▸ │  ← Lambert / Blinn / Phong / Standard Surface
+          │ Assign Existing ▸     │
+          └───────────────────────┘
+```
+- **Vertex Face**는 버텍스와 페이스 선택을 함께 켜고, **Multi**는 버텍스, 엣지, 페이스 선택을 모두 켜요.
+- 에딧 모드에서는 아래 목록이 Select Shell, Edge Loop, Edge Ring, Grow, Shrink 같은 컴포넌트용으로 바뀌어요. 이때 Assign Material은 선택한 페이스에만 적용돼요.
+- 빈 공간에서 우클릭하면 원래 블렌더 메뉴가 열려요.
+
+### 4. 마킹 메뉴 (Shift+우클릭)
 - **오브젝트 모드**: 기본 도형 생성, 아래쪽에 Smooth, Combine, Center Pivot, Freeze, Delete History 같은 버튼 묶음
 - **에딧 모드**: Extrude, Bevel, Insert Edge Loop, Multi-Cut, Target Weld, Inset, Edge Slide, 아래쪽에 Bridge, Fill, Merge 같은 버튼 묶음
 
-### 4. 채널 박스 (N 패널 → Channel Box 탭)
+### 5. 채널 박스 (N 패널 → Channel Box 탭)
 - Translate, Rotate, Scale, Visibility를 마야처럼 한 줄씩 보여줘요.
 - SHAPES(메시 이름)와 INPUTS(모디파이어 = 마야의 히스토리)도 함께 보여줘요.
 - **Layer Editor**: 컬렉션 숨기기와 렌더 토글, 선택한 오브젝트로 새 레이어 만들기
@@ -104,7 +131,7 @@
 `Edit → Preferences → Add-ons → Maya Style UI`를 펼치면 다음을 바꿀 수 있어요.
 - 키맵 적용 및 복원 버튼
 - 셸프 위치: Tool Header / Header / 숨김
-- 마킹 메뉴, 마야 단축키 켜기/끄기
+- 우클릭 메뉴, 마킹 메뉴, 마야 단축키 켜기/끄기
 
 ## 셸프가 안 보일 때
 뷰포트 헤더에서 `View → Tool Settings`를 체크하거나, 애드온 설정에서 **Show Shelf in All Viewports**를 누르세요.

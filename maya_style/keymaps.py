@@ -1,7 +1,7 @@
 """Add-on hotkeys and first-run keymap switch.
 
 Add-on keymaps are checked before the active keyconfig, so these override
-the Industry Compatible keys they share (Shift+Right-click, Space, 1~5, X/V/C,
+the Industry Compatible keys they share (Right-click, Shift+Right-click, Space, 1~5, X/V/C,
 Shift+H, Alt+H) with the Maya behavior.
 """
 
@@ -74,8 +74,13 @@ def register_keymaps():
     if kc is None:  # background mode
         return
     prefs = get_prefs()
+    use_rmb_menu = prefs.use_rmb_menu if prefs else True
     use_marking_menu = prefs.use_marking_menu if prefs else True
     use_maya_hotkeys = prefs.use_maya_hotkeys if prefs else True
+
+    if use_rmb_menu:
+        for km_name in ("Object Mode", "Mesh"):
+            _new_item(_keymap(kc, km_name), "maya.rmb_menu", 'RIGHTMOUSE')
 
     if use_marking_menu:
         _new_item(_keymap(kc, "Object Mode"), "wm.call_menu_pie", 'RIGHTMOUSE', shift=True,
