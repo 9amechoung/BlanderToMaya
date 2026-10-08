@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.7.4.zip`](dist/maya_style_v0.7.4.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.8.0.zip`](dist/maya_style_v0.8.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -193,6 +193,8 @@
 - Translate, Rotate, Scale, Visibility를 마야처럼 한 줄씩 보여줘요.
 - SHAPES(메시 이름)와 INPUTS(모디파이어 = 마야의 히스토리)도 함께 보여줘요.
 - **Layer Editor**: 컬렉션 숨기기와 렌더 토글, 선택한 오브젝트로 새 레이어 만들기
+- **World Space (Global)**: 채널 박스 아래에 월드 기준 Translate / Rotate / Scale이 있어요. 채널 박스 값은 부모 기준(Local)이고, 여기 값은 장면 기준이에요. 둘 다 직접 입력해서 바꿀 수 있어요.
+- 컴포넌트 모드에서는 선택한 버텍스들의 중심 위치를 Local / World로 보여주고, 숫자를 입력해서 옮길 수 있어요.
 
 ## 설정
 `Edit → Preferences → Add-ons → Maya Style UI`를 펼치면 다음을 바꿀 수 있어요.

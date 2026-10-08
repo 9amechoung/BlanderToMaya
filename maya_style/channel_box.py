@@ -128,8 +128,11 @@ def _draw_in_properties(self, context):
     if obj is None or (prefs is not None and not prefs.channel_box_in_properties):
         return
     box = self.layout.box()
-    box.label(text="Channel Box", icon='PROPERTIES')
+    box.label(text="Channel Box (Local)", icon='PROPERTIES')
     draw_channel_box(box, obj, show_name=False)
+    from .transform_panel import draw_components, draw_world_space
+    draw_components(self.layout, obj)
+    draw_world_space(self.layout, obj)
 
 
 class MAYA_PT_layer_editor_properties(MAYA_PT_layer_editor):
