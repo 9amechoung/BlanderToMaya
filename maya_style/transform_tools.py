@@ -123,29 +123,40 @@ def _dist_to_segment(p, a, b):
     return (p - (a + ab * t)).length
 
 
-def gizmo_hit(context, event, kind, tolerance=HIT_PX):
-    """Which handle is under the mouse: 'X'/'Y'/'Z', 'XY'/'YZ'/'XZ', 'VIEW', 'CENTER' or None."""
+def gizmo_frame(context):
+    """Where the transform gizmo is: (center, center_2d, handle length in world units,
+    handle length in pixels, orientation type, axes matrix) or None."""
     region, rv3d = context.region, context.region_data
     space = context.space_data
-    if region is None or rv3d is None or not (space.show_gizmo and space.show_gizmo_tool):
-        return None, None
+    if region is None or rv3d is None or space is None or space.type != 'VIEW_3D':
+        return None
+    if not (space.show_gizmo and space.show_gizmo_tool):
+        return None
     center = _pivot(context)
     if center is None:
-        return None, None
+        return None
     to2d = lambda co: view3d_utils.location_3d_to_region_2d(region, rv3d, co)
     c2 = to2d(center)
-    if c2 is None:
-        return None, None
-    mouse = Vector((event.mouse_region_x, event.mouse_region_y))
     right = rv3d.view_rotation @ Vector((1.0, 0.0, 0.0))
     r2 = to2d(center + right)
-    if r2 is None:
-        return None, None
+    if c2 is None or r2 is None:
+        return None
     px_per_unit = max((r2 - c2).length, 1e-6)
     prefs = context.preferences
     size_px = prefs.view.gizmo_size * prefs.system.ui_scale
-    length = size_px / px_per_unit  # gizmo handle length in world units
     orient, axes = _orientation(context, rv3d)
+    return center, c2, size_px / px_per_unit, size_px, orient, axes
+
+
+def gizmo_hit(context, event, kind, tolerance=HIT_PX):
+    """Which handle is under the mouse: 'X'/'Y'/'Z', 'XY'/'YZ'/'XZ', 'VIEW', 'CENTER' or None."""
+    frame = gizmo_frame(context)
+    if frame is None:
+        return None, None
+    center, c2, length, size_px, orient, axes = frame
+    region, rv3d = context.region, context.region_data
+    to2d = lambda co: view3d_utils.location_3d_to_region_2d(region, rv3d, co)
+    mouse = Vector((event.mouse_region_x, event.mouse_region_y))
     names = ("X", "Y", "Z")
     from_center = (mouse - c2).length
 
@@ -275,6 +286,138 @@ class MAYA_OT_mmb_transform(bpy.types.Operator):
         return {'FINISHED'}
 
 
+# ---------------------------------------------------------------------------
+# Yellow highlight of the picked handle (Maya draws the active handle in yellow)
+# ---------------------------------------------------------------------------
+
+HIGHLIGHT_COLOR = (1.0, 0.85, 0.0, 1.0)
+_draw_handle = None
+_shader = None
+
+
+def _polyline_shader():
+    global _shader
+    if _shader is None:
+        import gpu
+        try:
+            _shader = gpu.shader.from_builtin('POLYLINE_UNIFORM_COLOR')
+        except (ValueError, SystemError):
+            _shader = False
+    return _shader
+
+
+def _draw_lines(points, width, loop=False):
+    import gpu
+    from gpu_extras.batch import batch_for_shader
+    shader = _polyline_shader()
+    if not shader or len(points) < 2:
+        return
+    coords = []
+    seq = list(points) + ([points[0]] if loop else [])
+    for a, b in zip(seq, seq[1:]):
+        coords += [a, b]
+    batch = batch_for_shader(shader, 'LINES', {"pos": coords})
+    region = bpy.context.region
+    shader.bind()
+    shader.uniform_float("viewportSize", (region.width, region.height))
+    shader.uniform_float("lineWidth", width)
+    shader.uniform_float("color", HIGHLIGHT_COLOR)
+    gpu.state.depth_test_set('NONE')
+    gpu.state.blend_set('ALPHA')
+    batch.draw(shader)
+    gpu.state.blend_set('NONE')
+
+
+def _circle(center, u, v, radius, segments=48):
+    pts = []
+    for step in range(segments + 1):
+        a = step * math.tau / segments
+        offset = (u * math.cos(a) + v * math.sin(a)) * radius
+        pts.append(center + offset)
+    return pts
+
+
+def _draw_highlight():
+    context = bpy.context
+    try:
+        from .prefs import get_prefs
+        prefs = get_prefs(context)
+        if prefs is not None and not (prefs.use_mmb_transform and prefs.show_axis_highlight):
+            return
+        kind = active_tool_kind(context)
+        if kind is None:
+            return
+        frame = gizmo_frame(context)
+        if frame is None:
+            return
+        center, _c2, length, _size_px, _orient, axes = frame
+        rv3d = context.region_data
+        settings = last_axis_settings(context, kind) or {}
+        picked = "".join(a for a, on in zip("XYZ", settings.get("constraint_axis", (False,) * 3)) if on)
+        view_x = rv3d.view_rotation @ Vector((1.0, 0.0, 0.0))
+        view_y = rv3d.view_rotation @ Vector((0.0, 1.0, 0.0))
+
+        if kind == 'ROTATE':
+            if settings.get("orient_type") == 'VIEW' and not picked:
+                _draw_lines(_circle(center, view_x, view_y, length * 1.2), 4.0)
+            elif len(picked) == 1:
+                i = "XYZ".index(picked)
+                u, v = axes.col[(i + 1) % 3], axes.col[(i + 2) % 3]
+                _draw_lines(_circle(center, u, v, length), 5.0)
+            return
+
+        if not picked:
+            # Free (center handle): a small yellow ring in the middle.
+            _draw_lines(_circle(center, view_x, view_y, length * 0.16, 24), 3.0)
+        elif len(picked) == 1:
+            axis = axes.col["XYZ".index(picked)]
+            _draw_lines([center + axis * length * 0.2, center + axis * length * 1.15], 6.0)
+        else:  # plane handle
+            i, j = ("XYZ".index(picked[0]), "XYZ".index(picked[1]))
+            a, b = axes.col[i] * length, axes.col[j] * length
+            mid = center + (a + b) * 0.33
+            h = 0.09
+            _draw_lines([mid + (a + b) * h, mid + (a - b) * h, mid - (a + b) * h, mid - (a - b) * h], 3.0, loop=True)
+    except Exception:
+        pass  # drawing must never break the viewport
+
+
+def _redraw_viewports(context):
+    for window in context.window_manager.windows:
+        for area in window.screen.areas:
+            if area.type == 'VIEW_3D':
+                area.tag_redraw()
+
+
+class MAYA_OT_tool_key(bpy.types.Operator):
+    """Maya Q / W / E / R: pick the tool; pressed again, put the middle-drag axis back to the center (free)"""
+    bl_idname = "maya.tool_key"
+    bl_label = "Select / Move / Rotate / Scale Tool"
+
+    tool: bpy.props.StringProperty(default="builtin.move")
+
+    def execute(self, context):
+        kind = TOOL_KINDS.get(self.tool)
+        already = active_tool_kind(context) == kind if kind else False
+        if self.tool == "builtin.select_box":
+            try:
+                current = context.workspace.tools.from_space_view3d_mode(context.mode, create=False)
+                already = current is not None and current.idname.startswith("builtin.select")
+            except (AttributeError, TypeError):
+                already = False
+        if already:
+            # Pressed again: back to the center handle (free move), like Maya.
+            kinds = [kind] if kind else list(KINDS)
+            for k in kinds:
+                op = _last_transform_op(context, k)
+                _picked[k] = ({}, op.as_pointer() if op else 0)
+            _redraw_viewports(context)
+            return {'FINISHED'}
+        bpy.ops.wm.tool_set_by_id(name=self.tool, cycle=False)
+        _redraw_viewports(context)
+        return {'FINISHED'}
+
+
 KIND_ITEMS = (
     ('TRANSLATE', "Move", ""),
     ('ROTATE', "Rotate", ""),
@@ -365,6 +508,10 @@ class MAYA_OT_mmb_axis_drag(bpy.types.Operator):
 
 
 def register():
+    global _draw_handle
+    bpy.utils.register_class(MAYA_OT_tool_key)
+    if not bpy.app.background:
+        _draw_handle = bpy.types.SpaceView3D.draw_handler_add(_draw_highlight, (), 'WINDOW', 'POST_VIEW')
     bpy.utils.register_class(MAYA_OT_gizmo_pick)
     bpy.utils.register_class(MAYA_OT_mmb_transform)
     bpy.utils.register_class(MAYA_OT_shift_gizmo_drag)
@@ -372,6 +519,12 @@ def register():
 
 
 def unregister():
+    global _draw_handle, _shader
+    if _draw_handle is not None:
+        bpy.types.SpaceView3D.draw_handler_remove(_draw_handle, 'WINDOW')
+        _draw_handle = None
+    _shader = None
+    bpy.utils.unregister_class(MAYA_OT_tool_key)
     bpy.utils.unregister_class(MAYA_OT_mmb_axis_drag)
     bpy.utils.unregister_class(MAYA_OT_shift_gizmo_drag)
     bpy.utils.unregister_class(MAYA_OT_mmb_transform)

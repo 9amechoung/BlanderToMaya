@@ -131,6 +131,12 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         default=True,
         update=_update_keymaps,
     )
+    show_axis_highlight: BoolProperty(
+        name="Highlight Picked Axis",
+        description="Draw the picked manipulator handle in yellow, like Maya",
+        default=True,
+        update=_redraw,
+    )
     use_maya_hotkeys: BoolProperty(
         name="Maya Hotkeys",
         description="Space quad view, 4~7 shading, F8~F11 components, 1~3 smooth preview, "
@@ -176,6 +182,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box.prop(self, "use_marking_menu")
         box.prop(self, "use_tool_menu")
         box.prop(self, "use_mmb_transform")
+        box.prop(self, "show_axis_highlight")
         row = box.row()
         row.prop(self, "shift_extrude")
         row.prop(self, "shift_duplicate")

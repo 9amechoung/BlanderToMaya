@@ -98,6 +98,11 @@ MAYA_HOTKEYS = (
     *((km, "view3d.select_box", 'LEFTMOUSE', {"value": 'CLICK_DRAG', **mods}, {"mode": mode})
       for km in ("3D View Tool: Select Box", "3D View Tool: Select Box (fallback)")
       for mods, mode in (({"shift": True}, 'XOR'), ({"ctrl": True}, 'SUB'), ({"ctrl": True, "shift": True}, 'ADD'))),
+    # Q / W / E / R: pressing the key of the active tool again resets the middle-drag axis (Maya)
+    *((km, "maya.tool_key", key, {}, {"tool": tool})
+      for km in ("Object Mode", "Mesh", "Curve", "Armature", "Pose", "Lattice", "Metaball", "Curves")
+      for key, tool in (('Q', "builtin.select_box"), ('W', "builtin.move"), ('E', "builtin.rotate"),
+                        ('R', "builtin.scale"))),
     # Pick-walk the hierarchy with the arrow keys
     *(("Object Mode", "maya.pickwalk", key, {}, {"direction": d})
       for key, d in (('UP_ARROW', 'UP'), ('DOWN_ARROW', 'DOWN'), ('LEFT_ARROW', 'LEFT'), ('RIGHT_ARROW', 'RIGHT'))),
