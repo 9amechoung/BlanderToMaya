@@ -62,11 +62,11 @@ def _new_item(km, idname, key, value='PRESS', props=None, **modifiers):
     _addon_keymaps.append((km, kmi))
 
 
-def _keymap(kc, name):
-    default = bpy.context.window_manager.keyconfigs.default.keymaps.get(name)
-    space_type = default.space_type if default else 'EMPTY'
-    region_type = default.region_type if default else 'WINDOW'
-    return kc.keymaps.new(name=name, space_type=space_type, region_type=region_type)
+def _keymap(kc, name, space_type=None):
+    if space_type is None:
+        default = bpy.context.window_manager.keyconfigs.default.keymaps.get(name)
+        space_type = default.space_type if default else 'EMPTY'
+    return kc.keymaps.new(name=name, space_type=space_type, region_type='WINDOW')
 
 
 def register_keymaps():
@@ -77,6 +77,7 @@ def register_keymaps():
     use_rmb_menu = prefs.use_rmb_menu if prefs else True
     use_marking_menu = prefs.use_marking_menu if prefs else True
     use_maya_hotkeys = prefs.use_maya_hotkeys if prefs else True
+    use_mmb_transform = prefs.use_mmb_transform if prefs else True
 
     if use_rmb_menu:
         for km_name in ("Object Mode", "Mesh"):
@@ -87,6 +88,12 @@ def register_keymaps():
                   props={"name": "MAYA_MT_object_marking_menu"})
         _new_item(_keymap(kc, "Mesh"), "wm.call_menu_pie", 'RIGHTMOUSE', shift=True,
                   props={"name": "MAYA_MT_mesh_marking_menu"})
+
+    if use_mmb_transform:
+        from .transform_tools import TOOL_KEYMAPS
+        for km_name, kind in TOOL_KEYMAPS:
+            _new_item(_keymap(kc, km_name, 'VIEW_3D'), "maya.mmb_transform", 'MIDDLEMOUSE',
+                      props={"kind": kind})
 
     if use_maya_hotkeys:
         for km_name, idname, key, modifiers, props in MAYA_HOTKEYS:

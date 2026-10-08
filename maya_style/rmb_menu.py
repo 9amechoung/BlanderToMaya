@@ -4,7 +4,8 @@ Hold the right mouse button over an object: a component marking menu
 (Vertex / Edge / Face / Object Mode / UV / Vertex Face / Multi) appears
 around the cursor, with the object menu list (Select, Inputs, Paint,
 Assign Material...) underneath. Release over an item to run it, like Maya.
-Over empty space Blender's normal context menu opens instead.
+Over empty space the menu is for the selected object; with nothing
+selected, Blender's normal context menu opens instead.
 """
 
 import warnings
@@ -37,11 +38,15 @@ class MAYA_OT_rmb_menu(bpy.types.Operator):
     def invoke(self, context, event):
         if context.mode == 'OBJECT':
             obj = _object_under_mouse(context, event)
-            if obj is None:
-                # Empty space: let the keymap's normal right-click menu run.
-                return {'PASS_THROUGH'}
-            obj.select_set(True)
-            context.view_layer.objects.active = obj
+            if obj is not None:
+                obj.select_set(True)
+                context.view_layer.objects.active = obj
+            else:
+                # Empty space: like Maya, the menu is for the selected object.
+                active = context.active_object
+                if active is None or not active.select_get():
+                    # Nothing selected: let the keymap's normal right-click menu run.
+                    return {'PASS_THROUGH'}
             bpy.ops.wm.call_menu_pie(name="MAYA_MT_rmb_object")
         elif context.mode == 'EDIT_MESH':
             bpy.ops.wm.call_menu_pie(name="MAYA_MT_rmb_object")

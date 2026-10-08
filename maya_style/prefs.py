@@ -59,6 +59,13 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         default=True,
         update=_update_keymaps,
     )
+    use_mmb_transform: BoolProperty(
+        name="Middle-drag Along Picked Axis",
+        description="With the Move / Rotate / Scale tool, click a gizmo axis, then middle-drag anywhere "
+                    "to transform along that axis only (like Maya)",
+        default=True,
+        update=_update_keymaps,
+    )
     use_maya_hotkeys: BoolProperty(
         name="Maya Hotkeys",
         description="Space quad view, 4~7 shading, F8~F11 components, 1~3 smooth preview, "
@@ -88,6 +95,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box.label(text="Hotkeys", icon='EVENT_SHIFT')
         box.prop(self, "use_rmb_menu")
         box.prop(self, "use_marking_menu")
+        box.prop(self, "use_mmb_transform")
         box.prop(self, "use_maya_hotkeys")
 
 

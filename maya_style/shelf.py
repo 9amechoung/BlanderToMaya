@@ -170,6 +170,13 @@ def draw_shelf(layout, context):
         for key, value in props.items():
             setattr(op, key, value)
 
+    # Which axis a middle-drag will use (Maya highlights the picked handle in yellow).
+    from .transform_tools import active_tool_kind, last_axis_settings, axis_label
+    kind = active_tool_kind(context)
+    if kind is not None:
+        row.separator()
+        row.label(text="MMB: " + axis_label(last_axis_settings(context, kind), kind), icon='MOUSE_MMB_DRAG')
+
 
 def _draw_tool_header(self, context):
     prefs = get_prefs(context)
