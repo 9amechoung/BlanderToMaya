@@ -15,6 +15,32 @@ from . import maya_menus
 HOLD_SECONDS = 0.2
 
 
+def toggle_four_view(context, hovered):
+    """Four view <-> single view. Leaving four view keeps the view under the mouse, like Maya
+    (Blender would always go back to the perspective view)."""
+    space = context.space_data
+    in_four_view = len(space.region_quadviews) > 0
+    if not in_four_view or hovered is None or hovered.as_pointer() == space.region_3d.as_pointer():
+        bpy.ops.screen.region_quadview()
+        return
+    state = {
+        "view_perspective": hovered.view_perspective,
+        "view_rotation": hovered.view_rotation.copy(),
+        "view_location": hovered.view_location.copy(),
+        "view_distance": hovered.view_distance,
+    }
+    side_view = getattr(hovered, "is_orthographic_side_view", False)
+    bpy.ops.screen.region_quadview()
+    rv3d = space.region_3d
+    for name, value in state.items():
+        setattr(rv3d, name, value)
+    if side_view:
+        try:
+            rv3d.is_orthographic_side_view = True  # shows "Top Orthographic" instead of "User"
+        except (AttributeError, TypeError):
+            pass
+
+
 class MAYA_OT_space_hotbox(bpy.types.Operator):
     """Tap Space: four view / single view. Hold Space: hotbox with all menus"""
     bl_idname = "maya.space_hotbox"
@@ -24,6 +50,7 @@ class MAYA_OT_space_hotbox(bpy.types.Operator):
         if context.area is None or context.area.type != 'VIEW_3D':
             return {'PASS_THROUGH'}  # timeline etc.: Space keeps playing the animation
         self._start = time.monotonic()
+        self._hovered = context.region_data  # the view under the mouse (one of the four in four view)
         self._timer = context.window_manager.event_timer_add(0.02, window=context.window)
         context.window_manager.modal_handler_add(self)
         return {'RUNNING_MODAL'}
@@ -34,7 +61,7 @@ class MAYA_OT_space_hotbox(bpy.types.Operator):
     def modal(self, context, event):
         if event.type == 'SPACE' and event.value == 'RELEASE':
             self._finish(context)
-            bpy.ops.screen.region_quadview()
+            toggle_four_view(context, self._hovered)
             return {'FINISHED'}
         if event.type == 'TIMER' and time.monotonic() - self._start >= HOLD_SECONDS:
             self._finish(context)

@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.7.2.zip`](dist/maya_style_v0.7.2.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.7.3.zip`](dist/maya_style_v0.7.3.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -52,7 +52,7 @@
 | Alt + 우클릭 드래그 | 확대/축소 (Dolly) |
 | F | 선택한 오브젝트를 화면 중앙에 |
 | A | 전체 오브젝트를 화면 중앙에 |
-| Space | 4분할 뷰 ↔ 단일 뷰 |
+| Space | 4분할 뷰 ↔ 단일 뷰 (4분할일 때는 마우스를 올린 화면이 커짐) |
 | Ctrl + Space | 뷰포트 최대화 |
 
 **기본 조작 및 편집**
