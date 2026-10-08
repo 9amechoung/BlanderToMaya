@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Maya Style UI - make Blender feel like Maya.
 
+- Maya workspace: Outliner left, Channel Box right, timeline bottom, Maya colors
+- Maya menu bar with menu sets and status line in the top bar
 - Industry Compatible (Maya-like) keymap applied on install
 - Maya-style shelf bar on top of the 3D viewport
 - Right-click (hold) component menu on objects
@@ -13,16 +15,18 @@
 bl_info = {
     "name": "Maya Style UI",
     "author": "BlanderToMaya",
-    "version": (0, 4, 0),
-    "blender": (4, 2, 0),
+    "version": (0, 5, 0),
+    "blender": (4, 0, 0),
     "location": "3D Viewport > Tool Header (Shelf), Shift+RMB (Marking Menu), N Panel > Channel Box",
     "description": "Maya-like keymap, shelf bar, marking menus and channel box",
     "category": "Interface",
 }
 
-from . import prefs, operators, shelf, marking_menu, rmb_menu, transform_tools, channel_box, keymaps
+from . import (prefs, operators, shelf, marking_menu, rmb_menu, transform_tools, channel_box,
+               maya_menus, maya_ui, keymaps)
 
-_modules = (prefs, operators, shelf, marking_menu, rmb_menu, transform_tools, channel_box, keymaps)
+_modules = (prefs, operators, shelf, marking_menu, rmb_menu, transform_tools, channel_box,
+            maya_menus, maya_ui, keymaps)
 
 
 def register():

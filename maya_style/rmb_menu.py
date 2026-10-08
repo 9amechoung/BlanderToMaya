@@ -55,6 +55,23 @@ class MAYA_OT_rmb_menu(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class MAYA_OT_rmb_click_block(bpy.types.Operator):
+    """Swallow the right-click 'click' event after a quick tap.
+
+    Otherwise the keymap's normal context menu opens on release and replaces
+    the Maya menu that the press just opened."""
+    bl_idname = "maya.rmb_click_block"
+    bl_label = "Maya Right-click (tap)"
+    bl_options = {'INTERNAL'}
+
+    def invoke(self, context, event):
+        if context.mode == 'OBJECT':
+            active = context.active_object
+            if _object_under_mouse(context, event) is None and (active is None or not active.select_get()):
+                return {'PASS_THROUGH'}  # the press passed through too: keep Blender's menu
+        return {'FINISHED'}
+
+
 # ---------------------------------------------------------------------------
 # Small operators used by the menu
 # ---------------------------------------------------------------------------
@@ -303,9 +320,21 @@ def _component(layout, text, mode):
     layout.operator("maya.component_mode", text=text).mode = mode
 
 
+def _menu_column(layout):
+    """A column that looks like a regular dropdown menu (flat items, ▸ on sub menus)."""
+    col = layout.column()
+    col.emboss = 'PULLDOWN_MENU'
+    return col
+
+
+def _submenu(col, idname):
+    """Menu item with Maya's ▸ marker."""
+    col.menu(idname, text=getattr(bpy.types, idname).bl_label + "  \u25B8")
+
+
 def _draw_object_list(layout, context):
     obj = context.active_object
-    col = layout.column()
+    col = _menu_column(layout)
     col.operator("maya.show_attributes", text=obj.name + "...").tab = 'OBJECT'
     col.separator()
     col.operator("maya.select_only", text="Select")
@@ -320,19 +349,19 @@ def _draw_object_list(layout, context):
     op.type = 'TYPE'
     op.extend = True
     col.separator()
-    col.menu("MAYA_MT_rmb_inputs")
-    col.menu("MAYA_MT_rmb_paint")
-    col.menu("MAYA_MT_rmb_uv_sets")
+    _submenu(col, "MAYA_MT_rmb_inputs")
+    _submenu(col, "MAYA_MT_rmb_paint")
+    _submenu(col, "MAYA_MT_rmb_uv_sets")
     col.separator()
     col.operator("maya.show_attributes", text="Material Attributes...").tab = 'MATERIAL'
     col.separator()
-    col.menu("MAYA_MT_rmb_new_material")
-    col.menu("MAYA_MT_rmb_existing_material")
+    _submenu(col, "MAYA_MT_rmb_new_material")
+    _submenu(col, "MAYA_MT_rmb_existing_material")
 
 
 def _draw_edit_list(layout, context):
     obj = context.active_object
-    col = layout.column()
+    col = _menu_column(layout)
     col.operator("maya.show_attributes", text=obj.name + "...").tab = 'DATA'
     col.separator()
     col.operator("mesh.select_all", text="Select All").action = 'SELECT'
@@ -350,13 +379,13 @@ def _draw_edit_list(layout, context):
     col.separator()
     col.operator("mesh.select_similar", text="Select Similar")
     col.separator()
-    col.menu("MAYA_MT_rmb_inputs")
-    col.menu("MAYA_MT_rmb_uv_sets")
+    _submenu(col, "MAYA_MT_rmb_inputs")
+    _submenu(col, "MAYA_MT_rmb_uv_sets")
     col.separator()
     col.operator("maya.show_attributes", text="Material Attributes...").tab = 'MATERIAL'
     col.separator()
-    col.menu("MAYA_MT_rmb_new_material")
-    col.menu("MAYA_MT_rmb_existing_material")
+    _submenu(col, "MAYA_MT_rmb_new_material")
+    _submenu(col, "MAYA_MT_rmb_existing_material")
 
 
 class MAYA_MT_rmb_object(bpy.types.Menu):
@@ -391,6 +420,7 @@ class MAYA_MT_rmb_object(bpy.types.Menu):
 
 classes = (
     MAYA_OT_rmb_menu,
+    MAYA_OT_rmb_click_block,
     MAYA_OT_show_attributes,
     MAYA_OT_select_only,
     MAYA_OT_open_uv_editor,

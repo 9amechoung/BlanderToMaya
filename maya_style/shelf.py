@@ -155,10 +155,14 @@ def draw_shelf(layout, context):
     wm = context.window_manager
 
     row = layout.row(align=False)
-    row.label(text="", icon='COLLAPSEMENU')
-    sub = row.row()
-    sub.ui_units_x = 6
-    sub.prop(wm, "maya_shelf", text="")
+    if prefs is None or prefs.shelf_style == 'TABS':
+        tabs = row.row(align=True)
+        tabs.prop(wm, "maya_shelf", expand=True)
+    else:
+        row.label(text="", icon='COLLAPSEMENU')
+        sub = row.row()
+        sub.ui_units_x = 6
+        sub.prop(wm, "maya_shelf", text="")
 
     buttons = row.row(align=True)
     for item in SHELVES[wm.maya_shelf][2]:

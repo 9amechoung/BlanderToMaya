@@ -82,6 +82,7 @@ def register_keymaps():
     if use_rmb_menu:
         for km_name in ("Object Mode", "Mesh"):
             _new_item(_keymap(kc, km_name), "maya.rmb_menu", 'RIGHTMOUSE')
+            _new_item(_keymap(kc, km_name), "maya.rmb_click_block", 'RIGHTMOUSE', 'CLICK')
 
     if use_marking_menu:
         _new_item(_keymap(kc, "Object Mode"), "wm.call_menu_pie", 'RIGHTMOUSE', shift=True,
@@ -92,8 +93,9 @@ def register_keymaps():
     if use_mmb_transform:
         from .transform_tools import TOOL_KEYMAPS
         for km_name, kind in TOOL_KEYMAPS:
-            _new_item(_keymap(kc, km_name, 'VIEW_3D'), "maya.mmb_transform", 'MIDDLEMOUSE',
-                      props={"kind": kind})
+            km = _keymap(kc, km_name, 'VIEW_3D')
+            _new_item(km, "maya.mmb_transform", 'MIDDLEMOUSE', props={"kind": kind})
+            _new_item(km, "maya.gizmo_pick", 'LEFTMOUSE', 'CLICK', props={"kind": kind})
 
     if use_maya_hotkeys:
         for km_name, idname, key, modifiers, props in MAYA_HOTKEYS:
@@ -115,20 +117,40 @@ def unregister_keymaps():
 
 
 def _first_run():
-    """Switch to the Maya-like keymap once, right after the add-on is installed."""
+    """Right after install: switch to the Maya-like keymap, then build the Maya UI (once each)."""
     prefs = get_prefs()
-    if prefs is None or not prefs.auto_apply_keymap or prefs.keymap_applied:
+    if prefs is None:
         return None
-    from .operators import activate_keyconfig
+    if prefs.auto_apply_keymap and not prefs.keymap_applied:
+        from .operators import activate_keyconfig
+        try:
+            if activate_keyconfig("Industry_Compatible"):
+                prefs.keymap_applied = True
+                bpy.ops.maya.setup_viewport()
+                # Re-add our hotkeys on top of the freshly loaded keyconfig.
+                unregister_keymaps()
+                register_keymaps()
+        except Exception as ex:  # never break add-on loading over this
+            print("Maya Style UI: could not apply keymap:", ex)
+    return _first_run_ui()
+
+
+def _first_run_ui():
+    """Create the Maya workspace and colors once, right after install."""
+    prefs = get_prefs()
+    if prefs is None or not prefs.auto_setup_ui or prefs.ui_applied:
+        return None
+    windows = bpy.context.window_manager.windows
+    if not windows:
+        bpy.app.timers.register(_first_run_ui, first_interval=0.5)
+        return None
+    from . import maya_ui
+    prefs.ui_applied = True
     try:
-        if activate_keyconfig("Industry_Compatible"):
-            prefs.keymap_applied = True
-            bpy.ops.maya.setup_viewport()
-            # Re-add our hotkeys on top of the freshly loaded keyconfig.
-            unregister_keymaps()
-            register_keymaps()
-    except Exception as ex:  # never break add-on loading over this
-        print("Maya Style UI: could not apply keymap:", ex)
+        maya_ui.apply_theme()
+        maya_ui.setup_maya_workspace(windows[0])
+    except Exception as ex:
+        print("Maya Style UI: could not create the Maya workspace:", ex)
     return None
 
 
@@ -139,6 +161,7 @@ def register():
 
 
 def unregister():
-    if bpy.app.timers.is_registered(_first_run):
-        bpy.app.timers.unregister(_first_run)
+    for fn in (_first_run, _first_run_ui):
+        if bpy.app.timers.is_registered(fn):
+            bpy.app.timers.unregister(fn)
     unregister_keymaps()

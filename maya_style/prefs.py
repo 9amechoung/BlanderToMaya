@@ -13,6 +13,12 @@ def _update_shelf(self, context):
     shelf.refresh_location()
 
 
+def _redraw(self, context):
+    for window in context.window_manager.windows:
+        for area in window.screen.areas:
+            area.tag_redraw()
+
+
 def _update_keymaps(self, context):
     from . import keymaps
     keymaps.unregister_keymaps()
@@ -31,6 +37,43 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         name="Keymap already applied",
         description="Internal flag: the keymap was switched once already",
         default=False,
+    )
+    auto_setup_ui: BoolProperty(
+        name="Create Maya workspace on install",
+        description="The first time the add-on is enabled, create the Maya workspace and Maya colors",
+        default=True,
+    )
+    ui_applied: BoolProperty(
+        name="Maya workspace already created",
+        description="Internal flag: the Maya workspace was created once already",
+        default=False,
+    )
+    workspace_in_every_file: BoolProperty(
+        name="Maya workspace in every file",
+        description="Add the Maya workspace to new files and files that don't have it yet "
+                    "(workspaces are saved inside each .blend file)",
+        default=True,
+    )
+    use_maya_topbar: BoolProperty(
+        name="Maya Top Bar",
+        description="Maya menu bar (Create, Select, Modify... with menu sets) and status line in the top bar",
+        default=True,
+        update=_redraw,
+    )
+    channel_box_in_properties: BoolProperty(
+        name="Channel Box in Properties",
+        description="Show the Channel Box at the top of the Properties editor's Object tab",
+        default=True,
+        update=_redraw,
+    )
+    shelf_style: EnumProperty(
+        name="Shelf Style",
+        items=(
+            ('TABS', "Tabs", "Maya-style shelf tabs"),
+            ('DROPDOWN', "Dropdown", "Compact dropdown to pick the shelf"),
+        ),
+        default='TABS',
+        update=_redraw,
     )
     shelf_location: EnumProperty(
         name="Shelf Location",
@@ -86,8 +129,21 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box.prop(self, "auto_apply_keymap")
 
         box = layout.box()
+        box.label(text="Interface", icon='WORKSPACE')
+        box.prop(self, "use_maya_topbar")
+        box.prop(self, "channel_box_in_properties")
+        row = box.row(align=True)
+        row.operator("maya.setup_maya_ui", icon='WORKSPACE')
+        row = box.row(align=True)
+        row.operator("maya.apply_theme", icon='COLOR')
+        row.operator("maya.reset_theme", icon='LOOP_BACK')
+        box.prop(self, "auto_setup_ui")
+        box.prop(self, "workspace_in_every_file")
+
+        box = layout.box()
         box.label(text="Shelf", icon='TOOL_SETTINGS')
         box.prop(self, "shelf_location", expand=True)
+        box.prop(self, "shelf_style", expand=True)
         box.prop(self, "shelf_show_labels")
         box.operator("maya.setup_viewport", icon='VIEW3D')
 

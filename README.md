@@ -1,18 +1,41 @@
 # BlanderToMaya: Maya Style UI for Blender
 
-블렌더를 마야처럼 쓰게 해 주는 애드온이에요. 설치하면 키맵, 셸프, 마킹 메뉴, 채널 박스가 한 번에 세팅돼요.
+블렌더를 마야처럼 쓰게 해 주는 애드온이에요. 설치하면 마야식 화면 배치, 메뉴바, 키맵, 셸프, 마킹 메뉴, 채널 박스가 한 번에 세팅돼요.
+
+![Maya 워크스페이스](docs/screenshot_layout.png)
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.4.0.zip`](dist/maya_style_v0.4.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.5.0.zip`](dist/maya_style_v0.5.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
-2. 블렌더를 엽니다. **4.2 이상**을 지원해요.
+2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
-   (구버전 방식: `Add-ons` 탭 → `⌄` → **Install from Disk...**)
-4. 설치되면 키맵이 자동으로 **Industry Compatible**(마야식)로 바뀌고, 뷰포트 상단에 셸프가 나타나요.
+   (4.0, 4.1 또는 구버전 방식: `Add-ons` 탭 → **Install...** 또는 `⌄` → **Install from Disk...** → 목록에서 체크)
+4. 설치되면 바로 `Maya` 워크스페이스로 바뀌고, 키맵이 **Industry Compatible**(마야식)로 바뀌어요.
 5. 새 버전으로 업데이트할 때도 같은 방법으로 새 zip을 설치하면 이전 버전을 덮어써요.
 
 ## 기능
+
+### 0. 마야 인터페이스
+- **화면 배치**: 왼쪽 아웃라이너, 가운데 뷰포트(왼쪽에 툴박스), 오른쪽 채널 박스, 아래 타임라인
+  - 오른쪽은 블렌더 속성 창이에요. Object 탭 맨 위에 채널 박스가 있고, 아래쪽에 Layer Editor가 있어요. 다른 탭은 마야의 Attribute Editor 역할이에요.
+  - 원래 블렌더 화면은 위쪽 `Workspace:`에서 `Layout`을 고르면 돼요.
+  - 화면이 망가지면 `Windows → Reset Maya Workspace`를 누르세요.
+  - 워크스페이스는 .blend 파일마다 저장돼요. 그래서 새 파일이나 다른 사람 파일을 열면 `Maya` 워크스페이스를 자동으로 추가해요. 설정에서 끌 수 있어요.
+- **메뉴바**: `File Edit Create Select Modify Display Windows` + 메뉴셋 메뉴
+  - 메뉴셋 드롭다운에서 고르면 뒤쪽 메뉴가 바뀌어요.
+    - **Modeling**: Mesh, Edit Mesh, Mesh Tools, Mesh Display, Curves, Deform, UV
+    - **Rigging**: Skeleton, Skin, Deform, Constrain, Control
+    - **Animation**: Key, Playback, Visualize, Deform, Constrain
+    - **Rendering**: Lighting/Shading, Texturing, Render
+  - 블렌더 메뉴(Window, Help, 블렌더 로고)도 남아 있어요.
+- **상태줄**: 메뉴바 옆
+  - 새 파일, 열기, 저장, 실행 취소, 다시 실행
+  - 오브젝트, 버텍스, 엣지, 페이스 모드
+  - 그리드, 커브, 점, 면 스냅 토글
+  - Symmetry X, 렌더, IPR, 렌더 설정
+- **마야 색상**: 회색 뷰포트, 선택한 오브젝트는 초록색. 블렌더 색으로 돌아가려면 설정에서 **Reset Blender Colors**를 누르세요.
+- **셸프**: 마야처럼 탭으로 되어 있어요.
 
 ### 1. 마야식 단축키
 설치하면 키맵이 한 번 자동으로 **Industry Compatible**로 바뀌고, 그 위에 마야 단축키를 덮어씌워요.
@@ -118,9 +141,11 @@
 - 에딧 모드에서는 아래 목록이 Select Shell, Edge Loop, Edge Ring, Grow, Shrink 같은 컴포넌트용으로 바뀌어요. 이때 Assign Material은 선택한 페이스에만 적용돼요.
 - 오브젝트가 선택되어 있으면 **빈 공간**에서 우클릭을 누르고 있어도 선택한 오브젝트의 메뉴가 열려요. 아무것도 선택하지 않았으면 원래 블렌더 메뉴가 열려요.
 
+![우클릭 메뉴](docs/screenshot_rmb_menu.png)
+
 ### 휠클릭 드래그로 축 고정 이동 (이동/회전/스케일 툴)
 1. W/E/R로 이동, 회전, 스케일 툴을 고릅니다.
-2. 기즈모에서 원하는 축(예: 빨간 X 화살표)을 **한 번 클릭**합니다. 드래그해도 돼요.
+2. 기즈모에서 원하는 축(예: 빨간 X 화살표, 회전이면 링)을 **한 번 클릭**합니다. 드래그해도 돼요.
 3. 이제 뷰포트 **아무 데서나 휠클릭 드래그**하면 그 축으로만 움직여요.
 - 셸프 바 오른쪽에 지금 고정된 축이 `MMB: X`처럼 표시돼요. 마야에서 노랗게 표시되는 축 역할이에요.
 - 기즈모 가운데(자유 이동)를 클릭하면 `Free`로 돌아가요. 평면 핸들을 클릭하면 `XY plane`처럼 평면 이동이 돼요.
@@ -138,7 +163,9 @@
 ## 설정
 `Edit → Preferences → Add-ons → Maya Style UI`를 펼치면 다음을 바꿀 수 있어요.
 - 키맵 적용 및 복원 버튼
-- 셸프 위치: Tool Header / Header / 숨김
+- 마야 상단 바 켜기/끄기, 채널 박스를 속성 창에 표시
+- Maya 워크스페이스 다시 만들기, 마야 색상 적용 및 블렌더 색상 복원
+- 셸프 위치: Tool Header / Header / 숨김, 셸프 모양: 탭 / 드롭다운
 - 우클릭 메뉴, 마킹 메뉴, 휠클릭 축 고정, 마야 단축키 켜기/끄기
 
 ## 셸프가 안 보일 때
