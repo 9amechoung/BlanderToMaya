@@ -15,30 +15,81 @@ from . import maya_menus
 HOLD_SECONDS = 0.2
 
 
+_VIEW_PROPS = ("view_perspective", "view_rotation", "view_location", "view_distance")
+
+# space pointer -> {"maximized": quad index or None, "views": {index or "persp": saved view}}
+_four_view_memory = {}
+
+
+def _save_view(rv3d):
+    view = {name: getattr(rv3d, name) for name in _VIEW_PROPS}
+    view["view_rotation"] = view["view_rotation"].copy()
+    view["view_location"] = view["view_location"].copy()
+    view["side"] = getattr(rv3d, "is_orthographic_side_view", False)
+    return view
+
+
+def _load_view(rv3d, view):
+    for name in _VIEW_PROPS:
+        setattr(rv3d, name, view[name])
+    try:
+        rv3d.is_orthographic_side_view = view["side"]  # "Top Orthographic" instead of "User ..."
+    except (AttributeError, TypeError):
+        pass
+
+
 def toggle_four_view(context, hovered):
-    """Four view <-> single view. Leaving four view keeps the view under the mouse, like Maya
-    (Blender would always go back to the perspective view)."""
+    """Four view <-> single view, like Maya:
+    - in four view, the view under the mouse is the one that gets maximized;
+    - every view keeps its own camera, so going back to four view puts the perspective
+      view back as perspective (and the orthographic views as they were)."""
     space = context.space_data
-    in_four_view = len(space.region_quadviews) > 0
-    if not in_four_view or hovered is None or hovered.as_pointer() == space.region_3d.as_pointer():
+    key = space.as_pointer()
+    if len(space.region_quadviews) > 0:
+        quads = list(space.region_quadviews)
+        views = {i: _save_view(rv3d) for i, rv3d in enumerate(quads)}
+        views["persp"] = _save_view(space.region_3d)
+        maximized = None
+        if hovered is not None:
+            for i, rv3d in enumerate(quads):
+                if rv3d.as_pointer() == hovered.as_pointer() and rv3d.as_pointer() != space.region_3d.as_pointer():
+                    maximized = i
+        _four_view_memory[key] = {"maximized": maximized, "views": views}
         bpy.ops.screen.region_quadview()
+        if maximized is not None:
+            _load_view(space.region_3d, views[maximized])
         return
-    state = {
-        "view_perspective": hovered.view_perspective,
-        "view_rotation": hovered.view_rotation.copy(),
-        "view_location": hovered.view_location.copy(),
-        "view_distance": hovered.view_distance,
-    }
-    side_view = getattr(hovered, "is_orthographic_side_view", False)
+
+    memory = _four_view_memory.get(key)
+    if memory is not None and memory["maximized"] is not None:
+        # Keep any pan / zoom done while the orthographic view was maximized.
+        memory["views"][memory["maximized"]] = _save_view(space.region_3d)
     bpy.ops.screen.region_quadview()
-    rv3d = space.region_3d
-    for name, value in state.items():
-        setattr(rv3d, name, value)
-    if side_view:
-        try:
-            rv3d.is_orthographic_side_view = True  # shows "Top Orthographic" instead of "User"
-        except (AttributeError, TypeError):
-            pass
+    if memory is None:
+        return
+
+    tries = [0]
+
+    def _restore():
+        quads = list(space.region_quadviews)
+        if not quads:
+            tries[0] += 1
+            return 0.05 if tries[0] < 20 else None
+        views = memory["views"]
+        if memory["maximized"] is not None:
+            _load_view(space.region_3d, views["persp"])
+        for i, rv3d in enumerate(quads):
+            if i in views and rv3d.as_pointer() != space.region_3d.as_pointer():
+                rv3d.view_location = views[i]["view_location"]
+                rv3d.view_distance = views[i]["view_distance"]
+        for window in bpy.context.window_manager.windows:
+            for area in window.screen.areas:
+                if area.type == 'VIEW_3D':
+                    area.tag_redraw()
+        return None
+
+    if _restore() is not None:
+        bpy.app.timers.register(_restore, first_interval=0.05)
 
 
 class MAYA_OT_space_hotbox(bpy.types.Operator):
