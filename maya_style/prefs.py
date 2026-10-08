@@ -53,9 +53,10 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         default=True,
         update=_update_keymaps,
     )
-    use_component_hotkeys: BoolProperty(
-        name="F8~F11 Component Hotkeys",
-        description="F8: object/component toggle, F9: vertex, F10: edge, F11: face",
+    use_maya_hotkeys: BoolProperty(
+        name="Maya Hotkeys",
+        description="Space quad view, 4~7 shading, F8~F11 components, 1~3 smooth preview, "
+                    "X/V/C hold to snap, Shift+H show, Alt+H isolate, Ctrl+Y redo...",
         default=True,
         update=_update_keymaps,
     )
@@ -80,7 +81,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box = layout.box()
         box.label(text="Hotkeys", icon='EVENT_SHIFT')
         box.prop(self, "use_marking_menu")
-        box.prop(self, "use_component_hotkeys")
+        box.prop(self, "use_maya_hotkeys")
 
 
 def register():

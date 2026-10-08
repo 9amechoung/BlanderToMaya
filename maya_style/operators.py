@@ -193,6 +193,101 @@ class MAYA_OT_set_shading(bpy.types.Operator):
         return {'FINISHED'}
 
 
+SMOOTH_PREVIEW_NAME = "Smooth Preview"
+
+
+class MAYA_OT_smooth_preview(bpy.types.Operator):
+    """Maya smooth mesh preview (1: off, 2: cage + smooth, 3: smooth)"""
+    bl_idname = "maya.smooth_preview"
+    bl_label = "Smooth Mesh Preview"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    level: EnumProperty(
+        items=(
+            ('1', "Off", "Show the original polygons"),
+            ('2', "Cage + Smooth", "Show the smoothed mesh with the original cage"),
+            ('3', "Smooth", "Show only the smoothed mesh"),
+        ),
+        default='3',
+    )
+
+    @classmethod
+    def poll(cls, context):
+        return any(o.type == 'MESH' for o in cls._targets(context))
+
+    @staticmethod
+    def _targets(context):
+        objs = set(context.selected_objects)
+        if context.active_object is not None:
+            objs.add(context.active_object)
+        return [o for o in objs if o.type == 'MESH']
+
+    def execute(self, context):
+        for obj in self._targets(context):
+            mod = obj.modifiers.get(SMOOTH_PREVIEW_NAME)
+            if self.level == '1':
+                if mod is not None:
+                    obj.modifiers.remove(mod)
+                obj.show_wire = False
+                continue
+            if mod is None:
+                mod = obj.modifiers.new(SMOOTH_PREVIEW_NAME, 'SUBSURF')
+                mod.levels = 2
+                mod.render_levels = 2
+            mod.show_viewport = True
+            mod.show_in_editmode = True
+            cage = self.level == '2'
+            # Level 2 keeps the original cage visible (edit mode cage, wire overlay in object mode).
+            mod.show_on_cage = not cage
+            obj.show_wire = cage
+            if hasattr(mod, "use_limit_surface"):
+                mod.use_limit_surface = True
+        return {'FINISHED'}
+
+
+_snap_saved = None
+
+
+def _grid_snap_element(tool_settings):
+    items = tool_settings.bl_rna.properties["snap_elements"].enum_items.keys()
+    return 'GRID' if 'GRID' in items else 'INCREMENT'
+
+
+class MAYA_OT_snap_hold(bpy.types.Operator):
+    """Maya-style snapping while the key is held (X: grid, V: vertex, C: curve/edge)"""
+    bl_idname = "maya.snap_hold"
+    bl_label = "Hold to Snap"
+
+    element: EnumProperty(
+        items=(
+            ('GRID', "Grid", ""),
+            ('VERTEX', "Vertex", ""),
+            ('EDGE', "Curve / Edge", ""),
+        ),
+        default='GRID',
+    )
+    release: bpy.props.BoolProperty(default=False, options={'SKIP_SAVE'})
+
+    def execute(self, context):
+        global _snap_saved
+        ts = context.scene.tool_settings
+        if self.release:
+            if _snap_saved is not None:
+                ts.use_snap, ts.snap_elements, ts.use_snap_grid_absolute = _snap_saved
+                _snap_saved = None
+            return {'FINISHED'}
+        # Only remember the user's own state, not one left over by a missed key release.
+        if _snap_saved is None:
+            _snap_saved = (ts.use_snap, set(ts.snap_elements), ts.use_snap_grid_absolute)
+        element = self.element
+        if element == 'GRID':
+            element = _grid_snap_element(ts)
+            ts.use_snap_grid_absolute = True
+        ts.snap_elements = {element}
+        ts.use_snap = True
+        return {'FINISHED'}
+
+
 classes = (
     MAYA_OT_apply_keymap,
     MAYA_OT_restore_keymap,
@@ -203,6 +298,8 @@ classes = (
     MAYA_OT_freeze_transforms,
     MAYA_OT_add_modifier,
     MAYA_OT_set_shading,
+    MAYA_OT_smooth_preview,
+    MAYA_OT_snap_hold,
 )
 
 

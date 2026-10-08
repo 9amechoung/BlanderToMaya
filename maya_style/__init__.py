@@ -5,13 +5,13 @@
 - Maya-style shelf bar on top of the 3D viewport
 - Shift+Right-click marking menus (object mode / edit mesh)
 - Channel Box panel in the sidebar (N)
-- F8~F11 component mode hotkeys
+- Maya hotkeys (Space quad view, 4~7 shading, F8~F11, 1~3 smooth, X/V/C snap...)
 """
 
 bl_info = {
     "name": "Maya Style UI",
     "author": "BlanderToMaya",
-    "version": (0, 1, 0),
+    "version": (0, 2, 0),
     "blender": (4, 2, 0),
     "location": "3D Viewport > Tool Header (Shelf), Shift+RMB (Marking Menu), N Panel > Channel Box",
     "description": "Maya-like keymap, shelf bar, marking menus and channel box",
