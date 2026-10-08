@@ -149,7 +149,8 @@ class MAYA_OT_center_pivot(bpy.types.Operator):
 
 
 class MAYA_OT_freeze_transforms(bpy.types.Operator):
-    """Apply location, rotation and scale (like Maya's Freeze Transformations)"""
+    """Freeze Transformations like Maya: Translate / Rotate / Scale become 0 / 0 / 1,
+    the object stays where it is and the pivot stays where it was"""
     bl_idname = "maya.freeze_transforms"
     bl_label = "Freeze Transformations"
     bl_options = {'REGISTER', 'UNDO'}
@@ -159,7 +160,16 @@ class MAYA_OT_freeze_transforms(bpy.types.Operator):
         return context.mode == 'OBJECT' and context.selected_objects
 
     def execute(self, context):
-        bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+        # Rotation and scale are baked into the geometry (the origin does not move).
+        # Blender's "Apply Location" would move the origin to the world center, so instead the
+        # position goes into the delta transform: Translate reads 0, the pivot stays put.
+        try:
+            bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+        except RuntimeError as ex:
+            self.report({'WARNING'}, str(ex).replace("Error: ", "").strip())
+        for obj in context.selected_objects:
+            obj.delta_location += obj.location
+            obj.location = (0.0, 0.0, 0.0)
         return {'FINISHED'}
 
 

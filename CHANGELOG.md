@@ -2,6 +2,12 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.8.1
+[다운로드](dist/maya_style_v0.8.1.zip)
+- **Freeze Transformations 수정**: 이제 마야처럼 Translate / Rotate / Scale만 0 / 0 / 1이 되고
+  **피벗은 원래 자리에 그대로** 있어요. (이전에는 블렌더의 Apply가 피벗을 월드 중심으로 옮겼어요.)
+  Reset Transformations: Translate를 하면 마지막으로 Freeze한 자리로 돌아가요 (마야와 같음).
+
 ## v0.8.0
 [다운로드](dist/maya_style_v0.8.0.zip)
 - 오른쪽 패널에 **로컬 / 월드(글로벌) 위치·회전·스케일**을 함께 표시, 둘 다 직접 입력해서 수정 가능

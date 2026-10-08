@@ -5,7 +5,7 @@
 - "원래 블렌더에서는 이랬는데 → 마야처럼 이렇게 바꿨습니다" 순서로 적었어요.
 - 블렌더 구조상 **불가능하거나 다르게 대체한 것**은 맨 아래에 따로 모았어요.
 
-> 기준 버전: Maya Style UI v0.8.0 / 블렌더 4.0 ~ 5.2
+> 기준 버전: Maya Style UI v0.8.1 / 블렌더 4.0 ~ 5.2
 
 ---
 
@@ -56,7 +56,7 @@
 | Edit | Undo/Redo/Repeat Last, Recent Commands, Cut/Copy/Paste, **Delete by Type**(History, Channels, Constraints, Motion Paths, Rigid Bodies, Attributes), **Delete All by Type**(Cameras, Lights, Curves, Joints...), Duplicate / Duplicate Special(인스턴스) / **Duplicate with Transform**, **Group / Ungroup**, Parent / Unparent |
 | Create | NURBS Primitives, Polygon Primitives(Pyramid, Prism 포함), Lights, Cameras, Curve Tools, Type, Locator, Empty Group, Joint, Measure Tools |
 | Select | All, All by Type, Hierarchy, Inverse, Similar, Grow/Shrink, Shell, Edge Loop/Ring, Border Edge, **Convert Selection**(To Vertices/Edges/Faces/UVs/Vertex Faces/Shell/Border/Loop/Ring/Contained) |
-| Modify | Freeze, Reset Transformations, **Match Transformations**, Center Pivot, Edit Pivot, Snap Align, **Add Attribute**, Replace Objects, Search and Replace Names(일괄 이름 변경), Convert, Combine, Delete History |
+| Modify | **Freeze**(값만 0/0/1, 피벗은 제자리 — 블렌더 Apply는 피벗을 월드 중심으로 옮겨서 따로 구현), Reset Transformations(마지막 Freeze 위치로), **Match Transformations**, Center Pivot, Edit Pivot, Snap Align, **Add Attribute**, Replace Objects, Search and Replace Names(일괄 이름 변경), Convert, Combine, Delete History |
 | Display | Grid, Heads Up Display, UI Elements, Hide/Show/Isolate, Wireframe Color, Object Display(Template, Bounding Box, X-Ray, Local Axes), Polygons 표시 옵션, 셰이딩 4~7, 스무스 1~3, 배경색 바꾸기 |
 | Windows | Outliner, Attribute Editor, Spreadsheet(Component Editor), Content Browser(에셋 브라우저), UV Editor, Node Editor, 애니메이션 에디터(Graph, Dope Sheet, NLA, Drivers, Shape), 렌더링 에디터(Hypershade, Render View, Render Settings), Script Editor, Hotkey Editor, Playblast |
 | Mesh | **Booleans**(Union/Difference/Intersection, 실제로 합쳐짐), Combine, Separate, Conform, Fill Hole, Reduce, Remesh, **Retopologize**(QuadriFlow), Smooth, Mirror, Triangulate, Quadrangulate, Clean Up, Transfer Attributes |
