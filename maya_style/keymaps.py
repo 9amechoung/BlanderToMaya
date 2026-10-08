@@ -19,7 +19,8 @@ MODE_KEYMAPS = ("Object Mode", "Mesh", "Curve", "Armature", "Pose")
 # Industry Compatible keymap is missing or maps differently.
 MAYA_HOTKEYS = (
     # Viewport
-    ("3D View", "screen.region_quadview", 'SPACE', {}, {}),
+    ("3D View", "maya.space_hotbox", 'SPACE', {}, {}),
+    ("Frames", "maya.space_hotbox", 'SPACE', {}, {}),  # Industry Compatible plays the animation here
     ("Screen", "screen.screen_full_area", 'SPACE', {"ctrl": True}, {}),
     ("Frames", "screen.animation_play", 'V', {"alt": True}, {}),
     # Editing
@@ -49,6 +50,50 @@ MAYA_HOTKEYS = (
     ("Armature", "armature.hide", 'H', {"alt": True}, {"unselected": True}),
     ("Pose", "pose.reveal", 'H', {"shift": True}, {"select": False}),
     ("Pose", "pose.hide", 'H', {"alt": True}, {"unselected": True}),
+    # Menu sets: F2 Modeling, F3 Rigging, F4 Animation, F5 FX, F6 Rendering
+    *((km, "maya.set_menu_set", key, {}, {"menu_set": menu_set})
+      for km in ("Screen", "3D View")
+      for key, menu_set in (('F2', 'MODELING'), ('F3', 'RIGGING'), ('F4', 'ANIMATION'), ('F5', 'FX'),
+                            ('F6', 'RENDERING'))),
+    # Convert selection: Ctrl+F9 vertices, Ctrl+F10 edges, Ctrl+F11 faces
+    ("3D View", "maya.convert_selection", 'F9', {"ctrl": True}, {"to": 'VERT'}),
+    ("3D View", "maya.convert_selection", 'F10', {"ctrl": True}, {"to": 'EDGE'}),
+    ("3D View", "maya.convert_selection", 'F11', {"ctrl": True}, {"to": 'FACE'}),
+    # Edit menu
+    ("Object Mode", "maya.group", 'G', {"ctrl": True}, {}),
+    ("Object Mode", "object.parent_set", 'P', {}, {"type": 'OBJECT', "keep_transform": True}),
+    ("Object Mode", "maya.duplicate_with_transform", 'D', {"shift": True}, {}),
+    ("Object Mode", "object.duplicate_move_linked", 'D', {"ctrl": True, "shift": True}, {}),
+    ("Object Mode", "maya.select_all", 'I', {"ctrl": True, "shift": True}, {"action": 'INVERT'}),
+    ("Mesh", "maya.select_all", 'I', {"ctrl": True, "shift": True}, {"action": 'INVERT'}),
+    ("Screen", "ed.undo", 'Z', {}, {}),
+    ("3D View", "ed.undo", 'Z', {}, {}),
+    ("Screen", "ed.redo", 'Z', {"shift": True}, {}),
+    ("Object Mode", "maya.toggle_attribute_editor", 'A', {"ctrl": True}, {}),
+    ("Mesh", "maya.toggle_attribute_editor", 'A', {"ctrl": True}, {}),
+    # Modeling
+    ("Mesh", "view3d.edit_mesh_extrude_move_normal", 'E', {"ctrl": True}, {}),
+    ("Mesh", "mesh.bevel", 'B', {"ctrl": True}, {}),
+    ("Mesh", "mesh.select_more", 'PERIOD', {"shift": True}, {}),
+    ("Mesh", "mesh.select_less", 'COMMA', {"shift": True}, {}),
+    # Soft selection (B, hold B + middle-drag for the radius) and pivot editing (D hold / Insert)
+    *((km, "maya.soft_select", 'B', {}, {}) for km in ("Object Mode", "Mesh", "Curve", "Lattice")),
+    ("Object Mode", "maya.pivot_edit", 'D', {}, {"state": 'ON'}),
+    ("Object Mode", "maya.pivot_edit", 'D', {"value": 'RELEASE'}, {"state": 'OFF'}),
+    ("3D View", "maya.pivot_edit", 'INSERT', {}, {"state": 'TOGGLE'}),
+    # View
+    ("3D View", "maya.cycle_background", 'B', {"alt": True}, {}),
+    ("3D View", "view3d.view_selected", 'F', {"shift": True}, {"use_all_regions": True}),
+    ("3D View", "view3d.view_all", 'A', {"shift": True}, {"use_all_regions": True}),
+    ("3D View", "view3d.zoom_border", 'LEFTMOUSE', {"ctrl": True, "alt": True}, {}),
+    # Time: , . previous / next key, Alt+, Alt+. previous / next frame
+    *((km, "screen.keyframe_jump", key, {}, {"next": nxt})
+      for km in ("Frames", "3D View") for key, nxt in (('COMMA', False), ('PERIOD', True))),
+    *((km, "screen.frame_offset", key, {"alt": True}, {"delta": delta})
+      for km in ("Frames", "3D View") for key, delta in (('COMMA', -1), ('PERIOD', 1))),
+    # Pick-walk the hierarchy with the arrow keys
+    *(("Object Mode", "maya.pickwalk", key, {}, {"direction": d})
+      for key, d in (('UP_ARROW', 'UP'), ('DOWN_ARROW', 'DOWN'), ('LEFT_ARROW', 'LEFT'), ('RIGHT_ARROW', 'RIGHT'))),
 )
 
 # Hold to snap: X grid, V vertex, C curve (edge)
@@ -85,6 +130,9 @@ def register_keymaps():
             _new_item(_keymap(kc, km_name), "maya.rmb_click_block", 'RIGHTMOUSE', 'CLICK')
 
     if use_marking_menu:
+        for km_name in ("Object Mode", "Mesh"):
+            _new_item(_keymap(kc, km_name), "wm.call_menu_pie", 'RIGHTMOUSE', ctrl=True,
+                      props={"name": "MAYA_MT_convert_marking_menu"})
         _new_item(_keymap(kc, "Object Mode"), "wm.call_menu_pie", 'RIGHTMOUSE', shift=True,
                   props={"name": "MAYA_MT_object_marking_menu"})
         _new_item(_keymap(kc, "Mesh"), "wm.call_menu_pie", 'RIGHTMOUSE', shift=True,

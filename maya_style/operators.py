@@ -4,6 +4,16 @@ import bpy
 from bpy.props import EnumProperty, StringProperty
 
 
+def set_props(operator_props, props):
+    """Set operator button properties, skipping ones this Blender version / context rejects
+    (dynamic enums like mesh.merge's 'LAST' only exist in some situations)."""
+    for key, value in props.items():
+        try:
+            setattr(operator_props, key, value)
+        except (TypeError, AttributeError, ValueError):
+            pass
+
+
 def find_keyconfig_preset(name):
     """Return the path of a bundled keyconfig preset (e.g. 'Industry_Compatible')."""
     for directory in bpy.utils.preset_paths("keyconfig"):

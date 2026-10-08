@@ -54,6 +54,12 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
                     "(workspaces are saved inside each .blend file)",
         default=True,
     )
+    use_command_line: BoolProperty(
+        name="Command Line",
+        description="Add a Python command line under the time slider when the Maya workspace is created "
+                    "(like Maya's MEL / Python command line)",
+        default=True,
+    )
     use_maya_topbar: BoolProperty(
         name="Maya Top Bar",
         description="Maya menu bar (Create, Select, Modify... with menu sets) and status line in the top bar",
@@ -155,6 +161,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         row.operator("maya.reset_theme", icon='LOOP_BACK')
         box.prop(self, "auto_setup_ui")
         box.prop(self, "workspace_in_every_file")
+        box.prop(self, "use_command_line")
 
         box = layout.box()
         box.label(text="Shelf", icon='TOOL_SETTINGS')

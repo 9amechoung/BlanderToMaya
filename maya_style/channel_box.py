@@ -52,6 +52,13 @@ def draw_channel_box(layout, obj, show_name=True):
     col.separator()
     _channel(col, obj, "hide_viewport", "Visibility")
 
+    # Custom attributes (Modify > Add Attribute) are listed under the transforms, like Maya.
+    custom = [k for k in obj.keys() if not k.startswith("_") and isinstance(obj[k], (int, float, str))]
+    if custom:
+        col.separator()
+        for key in custom:
+            _channel(col, obj, '["%s"]' % key, key)
+
     if obj.data is not None:
         layout.separator()
         layout.label(text="SHAPES")

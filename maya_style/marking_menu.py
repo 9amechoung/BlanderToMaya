@@ -6,11 +6,12 @@ The south slot holds a small grid of extra buttons, like Maya's marking menu.
 
 import bpy
 
+from .operators import set_props
+
 
 def _op(layout, idname, text, icon, **props):
     op = layout.operator(idname, text=text, icon=icon)
-    for key, value in props.items():
-        setattr(op, key, value)
+    set_props(op, props)
     return op
 
 
@@ -42,15 +43,103 @@ class MAYA_MT_object_marking_menu(bpy.types.Menu):
         _op(pie, "maya.component_mode", "Edit Components", 'EDITMODE_HLT', mode='TOGGLE')  # SE
 
 
+# Shift+Right-click in component mode changes with the component type, like Maya.
+# Each entry: (W, E, N, NW, NE, SW, SE, [grid items in the bottom box]); item = (idname, text, icon, props)
+_COMPONENT_MENUS = {
+    'VERT': (
+        ("mesh.remove_doubles", "Merge Vertices", 'AUTOMERGE_ON', {}),
+        ("mesh.bevel", "Chamfer Vertex", 'MOD_BEVEL', {"affect": 'VERTICES'}),
+        ("mesh.vert_connect_path", "Connect", 'LINKED', {}),
+        ("mesh.knife_tool", "Multi-Cut", 'SCULPTMODE_HLT', {}),
+        ("maya.target_weld", "Target Weld", 'PIVOT_ACTIVE', {}),
+        ("mesh.extrude_vertices_move", "Extrude Vertex", 'VERTEXSEL', {}),
+        ("mesh.dissolve_verts", "Delete Vertex", 'X', {}),
+        (
+            ("mesh.vertices_smooth", "Average Vertices", 'MOD_SMOOTH', {}),
+            ("transform.vert_slide", "Slide Vertex", 'ARROW_LEFTRIGHT', {}),
+            ("mesh.merge", "Merge to Center", 'NONE', {"type": 'CENTER'}),
+            ("mesh.loopcut_slide", "Insert Edge Loop", 'MOD_MULTIRES', {}),
+            ("mesh.rip_move", "Detach (Rip)", 'NONE', {}),
+            ("mesh.edge_face_add", "Fill (Make Face)", 'SNAP_FACE', {}),
+        ),
+    ),
+    'EDGE': (
+        ("mesh.bevel", "Bevel Edge", 'MOD_BEVEL', {"affect": 'EDGES'}),
+        ("mesh.bridge_edge_loops", "Bridge", 'MOD_LATTICE', {}),
+        ("mesh.loopcut_slide", "Insert Edge Loop", 'MOD_MULTIRES', {}),
+        ("mesh.knife_tool", "Multi-Cut", 'SCULPTMODE_HLT', {}),
+        ("view3d.edit_mesh_extrude_move_normal", "Extrude Edge", 'EDGESEL', {}),
+        ("mesh.dissolve_edges", "Delete Edge", 'X', {}),
+        ("transform.edge_slide", "Slide Edge", 'ARROW_LEFTRIGHT', {}),
+        (
+            ("mesh.merge", "Collapse", 'NONE', {"type": 'COLLAPSE'}),
+            ("mesh.fill_holes", "Fill Hole", 'SNAP_FACE', {}),
+            ("mesh.offset_edge_loops_slide", "Offset Edge Loop", 'NONE', {}),
+            ("transform.edge_crease", "Crease", 'SHARPCURVE', {}),
+            ("mesh.edge_rotate", "Spin Edge", 'NONE', {}),
+            ("mesh.mark_seam", "Cut UVs (Seam)", 'NONE', {"clear": False}),
+        ),
+    ),
+    'FACE': (
+        ("view3d.edit_mesh_extrude_move_normal", "Extrude Face", 'FACESEL', {}),
+        ("mesh.bridge_edge_loops", "Bridge", 'MOD_LATTICE', {}),
+        ("mesh.poke", "Poke Face", 'NONE', {}),
+        ("mesh.knife_tool", "Multi-Cut", 'SCULPTMODE_HLT', {}),
+        ("mesh.inset", "Extrude Inward (Inset)", 'FULLSCREEN_EXIT', {}),
+        ("mesh.duplicate_move", "Duplicate Face", 'DUPLICATE', {}),
+        ("mesh.separate", "Extract", 'NONE', {"type": 'SELECTED'}),
+        (
+            ("mesh.spin", "Wedge (Spin)", 'NONE', {}),
+            ("mesh.quads_convert_to_tris", "Triangulate", 'MOD_TRIANGULATE', {}),
+            ("mesh.tris_convert_to_quads", "Quadrangulate", 'NONE', {}),
+            ("mesh.subdivide", "Smooth / Add Divisions", 'MESH_GRID', {"smoothness": 1.0}),
+            ("mesh.flip_normals", "Reverse Normals", 'NORMALS_FACE', {}),
+            ("mesh.delete", "Delete Face", 'X', {"type": 'FACE'}),
+        ),
+    ),
+}
+
+
+def _item(layout, entry):
+    idname, text, icon, props = entry
+    _op(layout, idname, text, icon, **props)
+
+
 class MAYA_MT_mesh_marking_menu(bpy.types.Menu):
     bl_idname = "MAYA_MT_mesh_marking_menu"
     bl_label = "Modeling"
 
     def draw(self, context):
         pie = self.layout.menu_pie()
+        mode = tuple(context.tool_settings.mesh_select_mode)
+        kind = {(True, False, False): 'VERT', (False, True, False): 'EDGE', (False, False, True): 'FACE'}.get(mode)
+        if kind is None:  # several component types at once: the general menu
+            MAYA_MT_mesh_marking_menu._draw_general(pie)
+            return
+        w, e, n, nw, ne, sw, se, grid_items = _COMPONENT_MENUS[kind]
+        _item(pie, w)                                                            # W
+        _item(pie, e)                                                            # E
+        box = pie.box().column(align=True)                                       # S
+        box.ui_units_x = 16  # room for the full labels
+        box.label(text={'VERT': "Vertex", 'EDGE': "Edge", 'FACE': "Face"}[kind] + " Tools")
+        grid = box.grid_flow(columns=2, align=True)
+        for entry in grid_items:
+            _item(grid, entry)
+        row = box.row(align=True)
+        _op(row, "maya.component_mode", "", 'VERTEXSEL', mode='VERT')
+        _op(row, "maya.component_mode", "", 'EDGESEL', mode='EDGE')
+        _op(row, "maya.component_mode", "", 'FACESEL', mode='FACE')
+        _op(row, "maya.component_mode", "", 'OBJECT_DATAMODE', mode='TOGGLE')
+        _item(pie, n)                                                            # N
+        _item(pie, nw)                                                           # NW
+        _item(pie, ne)                                                           # NE
+        _item(pie, sw)                                                           # SW
+        _item(pie, se)                                                           # SE
+
+    @staticmethod
+    def _draw_general(pie):
         _op(pie, "view3d.edit_mesh_extrude_move_normal", "Extrude", 'FACESEL')  # W
         _op(pie, "mesh.bevel", "Bevel", 'MOD_BEVEL')                             # E
-
         box = pie.box().column(align=True)                                       # S
         box.label(text="Edit Mesh")
         grid = box.grid_flow(columns=2, align=True)
@@ -62,15 +151,9 @@ class MAYA_MT_mesh_marking_menu(bpy.types.Menu):
         _op(grid, "mesh.quads_convert_to_tris", "Triangulate", 'MOD_TRIANGULATE')
         _op(grid, "mesh.flip_normals", "Reverse Normals", 'NORMALS_FACE')
         _op(grid, "mesh.duplicate_move", "Duplicate Face", 'DUPLICATE')
-        row = box.row(align=True)
-        _op(row, "maya.component_mode", "", 'VERTEXSEL', mode='VERT')
-        _op(row, "maya.component_mode", "", 'EDGESEL', mode='EDGE')
-        _op(row, "maya.component_mode", "", 'FACESEL', mode='FACE')
-        _op(row, "maya.component_mode", "", 'OBJECT_DATAMODE', mode='TOGGLE')
-
         _op(pie, "mesh.loopcut_slide", "Insert Edge Loop", 'MOD_MULTIRES')  # N
         _op(pie, "mesh.knife_tool", "Multi-Cut", 'SCULPTMODE_HLT')           # NW
-        _op(pie, "mesh.merge", "Target Weld", 'PIVOT_ACTIVE', type='LAST')  # NE
+        _op(pie, "maya.target_weld", "Target Weld", 'PIVOT_ACTIVE')  # NE
         _op(pie, "mesh.inset", "Inset", 'FULLSCREEN_EXIT')                  # SW
         _op(pie, "transform.edge_slide", "Edge Slide", 'ARROW_LEFTRIGHT')   # SE
 

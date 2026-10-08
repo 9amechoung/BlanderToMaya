@@ -2,6 +2,20 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.7.0
+[다운로드](dist/maya_style_v0.7.0.zip) · 무엇이 바뀌었는지 전체 정리: [docs/CHANGES_KO.md](docs/CHANGES_KO.md)
+- 마야 메뉴 전체 보강: 54개 메뉴, 블렌더 기능 255개 연결
+  - File / Edit를 마야 메뉴로 교체 (Increment and Save, Export Selection, Delete by Type, Group / Ungroup, Duplicate with Transform...)
+  - Modeling 메뉴셋에 Surfaces(Loft, Planar, Revolve, Extrude), Generate, Cache 추가
+  - Animation 메뉴셋에 Audio, FX 메뉴셋(nParticles, Fluids, nCloth, nHair, Fields/Solvers, Effects), Rendering에 Toon, Stereo 추가
+  - Booleans, Match Transformations, Add Attribute(채널 박스에 표시), Lattice, Nonlinear, Pole Vector, Quick Rig, Convert Selection 등 새 명령
+  - 위쪽 메뉴에서 고른 명령이 3D 뷰포트에서 실행되도록 수정 (회색으로 막히던 항목 해결)
+- 핫박스: Space를 누르고 있으면 모든 메뉴와 뷰 전환이 뜸 (짧게 누르면 4분할 뷰)
+- Ctrl+우클릭 선택 변환 메뉴, Shift+우클릭이 버텍스 / 엣지 / 페이스마다 다른 메뉴로
+- 단축키 추가: F2~F6 메뉴셋, Ctrl+F9~F11 변환, Ctrl+G 그룹, Shift+D, B 소프트 선택(+휠클릭 반경), D/Insert 피벗 편집, Alt+B 배경, 방향키 픽워크, , . 키 이동, Ctrl+E / Ctrl+B, > <, Ctrl+Shift+I, Z / Shift+Z 등
+- 커맨드 라인(파이썬)을 타임라인 아래에 추가, 사이드바에 Modeling Toolkit 탭 추가
+- 버그 수정: Group을 하면 오브젝트 위치가 밀리던 문제, Target Weld 때문에 메뉴가 안 열리던 문제
+
 ## v0.6.0
 [다운로드](dist/maya_style_v0.6.0.zip)
 - Ctrl+Shift+우클릭 툴 설정 마킹 메뉴 추가 (마야와 같은 배치)

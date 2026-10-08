@@ -98,11 +98,7 @@ def _draw_left(self, context):
     screen = context.screen
 
     layout.menu("TOPBAR_MT_blender", text="", icon='BLENDER')
-    layout.menu("TOPBAR_MT_file")
-    layout.menu("TOPBAR_MT_edit")
     maya_menus.draw_menu_bar(layout, context)
-    layout.menu("TOPBAR_MT_window", text="Window")
-    layout.menu("TOPBAR_MT_help")
 
     _sep(layout)
     if screen.show_fullscreen:
@@ -263,12 +259,21 @@ def build_layout(window):
     main.type = 'VIEW_3D'
 
     # Timeline across the bottom
-    pair = _split(window, screen, main, 'HORIZONTAL', 0.08)
+    prefs = get_prefs()
+    command_line = prefs is None or prefs.use_command_line
+    pair = _split(window, screen, main, 'HORIZONTAL', 0.115 if command_line else 0.08)
     if pair is None:
         return False
     timeline, main = pair
     timeline.type = 'DOPESHEET_EDITOR'
     timeline.ui_type = 'TIMELINE'
+
+    # Command line under the time slider (Maya's MEL/Python line -> Python console)
+    if command_line:
+        pair = _split(window, screen, timeline, 'HORIZONTAL', 0.35)
+        if pair is not None:
+            console, timeline = pair
+            console.type = 'CONSOLE'
 
     # Outliner on the left
     pair = _split(window, screen, main, 'VERTICAL', 0.14)
@@ -301,6 +306,8 @@ def build_layout(window):
                 space.show_region_ui = False
             elif area.type == 'DOPESHEET_EDITOR' and hasattr(space, "show_region_channels"):
                 space.show_region_channels = False  # Maya's time slider has no channel list
+            elif area.type == 'CONSOLE':
+                space.show_region_header = False  # just the input line, like Maya's command line
         return None
 
     bpy.app.timers.register(_configure_viewport, first_interval=0.3)

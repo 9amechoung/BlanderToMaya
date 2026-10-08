@@ -7,6 +7,7 @@ Animation, Rendering) and the row of icon buttons next to it changes.
 import bpy
 from bpy.props import EnumProperty
 
+from .operators import set_props
 from .prefs import get_prefs
 
 SEP = None
@@ -52,7 +53,7 @@ SHELVES = {
             ("mesh.fill", 'SNAP_FACE', "Fill Hole", {}),
             SEP,
             ("mesh.merge", 'AUTOMERGE_ON', "Merge", {"type": 'CENTER'}),
-            ("mesh.merge", 'PIVOT_ACTIVE', "Target Weld", {"type": 'LAST'}),
+            ("maya.target_weld", 'PIVOT_ACTIVE', "Target Weld", {}),
             ("transform.edge_slide", 'ARROW_LEFTRIGHT', "Edge Slide", {}),
             ("mesh.subdivide", 'MESH_GRID', "Subdivide", {}),
             ("mesh.dissolve_mode", 'X', "Dissolve", {}),
@@ -171,8 +172,7 @@ def draw_shelf(layout, context):
             continue
         idname, icon, label, props = item
         op = buttons.operator(idname, text=label if show_labels else "", icon=icon)
-        for key, value in props.items():
-            setattr(op, key, value)
+        set_props(op, props)
 
     # Which axis a middle-drag will use (Maya highlights the picked handle in yellow).
     from .transform_tools import active_tool_kind, last_axis_settings, axis_label

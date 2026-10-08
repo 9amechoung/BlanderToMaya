@@ -4,9 +4,11 @@
 
 ![Maya 워크스페이스](docs/screenshot_layout.png)
 
+> **무엇이 바뀌었는지 전체 정리 (원래 블렌더 → 마야처럼 바꾼 것, 불가능한 것):** [docs/CHANGES_KO.md](docs/CHANGES_KO.md)
+
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.6.0.zip`](dist/maya_style_v0.6.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.7.0.zip`](dist/maya_style_v0.7.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -22,13 +24,15 @@
   - 원래 블렌더 화면은 위쪽 `Workspace:`에서 `Layout`을 고르면 돼요.
   - 화면이 망가지면 `Windows → Reset Maya Workspace`를 누르세요.
   - 워크스페이스는 .blend 파일마다 저장돼요. 그래서 새 파일이나 다른 사람 파일을 열면 `Maya` 워크스페이스를 자동으로 추가해요. 설정에서 끌 수 있어요.
-- **메뉴바**: `File Edit Create Select Modify Display Windows` + 메뉴셋 메뉴
-  - 메뉴셋 드롭다운에서 고르면 뒤쪽 메뉴가 바뀌어요.
-    - **Modeling**: Mesh, Edit Mesh, Mesh Tools, Mesh Display, Curves, Deform, UV
-    - **Rigging**: Skeleton, Skin, Deform, Constrain, Control
-    - **Animation**: Key, Playback, Visualize, Deform, Constrain
-    - **Rendering**: Lighting/Shading, Texturing, Render
-  - 블렌더 메뉴(Window, Help, 블렌더 로고)도 남아 있어요.
+- **메뉴바**: `File Edit Create Select Modify Display Windows` + 메뉴셋 메뉴 + `Help`
+  - 메뉴셋 드롭다운이나 **F2~F6**으로 바꾸면 뒤쪽 메뉴가 바뀌어요.
+    - **Modeling**: Mesh, Edit Mesh, Mesh Tools, Mesh Display, Curves, Surfaces, Deform, UV, Generate, Cache
+    - **Rigging**: Skeleton, Skin, Deform, Constrain, Control, Cache
+    - **Animation**: Key, Playback, Audio, Visualize, Deform, Constrain, Cache
+    - **FX**: nParticles, Fluids, nCloth, nHair, Fields/Solvers, Effects, Cache
+    - **Rendering**: Lighting/Shading, Texturing, Render, Toon, Stereo
+  - 원래 블렌더 메뉴는 File / Edit / Help 맨 아래에 "Blender ... Menu"로 남겨 뒀어요.
+  - **Space를 누르고 있으면 핫박스**가 떠요. 모든 메뉴와 뷰 전환(Top / Front / Side / Perspective)을 커서 근처에서 쓸 수 있어요.
 - **상태줄**: 메뉴바 옆
   - 새 파일, 열기, 저장, 실행 취소, 다시 실행
   - 오브젝트, 버텍스, 엣지, 페이스 모드

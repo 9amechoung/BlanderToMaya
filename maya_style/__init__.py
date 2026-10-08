@@ -16,18 +16,18 @@
 bl_info = {
     "name": "Maya Style UI",
     "author": "BlanderToMaya",
-    "version": (0, 6, 0),
+    "version": (0, 7, 0),
     "blender": (4, 0, 0),
     "location": "3D Viewport > Tool Header (Shelf), Shift+RMB (Marking Menu), N Panel > Channel Box",
     "description": "Maya-like keymap, shelf bar, marking menus and channel box",
     "category": "Interface",
 }
 
-from . import (prefs, operators, shelf, marking_menu, rmb_menu, tool_menu, transform_tools, channel_box,
-               maya_menus, maya_ui, keymaps)
+from . import (prefs, operators, maya_ops, shelf, marking_menu, hotbox, rmb_menu, tool_menu, transform_tools, channel_box,
+               modeling_toolkit, maya_menus, maya_ui, keymaps)
 
-_modules = (prefs, operators, shelf, marking_menu, rmb_menu, tool_menu, transform_tools, channel_box,
-            maya_menus, maya_ui, keymaps)
+_modules = (prefs, operators, maya_ops, shelf, marking_menu, hotbox, rmb_menu, tool_menu, transform_tools, channel_box,
+            modeling_toolkit, maya_menus, maya_ui, keymaps)
 
 
 def register():
