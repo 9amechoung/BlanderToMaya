@@ -201,6 +201,16 @@
 - 셸프 위치: Tool Header / Header / 숨김, 셸프 모양: 탭 / 드롭다운
 - 우클릭 메뉴, 마킹 메뉴, 툴 설정 메뉴, 휠클릭 축 고정, 마야 단축키 켜기/끄기
 
+## 설치할 때 "Permission denied" / "lock could not be created" 오류가 날 때
+`C:\Program Files\Blender Foundation\Blender 5.0\portable\...` 같은 경로가 오류에 나오면, 블렌더가 설정과 확장을
+쓰기 금지된 `Program Files` 안의 `portable` 폴더에 저장하려다 막힌 거예요. 애드온 문제가 아니라 블렌더 설치 위치 문제예요.
+
+1. 블렌더를 끄고 `C:\Program Files\Blender Foundation\Blender 5.0` 을 엽니다.
+2. `portable` 폴더 이름을 `portable_old` 로 바꿉니다 (관리자 권한 확인 → 계속).
+3. 블렌더를 다시 켜면 설정이 `%APPDATA%\Blender Foundation\Blender\5.0` 에 저장돼요. 그다음 zip을 다시 설치하세요.
+
+포터블 모드를 계속 쓰고 싶다면 블렌더 폴더를 `C:\Blender\` 처럼 쓰기 가능한 곳으로 옮겨서 실행해도 돼요.
+
 ## 셸프가 안 보일 때
 뷰포트 헤더에서 `View → Tool Settings`를 체크하거나, 애드온 설정에서 **Show Shelf in All Viewports**를 누르세요.
 
