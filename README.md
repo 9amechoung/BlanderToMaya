@@ -4,11 +4,13 @@
 
 ## 다운로드 및 설치
 
-1. [`dist/maya_style.zip`](dist/maya_style.zip) 파일을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.2.0.zip`](dist/maya_style_v0.2.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+   - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.2 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
    (구버전 방식: `Add-ons` 탭 → `⌄` → **Install from Disk...**)
 4. 설치되면 키맵이 자동으로 **Industry Compatible**(마야식)로 바뀌고, 뷰포트 상단에 셸프가 나타나요.
+5. 새 버전으로 업데이트할 때도 같은 방법으로 새 zip을 설치하면 이전 버전을 덮어써요.
 
 ## 기능
 
@@ -109,5 +111,6 @@
 
 ## 직접 빌드
 ```
-python build_zip.py   # dist/maya_style.zip 생성
+python build_zip.py   # dist/maya_style_v<버전>.zip 생성
 ```
+버전을 올릴 때는 `maya_style/blender_manifest.toml`의 `version`과 `maya_style/__init__.py`의 `bl_info["version"]`을 같이 바꾸고 빌드하세요. 예전 zip은 지우지 않아요.
