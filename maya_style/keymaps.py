@@ -1,7 +1,7 @@
 """Add-on hotkeys and first-run keymap switch.
 
 Add-on keymaps are checked before the active keyconfig, so these override
-the Industry Compatible keys they share (Right-click, Shift+Right-click, Space, 1~5, X/V/C,
+the Industry Compatible keys they share (Right-click, Shift+Right-click, Ctrl+Shift+Right-click, Space, 1~5, X/V/C,
 Shift+H, Alt+H) with the Maya behavior.
 """
 
@@ -90,11 +90,17 @@ def register_keymaps():
         _new_item(_keymap(kc, "Mesh"), "wm.call_menu_pie", 'RIGHTMOUSE', shift=True,
                   props={"name": "MAYA_MT_mesh_marking_menu"})
 
+    if prefs is None or prefs.use_tool_menu:
+        for km_name in ("Object Mode", "Mesh"):
+            _new_item(_keymap(kc, km_name), "wm.call_menu_pie", 'RIGHTMOUSE', ctrl=True, shift=True,
+                      props={"name": "MAYA_MT_tool_settings_menu"})
+
     if use_mmb_transform:
         from .transform_tools import TOOL_KEYMAPS
         for km_name, kind in TOOL_KEYMAPS:
             km = _keymap(kc, km_name, 'VIEW_3D')
             _new_item(km, "maya.mmb_transform", 'MIDDLEMOUSE', props={"kind": kind})
+            _new_item(km, "maya.mmb_transform", 'MIDDLEMOUSE', shift=True, props={"kind": kind})
             _new_item(km, "maya.gizmo_pick", 'LEFTMOUSE', 'CLICK', props={"kind": kind})
 
     if use_maya_hotkeys:

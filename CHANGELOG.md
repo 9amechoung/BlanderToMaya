@@ -2,6 +2,14 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.6.0
+[다운로드](dist/maya_style_v0.6.0.zip)
+- Ctrl+Shift+우클릭 툴 설정 마킹 메뉴 추가 (마야와 같은 배치)
+  - Object / World / Component (= 블렌더 방향 Local / Global / Normal), Axis ▸, Symmetry ▸, Snap ▸, Keep Spacing
+  - Select ▸, Selection Constraints ▸, Transform Constraints ▸, Shift Extrude, Shift Duplicate,
+    Preserve UVs, Preserve Children, Tweak Mode, Move Options
+- Shift + 휠클릭 드래그: 에딧 모드에서는 익스트루드, 오브젝트 모드에서는 복제한 뒤 이동 (마야의 Shift 드래그)
+
 ## v0.5.0
 [다운로드](dist/maya_style_v0.5.0.zip)
 - 마야 인터페이스: 설치하면 `Maya` 워크스페이스가 만들어지고 자동으로 전환됨

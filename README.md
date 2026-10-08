@@ -6,7 +6,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.5.0.zip`](dist/maya_style_v0.5.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.6.0.zip`](dist/maya_style_v0.6.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -151,6 +151,32 @@
 - 기즈모 가운데(자유 이동)를 클릭하면 `Free`로 돌아가요. 평면 핸들을 클릭하면 `XY plane`처럼 평면 이동이 돼요.
 - 축은 마지막으로 그 툴로 움직인 방향을 기억해요. 기즈모 대신 오브젝트를 직접 끌어서 움직였다면 `Free`로 바뀌어요.
 
+### 툴 설정 메뉴 (Ctrl+Shift+우클릭)
+마야처럼 Ctrl+Shift+우클릭을 하면 이동 툴 설정 메뉴가 열려요.
+
+![툴 설정 메뉴](docs/screenshot_tool_menu.png)
+
+| 메뉴 | 블렌더에서 하는 일 |
+|---|---|
+| Object / World / Component | 기즈모 방향 Local / Global / Normal |
+| Axis ▸ | 방향 전체 목록 (World, Object, Component, Parent, Gimbal, View, 3D 커서) |
+| Symmetry ▸ | 메시 대칭 X / Y / Z, Topology |
+| Snap ▸ | 그리드, 커브(엣지), 점, 면 스냅 |
+| Keep Spacing | 켜면 스냅할 때 선택한 것들이 간격을 유지한 채 함께 움직여요. 끄면 버텍스가 하나씩 따로 면에 붙어요. |
+| Select ▸ | 선택, 올가미, 페인트 선택, 트윅, 이동, 회전, 스케일 툴 |
+| Selection Constraints ▸ | 엣지 루프, 엣지 링, 경계, 셸 선택 |
+| Transform Constraints ▸ | 엣지 슬라이드, 버텍스 슬라이드, 면 위로 투영 |
+| Shift Extrude / Shift Duplicate | Shift + 휠클릭 드래그로 익스트루드 / 복제하며 이동 |
+| Preserve UVs | UV를 유지하면서 이동 (Correct Face Attributes) |
+| Preserve Children | 부모만 움직이고 자식은 제자리 (Affect Only Parents) |
+| Tweak Mode | 트윅 툴로 전환 |
+| Move Options | 속성 창의 툴 설정 탭 열기 |
+
+### Shift + 휠클릭 드래그
+- 에딧 모드: 선택한 면이나 엣지를 **익스트루드한 뒤** 고른 축으로 이동해요.
+- 오브젝트 모드: 오브젝트를 **복제한 뒤** 고른 축으로 이동해요.
+- 툴 설정 메뉴의 Shift Extrude / Shift Duplicate로 끌 수 있어요.
+
 ### 4. 마킹 메뉴 (Shift+우클릭)
 - **오브젝트 모드**: 기본 도형 생성, 아래쪽에 Smooth, Combine, Center Pivot, Freeze, Delete History 같은 버튼 묶음
 - **에딧 모드**: Extrude, Bevel, Insert Edge Loop, Multi-Cut, Target Weld, Inset, Edge Slide, 아래쪽에 Bridge, Fill, Merge 같은 버튼 묶음
@@ -166,7 +192,7 @@
 - 마야 상단 바 켜기/끄기, 채널 박스를 속성 창에 표시
 - Maya 워크스페이스 다시 만들기, 마야 색상 적용 및 블렌더 색상 복원
 - 셸프 위치: Tool Header / Header / 숨김, 셸프 모양: 탭 / 드롭다운
-- 우클릭 메뉴, 마킹 메뉴, 휠클릭 축 고정, 마야 단축키 켜기/끄기
+- 우클릭 메뉴, 마킹 메뉴, 툴 설정 메뉴, 휠클릭 축 고정, 마야 단축키 켜기/끄기
 
 ## 셸프가 안 보일 때
 뷰포트 헤더에서 `View → Tool Settings`를 체크하거나, 애드온 설정에서 **Show Shelf in All Viewports**를 누르세요.

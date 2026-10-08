@@ -102,6 +102,22 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         default=True,
         update=_update_keymaps,
     )
+    use_tool_menu: BoolProperty(
+        name="Tool Settings Menu (Ctrl+Shift+Right-click)",
+        description="Maya's tool settings marking menu: orientation, snapping, symmetry...",
+        default=True,
+        update=_update_keymaps,
+    )
+    shift_extrude: BoolProperty(
+        name="Shift Extrude",
+        description="Shift + middle-drag in component mode extrudes before moving (like Maya)",
+        default=True,
+    )
+    shift_duplicate: BoolProperty(
+        name="Shift Duplicate",
+        description="Shift + middle-drag in object mode duplicates before moving (like Maya)",
+        default=True,
+    )
     use_mmb_transform: BoolProperty(
         name="Middle-drag Along Picked Axis",
         description="With the Move / Rotate / Scale tool, click a gizmo axis, then middle-drag anywhere "
@@ -151,7 +167,11 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box.label(text="Hotkeys", icon='EVENT_SHIFT')
         box.prop(self, "use_rmb_menu")
         box.prop(self, "use_marking_menu")
+        box.prop(self, "use_tool_menu")
         box.prop(self, "use_mmb_transform")
+        row = box.row()
+        row.prop(self, "shift_extrude")
+        row.prop(self, "shift_duplicate")
         box.prop(self, "use_maya_hotkeys")
 
 

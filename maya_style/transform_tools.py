@@ -266,6 +266,14 @@ class MAYA_OT_mmb_transform(bpy.types.Operator):
     def invoke(self, context, event):
         op_name, _idname = KINDS[self.kind]
         settings = last_axis_settings(context, self.kind) or {}
+        if event.shift:
+            # Maya: Shift + drag extrudes components / duplicates objects first.
+            from .prefs import get_prefs
+            prefs = get_prefs(context)
+            if context.mode == 'EDIT_MESH' and (prefs is None or prefs.shift_extrude):
+                bpy.ops.mesh.extrude_context()
+            elif context.mode == 'OBJECT' and (prefs is None or prefs.shift_duplicate):
+                bpy.ops.object.duplicate()
         operator = getattr(bpy.ops.transform, op_name)
         try:
             operator('INVOKE_DEFAULT', release_confirm=True, **settings)
