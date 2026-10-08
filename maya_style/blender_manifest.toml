@@ -1,0 +1,13 @@
+schema_version = "1.0.0"
+
+id = "maya_style"
+version = "0.1.0"
+name = "Maya Style UI"
+tagline = "Maya-like keymap, shelf bar, marking menus and channel box"
+maintainer = "BlanderToMaya"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = ["SPDX:GPL-3.0-or-later"]
+tags = ["Interface", "3D View"]
