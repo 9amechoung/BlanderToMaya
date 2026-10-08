@@ -116,12 +116,12 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
     )
     shift_extrude: BoolProperty(
         name="Shift Extrude",
-        description="Shift + middle-drag in component mode extrudes before moving (like Maya)",
+        description="Shift + drag a manipulator handle in component mode extrudes before moving (like Maya)",
         default=True,
     )
     shift_duplicate: BoolProperty(
         name="Shift Duplicate",
-        description="Shift + middle-drag in object mode duplicates before moving (like Maya)",
+        description="Shift + drag a manipulator handle in object mode duplicates before moving (like Maya)",
         default=True,
     )
     use_mmb_transform: BoolProperty(

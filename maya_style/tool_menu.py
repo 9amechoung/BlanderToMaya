@@ -15,8 +15,8 @@
           Move Options
 
 Object / World / Component are the transform orientation (Local / Global /
-Normal). Shift Extrude / Shift Duplicate: Shift + middle-drag extrudes
-(edit mode) or duplicates (object mode) before moving.
+Normal). Shift Extrude / Shift Duplicate: Shift + drag a manipulator handle
+extrudes (edit mode) or duplicates (object mode) before moving.
 """
 
 import bpy

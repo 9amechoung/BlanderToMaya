@@ -2,6 +2,13 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.7.1
+[다운로드](dist/maya_style_v0.7.1.zip)
+- **Shift + 기즈모 화살표 드래그**로 익스트루드(컴포넌트 모드) / 복제(오브젝트 모드) — 마야와 같은 방식
+  (이전 버전의 Shift + 휠클릭 익스트루드는 마야와 달라서 바꿨어요)
+- **Shift + 휠클릭 드래그**: 처음 드래그한 방향의 축으로 고정해서 이동 (마야와 동일)
+- 선택 규칙을 마야처럼: Shift 토글, Ctrl 선택 해제, Ctrl+Shift 추가 (클릭과 박스 선택 모두)
+
 ## v0.7.0
 [다운로드](dist/maya_style_v0.7.0.zip) · 무엇이 바뀌었는지 전체 정리: [docs/CHANGES_KO.md](docs/CHANGES_KO.md)
 - 마야 메뉴 전체 보강: 54개 메뉴, 블렌더 기능 255개 연결
@@ -22,7 +29,7 @@
   - Object / World / Component (= 블렌더 방향 Local / Global / Normal), Axis ▸, Symmetry ▸, Snap ▸, Keep Spacing
   - Select ▸, Selection Constraints ▸, Transform Constraints ▸, Shift Extrude, Shift Duplicate,
     Preserve UVs, Preserve Children, Tweak Mode, Move Options
-- Shift + 휠클릭 드래그: 에딧 모드에서는 익스트루드, 오브젝트 모드에서는 복제한 뒤 이동 (마야의 Shift 드래그)
+- Shift + 휠클릭 드래그: 에딧 모드에서는 익스트루드, 오브젝트 모드에서는 복제한 뒤 이동 (v0.7.1에서 Shift + 기즈모 드래그로 변경)
 
 ## v0.5.0
 [다운로드](dist/maya_style_v0.5.0.zip)

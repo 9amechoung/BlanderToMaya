@@ -123,7 +123,7 @@ def _dist_to_segment(p, a, b):
     return (p - (a + ab * t)).length
 
 
-def gizmo_hit(context, event, kind):
+def gizmo_hit(context, event, kind, tolerance=HIT_PX):
     """Which handle is under the mouse: 'X'/'Y'/'Z', 'XY'/'YZ'/'XZ', 'VIEW', 'CENTER' or None."""
     region, rv3d = context.region, context.region_data
     space = context.space_data
@@ -150,10 +150,10 @@ def gizmo_hit(context, event, kind):
     from_center = (mouse - c2).length
 
     if kind == 'ROTATE':
-        if abs(from_center - size_px * 1.2) < HIT_PX:
+        if abs(from_center - size_px * 1.2) < tolerance:
             return 'VIEW', orient
         view_dir = rv3d.view_rotation @ Vector((0.0, 0.0, 1.0))  # towards the viewer
-        best, best_d = None, HIT_PX
+        best, best_d = None, tolerance
         for i, name in enumerate(names):
             axis = axes.col[i]
             u = axes.col[(i + 1) % 3]
@@ -170,7 +170,7 @@ def gizmo_hit(context, event, kind):
 
     if from_center < 12:
         return 'CENTER', orient
-    best, best_d = None, HIT_PX
+    best, best_d = None, tolerance
     for i, name in enumerate(names):
         tip = to2d(center + axes.col[i] * length * 1.25)
         if tip is None:
@@ -184,7 +184,7 @@ def gizmo_hit(context, event, kind):
     # Plane handles: small squares between two axes, about 1/3 out
     for i, j, name in ((0, 1, "XY"), (1, 2, "YZ"), (0, 2, "XZ")):
         p = to2d(center + (axes.col[i] + axes.col[j]) * length * 0.33)
-        if p is not None and (p - mouse).length < HIT_PX:
+        if p is not None and (p - mouse).length < tolerance:
             return name, orient
     return None, orient
 
@@ -266,14 +266,6 @@ class MAYA_OT_mmb_transform(bpy.types.Operator):
     def invoke(self, context, event):
         op_name, _idname = KINDS[self.kind]
         settings = last_axis_settings(context, self.kind) or {}
-        if event.shift:
-            # Maya: Shift + drag extrudes components / duplicates objects first.
-            from .prefs import get_prefs
-            prefs = get_prefs(context)
-            if context.mode == 'EDIT_MESH' and (prefs is None or prefs.shift_extrude):
-                bpy.ops.mesh.extrude_context()
-            elif context.mode == 'OBJECT' and (prefs is None or prefs.shift_duplicate):
-                bpy.ops.object.duplicate()
         operator = getattr(bpy.ops.transform, op_name)
         try:
             operator('INVOKE_DEFAULT', release_confirm=True, **settings)
@@ -283,12 +275,105 @@ class MAYA_OT_mmb_transform(bpy.types.Operator):
         return {'FINISHED'}
 
 
+KIND_ITEMS = (
+    ('TRANSLATE', "Move", ""),
+    ('ROTATE', "Rotate", ""),
+    ('RESIZE', "Scale", ""),
+    ('AUTO', "Active Tool", "Use the active Move / Rotate / Scale tool"),
+)
+
+
+def _shift_extrude_or_duplicate(context):
+    """Maya Shift Extrude / Shift Duplicate. Returns False if nothing was done."""
+    from .prefs import get_prefs
+    prefs = get_prefs(context)
+    if context.mode == 'EDIT_MESH':
+        if prefs is not None and not prefs.shift_extrude:
+            return False
+        bpy.ops.mesh.extrude_context()
+        return True
+    if context.mode == 'OBJECT':
+        if prefs is not None and not prefs.shift_duplicate:
+            return False
+        bpy.ops.object.duplicate()
+        return True
+    return False
+
+
+def _invoke_transform(kind, settings):
+    operator = getattr(bpy.ops.transform, KINDS[kind][0])
+    try:
+        operator('INVOKE_DEFAULT', release_confirm=True, **settings)
+    except (RuntimeError, TypeError):
+        operator('INVOKE_DEFAULT', release_confirm=True)
+
+
+class MAYA_OT_shift_gizmo_drag(bpy.types.Operator):
+    """Shift + drag a manipulator handle: extrude components / duplicate objects along it (Maya)"""
+    bl_idname = "maya.shift_gizmo_drag"
+    bl_label = "Shift Drag Manipulator"
+
+    kind: EnumProperty(items=KIND_ITEMS, default='TRANSLATE')
+
+    def invoke(self, context, event):
+        kind = active_tool_kind(context) if self.kind == 'AUTO' else self.kind
+        if kind is None:
+            return {'PASS_THROUGH'}
+        # The drag event fires a few pixels after the press: allow for that.
+        hit, orient = gizmo_hit(context, event, kind, tolerance=HIT_PX + 6)
+        if hit is None:
+            return {'PASS_THROUGH'}  # not on the manipulator: Shift box select etc.
+        settings = _settings_for_hit(kind, hit, orient)
+        _shift_extrude_or_duplicate(context)
+        _invoke_transform(kind, settings)
+        op = _last_transform_op(context, kind)
+        _picked[kind] = (settings, op.as_pointer() if op else 0)
+        return {'FINISHED'}
+
+
+class MAYA_OT_mmb_axis_drag(bpy.types.Operator):
+    """Shift + middle-drag: move along the axis you drag first (Maya)"""
+    bl_idname = "maya.mmb_axis_drag"
+    bl_label = "Shift Middle-drag (First Direction)"
+
+    kind: EnumProperty(items=KIND_ITEMS, default='TRANSLATE')
+
+    def invoke(self, context, event):
+        region, rv3d = context.region, context.region_data
+        center = _pivot(context)
+        if region is None or rv3d is None or center is None:
+            return {'PASS_THROUGH'}
+        start_x = getattr(event, "mouse_prev_press_x", event.mouse_prev_x)
+        start_y = getattr(event, "mouse_prev_press_y", event.mouse_prev_y)
+        drag = Vector((event.mouse_x - start_x, event.mouse_y - start_y))
+        orient, axes = _orientation(context, rv3d)
+        settings = {}
+        if drag.length > 0.5:
+            c2 = view3d_utils.location_3d_to_region_2d(region, rv3d, center)
+            best, best_score = None, -1.0
+            for i, name in enumerate("XYZ"):
+                p = view3d_utils.location_3d_to_region_2d(region, rv3d, center + axes.col[i])
+                if c2 is None or p is None or (p - c2).length < 1e-6:
+                    continue
+                score = abs((p - c2).normalized().dot(drag.normalized()))
+                if score > best_score:
+                    best, best_score = name, score
+            if best is not None:
+                settings = _settings_for_hit(self.kind, best, orient)
+        _invoke_transform(self.kind, settings)
+        return {'FINISHED'}
+
+
 def register():
     bpy.utils.register_class(MAYA_OT_gizmo_pick)
     bpy.utils.register_class(MAYA_OT_mmb_transform)
+    bpy.utils.register_class(MAYA_OT_shift_gizmo_drag)
+    bpy.utils.register_class(MAYA_OT_mmb_axis_drag)
 
 
 def unregister():
+    bpy.utils.unregister_class(MAYA_OT_mmb_axis_drag)
+    bpy.utils.unregister_class(MAYA_OT_shift_gizmo_drag)
     bpy.utils.unregister_class(MAYA_OT_mmb_transform)
     bpy.utils.unregister_class(MAYA_OT_gizmo_pick)
     _picked.clear()

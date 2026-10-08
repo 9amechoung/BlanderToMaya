@@ -91,6 +91,13 @@ MAYA_HOTKEYS = (
       for km in ("Frames", "3D View") for key, nxt in (('COMMA', False), ('PERIOD', True))),
     *((km, "screen.frame_offset", key, {"alt": True}, {"delta": delta})
       for km in ("Frames", "3D View") for key, delta in (('COMMA', -1), ('PERIOD', 1))),
+    # Maya click selection: Shift toggles (Industry Compatible already), Ctrl deselects, Ctrl+Shift adds
+    ("3D View", "view3d.select", 'LEFTMOUSE', {"value": 'CLICK', "ctrl": True}, {"deselect": True}),
+    ("3D View", "view3d.select", 'LEFTMOUSE', {"value": 'CLICK', "ctrl": True, "shift": True}, {"extend": True}),
+    # ... and the same for box selection
+    *((km, "view3d.select_box", 'LEFTMOUSE', {"value": 'CLICK_DRAG', **mods}, {"mode": mode})
+      for km in ("3D View Tool: Select Box", "3D View Tool: Select Box (fallback)")
+      for mods, mode in (({"shift": True}, 'XOR'), ({"ctrl": True}, 'SUB'), ({"ctrl": True, "shift": True}, 'ADD'))),
     # Pick-walk the hierarchy with the arrow keys
     *(("Object Mode", "maya.pickwalk", key, {}, {"direction": d})
       for key, d in (('UP_ARROW', 'UP'), ('DOWN_ARROW', 'DOWN'), ('LEFT_ARROW', 'LEFT'), ('RIGHT_ARROW', 'RIGHT'))),
@@ -108,6 +115,8 @@ def _new_item(km, idname, key, value='PRESS', props=None, **modifiers):
 
 
 def _keymap(kc, name, space_type=None):
+    if space_type is None and name.startswith("3D View Tool:"):
+        space_type = 'VIEW_3D'
     if space_type is None:
         default = bpy.context.window_manager.keyconfigs.default.keymaps.get(name)
         space_type = default.space_type if default else 'EMPTY'
@@ -148,7 +157,8 @@ def register_keymaps():
         for km_name, kind in TOOL_KEYMAPS:
             km = _keymap(kc, km_name, 'VIEW_3D')
             _new_item(km, "maya.mmb_transform", 'MIDDLEMOUSE', props={"kind": kind})
-            _new_item(km, "maya.mmb_transform", 'MIDDLEMOUSE', shift=True, props={"kind": kind})
+            _new_item(km, "maya.mmb_axis_drag", 'MIDDLEMOUSE', 'CLICK_DRAG', shift=True, props={"kind": kind})
+            _new_item(km, "maya.shift_gizmo_drag", 'LEFTMOUSE', 'CLICK_DRAG', shift=True, props={"kind": kind})
             _new_item(km, "maya.gizmo_pick", 'LEFTMOUSE', 'CLICK', props={"kind": kind})
 
     if use_maya_hotkeys:
@@ -159,6 +169,12 @@ def register_keymaps():
             for key, element in SNAP_KEYS:
                 _new_item(km, "maya.snap_hold", key, props={"element": element})
                 _new_item(km, "maya.snap_hold", key, 'RELEASE', props={"element": element, "release": True})
+
+    if use_mmb_transform:
+        # The tools' fallback (box select) keymap sees Shift+drag before the tool keymap.
+        # Added last on purpose: when several add-on items match, the last added one wins.
+        _new_item(_keymap(kc, "3D View Tool: Select Box (fallback)"), "maya.shift_gizmo_drag", 'LEFTMOUSE',
+                  'CLICK_DRAG', shift=True, props={"kind": 'AUTO'})
 
 
 def unregister_keymaps():

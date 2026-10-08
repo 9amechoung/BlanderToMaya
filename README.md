@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.7.0.zip`](dist/maya_style_v0.7.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.7.1.zip`](dist/maya_style_v0.7.1.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -170,16 +170,19 @@
 | Select ▸ | 선택, 올가미, 페인트 선택, 트윅, 이동, 회전, 스케일 툴 |
 | Selection Constraints ▸ | 엣지 루프, 엣지 링, 경계, 셸 선택 |
 | Transform Constraints ▸ | 엣지 슬라이드, 버텍스 슬라이드, 면 위로 투영 |
-| Shift Extrude / Shift Duplicate | Shift + 휠클릭 드래그로 익스트루드 / 복제하며 이동 |
+| Shift Extrude / Shift Duplicate | Shift를 누른 채 기즈모 화살표를 드래그하면 익스트루드 / 복제하며 이동 |
 | Preserve UVs | UV를 유지하면서 이동 (Correct Face Attributes) |
 | Preserve Children | 부모만 움직이고 자식은 제자리 (Affect Only Parents) |
 | Tweak Mode | 트윅 툴로 전환 |
 | Move Options | 속성 창의 툴 설정 탭 열기 |
 
-### Shift + 휠클릭 드래그
-- 에딧 모드: 선택한 면이나 엣지를 **익스트루드한 뒤** 고른 축으로 이동해요.
-- 오브젝트 모드: 오브젝트를 **복제한 뒤** 고른 축으로 이동해요.
-- 툴 설정 메뉴의 Shift Extrude / Shift Duplicate로 끌 수 있어요.
+### Shift + 드래그 (마야와 같은 동작)
+- **Shift + 기즈모 화살표(또는 링, 스케일 핸들) 좌클릭 드래그**
+  - 컴포넌트 모드: 선택한 면이나 엣지를 **익스트루드**하면서 그 축으로 이동해요.
+  - 오브젝트 모드: 오브젝트를 **복제**하면서 그 축으로 이동해요.
+  - 툴 설정 메뉴(Ctrl+Shift+우클릭)의 Shift Extrude / Shift Duplicate로 끌 수 있어요.
+- **Shift + 휠클릭 드래그**: 처음 드래그한 방향에 가까운 축으로 고정해서 움직여요.
+- **선택**: Shift+클릭은 토글, Ctrl+클릭은 선택 해제, Ctrl+Shift+클릭은 추가예요. 박스 선택도 똑같이 동작해요.
 
 ### 4. 마킹 메뉴 (Shift+우클릭)
 - **오브젝트 모드**: 기본 도형 생성, 아래쪽에 Smooth, Combine, Center Pivot, Freeze, Delete History 같은 버튼 묶음
