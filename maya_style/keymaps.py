@@ -83,7 +83,9 @@ MAYA_HOTKEYS = (
     ("3D View", "maya.pivot_edit", 'INSERT', {}, {"state": 'TOGGLE'}),
     # View
     ("3D View", "maya.cycle_background", 'B', {"alt": True}, {}),
-    ("3D View", "view3d.view_selected", 'F', {"shift": True}, {"use_all_regions": True}),
+    # F frames the selection, or everything when nothing is selected (Maya)
+    ("3D View", "maya.frame", 'F', {}, {}),
+    ("3D View", "maya.frame", 'F', {"shift": True}, {"all_regions": True}),
     ("3D View", "view3d.view_all", 'A', {"shift": True}, {"use_all_regions": True}),
     ("3D View", "view3d.zoom_border", 'LEFTMOUSE', {"ctrl": True, "alt": True}, {}),
     # Time: , . previous / next key, Alt+, Alt+. previous / next frame

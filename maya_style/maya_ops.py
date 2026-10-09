@@ -603,6 +603,40 @@ class MAYA_OT_convert_selection(bpy.types.Operator):
         return {'FINISHED'}
 
 
+def _has_selection(context):
+    if context.mode == 'OBJECT':
+        return bool(context.selected_objects)
+    if context.mode == 'EDIT_MESH':
+        import bmesh
+        for obj in context.objects_in_mode_unique_data or [context.edit_object]:
+            if obj is not None and obj.type == 'MESH':
+                bm = bmesh.from_edit_mesh(obj.data)
+                if any(v.select for v in bm.verts):
+                    return True
+        return False
+    return True  # other modes: let Blender decide
+
+
+class MAYA_OT_frame(bpy.types.Operator):
+    """Frame the selection (F); with nothing selected, frame everything like Maya"""
+    bl_idname = "maya.frame"
+    bl_label = "Frame Selection"
+
+    all_regions: bpy.props.BoolProperty(name="All Views", default=False)
+
+    @classmethod
+    def poll(cls, context):
+        return context.space_data is not None and context.space_data.type == 'VIEW_3D'
+
+    def execute(self, context):
+        if _has_selection(context):
+            result = bpy.ops.view3d.view_selected(use_all_regions=self.all_regions)
+            if 'FINISHED' in result:
+                return {'FINISHED'}
+        bpy.ops.view3d.view_all(use_all_regions=self.all_regions, center=False)
+        return {'FINISHED'}
+
+
 class MAYA_OT_pickwalk(bpy.types.Operator):
     """Walk the selection through the hierarchy (Maya: arrow keys)"""
     bl_idname = "maya.pickwalk"
@@ -770,6 +804,7 @@ class MAYA_OT_toggle_attribute_editor(bpy.types.Operator):
 
 
 classes = (
+    MAYA_OT_frame,
     MAYA_OT_group,
     MAYA_OT_ungroup,
     MAYA_OT_duplicate_with_transform,
