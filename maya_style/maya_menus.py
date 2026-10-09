@@ -367,9 +367,9 @@ class MAYA_MT_file(bpy.types.Menu):
     def draw(self, context):
         lay = self.layout
         op(lay, "wm.read_homefile", "New Scene  (Ctrl+N)", 'FILE_NEW')
-        op(lay, "wm.open_mainfile", "Open Scene...  (Ctrl+O)", 'FILE_FOLDER')
-        op(lay, "wm.save_mainfile", "Save Scene  (Ctrl+S)", 'FILE_TICK')
-        op(lay, "wm.save_as_mainfile", "Save Scene As...  (Ctrl+Shift+S)")
+        op(lay, "maya.open_scene", "Open Scene...  (Ctrl+O)", 'FILE_FOLDER')
+        op(lay, "maya.save_scene", "Save Scene  (Ctrl+S)", 'FILE_TICK')
+        op(lay, "maya.save_scene", "Save Scene As...  (Ctrl+Shift+S)", save_as=True)
         op(lay, "wm.save_mainfile", "Increment and Save", incremental=True)
         op(lay, "file.pack_all", "Archive Scene (Pack Resources)", 'PACKAGE')
         op(lay, "outliner.orphans_purge", "Optimize Scene Size (Purge Unused)", do_recursive=True)
@@ -384,7 +384,13 @@ class MAYA_MT_file(bpy.types.Menu):
         op(lay, "file.find_missing_files", "File Path Editor: Find Missing Files...")
         op(lay, "file.make_paths_relative", "File Path Editor: Make Paths Relative")
         lay.separator()
+        from .project import current_project
+        lay.label(text="Project: " + (current_project() or "(none)"), icon='FILE_FOLDER')
+        op(lay, "maya.project_window", "Project Window...", 'NEWFOLDER')
+        op(lay, "maya.set_project", "Set Project...", 'FILEBROWSER')
+        lay.separator()
         lay.menu("TOPBAR_MT_file_open_recent", text="Recent Files", icon='RECOVER_LAST')
+        lay.menu("MAYA_MT_recent_projects", text="Recent Projects", icon='RECOVER_LAST')
         lay.separator()
         lay.menu("TOPBAR_MT_file", text="Blender File Menu", icon='BLENDER')
         op(lay, "wm.quit_blender", "Exit", 'QUIT')

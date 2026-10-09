@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "maya_style"
-version = "0.8.5"
+version = "0.9.0"
 name = "Maya Style UI"
 tagline = "Maya-like keymap, shelf bar, marking menus and channel box"
 maintainer = "BlanderToMaya"
@@ -11,3 +11,6 @@ blender_version_min = "4.2.0"
 
 license = ["SPDX:GPL-3.0-or-later"]
 tags = ["Interface", "3D View"]
+
+[permissions]
+files = "Create Maya project folders and workspace.mel"

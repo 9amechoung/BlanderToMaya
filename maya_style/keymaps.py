@@ -83,6 +83,10 @@ MAYA_HOTKEYS = (
     ("3D View", "maya.pivot_edit", 'INSERT', {}, {"state": 'TOGGLE'}),
     # View
     ("3D View", "maya.cycle_background", 'B', {"alt": True}, {}),
+    # Open / Save start in the project's scenes folder
+    ("Window", "maya.open_scene", 'O', {"ctrl": True}, {}),
+    ("Window", "maya.save_scene", 'S', {"ctrl": True}, {}),
+    ("Window", "maya.save_scene", 'S', {"ctrl": True, "shift": True}, {"save_as": True}),
     # F frames the selection, or everything when nothing is selected (Maya)
     ("3D View", "maya.frame", 'F', {}, {}),
     ("3D View", "maya.frame", 'F', {"shift": True}, {"all_regions": True}),

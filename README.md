@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.8.5.zip`](dist/maya_style_v0.8.5.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.9.0.zip`](dist/maya_style_v0.9.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -196,6 +196,18 @@
 - **Layer Editor**: 컬렉션 숨기기와 렌더 토글, 선택한 오브젝트로 새 레이어 만들기
 - **World Space (Global)**: 채널 박스 아래에 월드 기준 Translate / Rotate / Scale이 있어요. 채널 박스 값은 부모 기준(Local)이고, 여기 값은 장면 기준이에요. 둘 다 직접 입력해서 바꿀 수 있어요.
 - 컴포넌트 모드에서는 선택한 버텍스들의 중심 위치를 Local / World로 보여주고, 숫자를 입력해서 옮길 수 있어요.
+
+### 6. 프로젝트 (File → Project Window / Set Project)
+마야처럼 프로젝트 폴더를 만들고, 그 안의 경로가 자동으로 잡혀요.
+- **Project Window...**: 프로젝트 이름과 위치를 넣고 OK(Accept)를 누르면 마야와 같은 폴더(scenes, assets, images, sourceimages, renderData, clips, sound, scripts, data, movies, Time Editor, autosave, sceneAssembly)와 `workspace.mel`을 만들고 그 프로젝트로 설정해요. 폴더 이름은 창에서 바꿀 수 있고, **New** 버튼은 기본값으로 다시 채워요.
+- **Set Project...**: 이미 있는 프로젝트 폴더를 골라요. **마야에서 만든 프로젝트도 그대로 쓸 수 있어요** (`workspace.mel`을 읽어요). `workspace.mel`이 없으면 기본 내용으로 만들어요.
+- **Recent Projects**: 최근 프로젝트 목록. File 메뉴 위쪽에 지금 프로젝트가 표시돼요.
+- 프로젝트가 설정되면 자동으로:
+  - Open Scene(Ctrl+O), 새 장면 Save(Ctrl+S), Save As(Ctrl+Shift+S) → `scenes` 폴더에서 시작
+  - 텍스처 이미지 열기 → `sourceimages`, 사운드 → `sound`
+  - 렌더 출력 → `images` (렌더 경로를 직접 바꾼 장면은 그대로 둬요)
+  - 자동 저장 → `autosave`
+- 프로젝트 안에 있는 .blend 파일을 열면 그 프로젝트로 자동 설정돼요.
 
 ## 설정
 `Edit → Preferences → Add-ons → Maya Style UI`를 펼치면 다음을 바꿀 수 있어요.

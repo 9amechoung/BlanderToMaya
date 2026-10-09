@@ -2,6 +2,14 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.9.0
+[다운로드](dist/maya_style_v0.9.0.zip)
+- **마야 프로젝트 기능** (File 메뉴)
+  - **Project Window...**: 이름과 위치를 넣고 OK를 누르면 마야와 똑같은 프로젝트 폴더(scenes, sourceimages, images, ...)와 `workspace.mel`을 만들고 바로 그 프로젝트로 설정
+  - **Set Project...**: 기존 프로젝트 폴더 선택 (마야에서 만든 프로젝트도 OK), **Recent Projects** 목록
+  - 프로젝트가 설정되면 열기/저장은 `scenes`, 텍스처는 `sourceimages`, 사운드는 `sound`, 렌더는 `images`, 자동 저장은 `autosave`로 경로가 자동으로 잡혀요
+  - 프로젝트 안의 .blend를 열면 그 프로젝트로 자동 설정
+
 ## v0.8.5
 [다운로드](dist/maya_style_v0.8.5.zip)
 - **F키**: 아무것도 선택하지 않은 상태에서 누르면 장면 전체가 화면에 들어오게 맞춰요 (마야와 동일).
