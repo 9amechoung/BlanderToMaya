@@ -94,16 +94,12 @@ MAYA_HOTKEYS = (
     # Maya click selection: Shift toggles (Industry Compatible already), Ctrl deselects, Ctrl+Shift adds
     ("3D View", "view3d.select", 'LEFTMOUSE', {"value": 'CLICK', "ctrl": True}, {"deselect": True}),
     ("3D View", "view3d.select", 'LEFTMOUSE', {"value": 'CLICK', "ctrl": True, "shift": True}, {"extend": True}),
-    # ... and the same for box selection
-    *((km, "view3d.select_box", 'LEFTMOUSE', {"value": 'CLICK_DRAG', **mods}, {"mode": mode})
-      for km in ("3D View Tool: Select Box", "3D View Tool: Select Box (fallback)")
-      for mods, mode in (({"shift": True}, 'XOR'), ({"ctrl": True}, 'SUB'), ({"ctrl": True, "shift": True}, 'ADD'))),
-    # Box / lasso selection also picks what is behind, without X-ray display (switched on while dragging)
-    *((km, "maya.select_through", 'LEFTMOUSE', {"value": value, **mods}, {"release": value == 'RELEASE'})
-      for km in ("3D View Tool: Select Box", "3D View Tool: Select Box (fallback)",
-                 "3D View Tool: Select Lasso", "3D View Tool: Select Lasso (fallback)")
-      for value in ('PRESS', 'RELEASE')
-      for mods in ({}, {"shift": True}, {"ctrl": True}, {"ctrl": True, "shift": True})),
+    # Box / lasso selection also picks what is behind, without X-ray (same modifiers as clicking)
+    *((km, "maya.select_through", 'LEFTMOUSE', {"value": 'CLICK_DRAG', **mods}, {"gesture": gesture, "mode": mode})
+      for km, gesture in (("3D View Tool: Select Box", 'BOX'), ("3D View Tool: Select Box (fallback)", 'BOX'),
+                          ("3D View Tool: Select Lasso", 'LASSO'), ("3D View Tool: Select Lasso (fallback)", 'LASSO'))
+      for mods, mode in (({}, 'SET'), ({"shift": True}, 'XOR'), ({"ctrl": True}, 'SUB'),
+                         ({"ctrl": True, "shift": True}, 'ADD'))),
     # Q / W / E / R: pressing the key of the active tool again resets the middle-drag axis (Maya)
     *((km, "maya.tool_key", key, {}, {"tool": tool})
       for km in ("Object Mode", "Mesh", "Curve", "Armature", "Pose", "Lattice", "Metaball", "Curves")

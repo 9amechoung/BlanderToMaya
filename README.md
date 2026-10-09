@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.8.2.zip`](dist/maya_style_v0.8.2.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.8.3.zip`](dist/maya_style_v0.8.3.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -184,7 +184,7 @@
   - 툴 설정 메뉴(Ctrl+Shift+우클릭)의 Shift Extrude / Shift Duplicate로 끌 수 있어요.
 - **Shift + 휠클릭 드래그**: 처음 드래그한 방향에 가까운 축으로 고정해서 움직여요.
 - **선택**: Shift+클릭은 토글, Ctrl+클릭은 선택 해제, Ctrl+Shift+클릭은 추가예요. 박스 선택도 똑같이 동작해요.
-- **뒤에 있는 것도 선택**: 박스나 올가미로 드래그하면 X-ray를 켜지 않아도 가려진 오브젝트와 뒤쪽 버텍스·엣지·페이스까지 선택돼요. 드래그하는 동안만 잠깐 투명하게 보였다가 원래대로 돌아와요. 클릭은 앞에 보이는 것만 골라요.
+- **뒤에 있는 것도 선택**: 박스나 올가미로 드래그하면 X-ray를 켜지 않아도 가려진 오브젝트와 뒤쪽 버텍스·엣지·페이스까지 선택돼요. 화면은 X-ray 없이 그대로예요 (드래그하는 동안에도 투명해지지 않아요). 클릭은 앞에 보이는 것만 골라요.
 
 ### 4. 마킹 메뉴 (Shift+우클릭)
 - **오브젝트 모드**: 기본 도형 생성, 아래쪽에 Smooth, Combine, Center Pivot, Freeze, Delete History 같은 버튼 묶음
