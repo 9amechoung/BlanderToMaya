@@ -137,6 +137,12 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         default=True,
         update=_redraw,
     )
+    use_select_through: BoolProperty(
+        name="Select Through (no X-ray needed)",
+        description="Box / lasso selection also selects hidden objects and the back vertices / edges / faces, "
+                    "like Maya, while the viewport stays solid",
+        default=True,
+    )
     use_maya_hotkeys: BoolProperty(
         name="Maya Hotkeys",
         description="Space quad view, 4~7 shading, F8~F11 components, 1~3 smooth preview, "
@@ -183,6 +189,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box.prop(self, "use_tool_menu")
         box.prop(self, "use_mmb_transform")
         box.prop(self, "show_axis_highlight")
+        box.prop(self, "use_select_through")
         row = box.row()
         row.prop(self, "shift_extrude")
         row.prop(self, "shift_duplicate")

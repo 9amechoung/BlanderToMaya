@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "maya_style"
-version = "0.8.1"
+version = "0.8.2"
 name = "Maya Style UI"
 tagline = "Maya-like keymap, shelf bar, marking menus and channel box"
 maintainer = "BlanderToMaya"

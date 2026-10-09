@@ -98,6 +98,12 @@ MAYA_HOTKEYS = (
     *((km, "view3d.select_box", 'LEFTMOUSE', {"value": 'CLICK_DRAG', **mods}, {"mode": mode})
       for km in ("3D View Tool: Select Box", "3D View Tool: Select Box (fallback)")
       for mods, mode in (({"shift": True}, 'XOR'), ({"ctrl": True}, 'SUB'), ({"ctrl": True, "shift": True}, 'ADD'))),
+    # Box / lasso selection also picks what is behind, without X-ray display (switched on while dragging)
+    *((km, "maya.select_through", 'LEFTMOUSE', {"value": value, **mods}, {"release": value == 'RELEASE'})
+      for km in ("3D View Tool: Select Box", "3D View Tool: Select Box (fallback)",
+                 "3D View Tool: Select Lasso", "3D View Tool: Select Lasso (fallback)")
+      for value in ('PRESS', 'RELEASE')
+      for mods in ({}, {"shift": True}, {"ctrl": True}, {"ctrl": True, "shift": True})),
     # Q / W / E / R: pressing the key of the active tool again resets the middle-drag axis (Maya)
     *((km, "maya.tool_key", key, {}, {"tool": tool})
       for km in ("Object Mode", "Mesh", "Curve", "Armature", "Pose", "Lattice", "Metaball", "Curves")

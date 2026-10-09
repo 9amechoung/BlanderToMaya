@@ -2,6 +2,12 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.8.2
+[다운로드](dist/maya_style_v0.8.2.zip)
+- **뒤에 있는 것도 드래그로 선택**: X-ray를 켜지 않아도 박스 / 올가미 선택이 가려진 오브젝트와 뒤쪽 버텍스·엣지·페이스까지 잡아요 (마야와 동일).
+  드래그하는 동안만 X-ray가 잠깐 켜졌다가 끝나면 원래대로 돌아와요. 클릭 선택은 지금처럼 앞에 보이는 것만 골라요.
+  설정의 "Select Through"로 끌 수 있어요.
+
 ## v0.8.1
 [다운로드](dist/maya_style_v0.8.1.zip)
 - **Freeze Transformations 수정**: 이제 마야처럼 Translate / Rotate / Scale만 0 / 0 / 1이 되고
