@@ -150,13 +150,44 @@ SHELF_ITEMS = tuple(
 )
 
 
-def draw_shelf(layout, context):
+def _text_width(text):
+    try:
+        import blf
+        ui = bpy.context.preferences.view.ui_scale
+        blf.size(0, 11 * ui)
+        return blf.dimensions(0, text)[0]
+    except Exception:
+        return len(text) * 7 * bpy.context.preferences.view.ui_scale
+
+
+def _fits(context, wm, show_labels, reserve_units):
+    """Estimate whether the shelf with tabs still leaves room for the rest of the header."""
+    region = context.region
+    if region is None:
+        return True
+    unit = 20 * context.preferences.view.ui_scale
+    tabs = sum(_text_width(name) + unit * 1.6 for name, _icon, _b in SHELVES.values())
+    buttons = 0
+    for item in SHELVES[wm.maya_shelf][2]:
+        if item is SEP:
+            buttons += unit * 0.3
+        else:
+            buttons += unit + (_text_width(item[2]) + unit * 0.5 if show_labels else 0)
+    return tabs + buttons + reserve_units * unit <= region.width
+
+
+def draw_shelf(layout, context, reserve_units=28):
     prefs = get_prefs(context)
     show_labels = prefs.shelf_show_labels if prefs else False
     wm = context.window_manager
 
     row = layout.row(align=False)
-    if prefs is None or prefs.shelf_style == 'TABS':
+    # Tabs when there is room; a dropdown when the viewport is too narrow, so the tool settings
+    # (orientation, symmetry...) on the right are not pushed out of the header.
+    use_tabs = prefs is None or prefs.shelf_style == 'TABS'
+    if use_tabs and not _fits(context, wm, show_labels, reserve_units):
+        use_tabs = False
+    if use_tabs:
         tabs = row.row(align=True)
         tabs.prop(wm, "maya_shelf", expand=True)
     else:
@@ -179,7 +210,7 @@ def draw_shelf(layout, context):
     kind = active_tool_kind(context)
     if kind is not None:
         row.separator()
-        row.label(text="MMB: " + axis_label(last_axis_settings(context, kind), kind), icon='MOUSE_MMB_DRAG')
+        row.label(text=axis_label(last_axis_settings(context, kind), kind), icon='MOUSE_MMB_DRAG')
 
 
 def _draw_tool_header(self, context):
@@ -192,7 +223,12 @@ def _draw_tool_header(self, context):
 def _draw_header(self, context):
     prefs = get_prefs(context)
     if prefs and prefs.shelf_location == 'HEADER':
-        draw_shelf(self.layout, context)
+        draw_shelf(self.layout, context, reserve_units=60)
+    # Maya's "Wireframe on Shaded" button, next to the shading buttons
+    space = context.space_data
+    if space is not None and space.type == 'VIEW_3D':
+        self.layout.operator("maya.wireframe_on_shaded", text="", icon='MOD_WIREFRAME',
+                             depress=space.overlay.show_wireframes and space.overlay.show_overlays)
 
 
 def refresh_location():

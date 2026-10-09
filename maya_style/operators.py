@@ -225,6 +225,28 @@ class MAYA_OT_set_shading(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class MAYA_OT_wireframe_on_shaded(bpy.types.Operator):
+    """Wireframe on Shaded: draw the edges on top of the solid surface (it stays solid, not X-ray)"""
+    bl_idname = "maya.wireframe_on_shaded"
+    bl_label = "Wireframe on Shaded"
+
+    @classmethod
+    def poll(cls, context):
+        return context.space_data is not None and context.space_data.type == 'VIEW_3D'
+
+    def execute(self, context):
+        space = context.space_data
+        overlay = space.overlay
+        on = not (overlay.show_wireframes and overlay.show_overlays)
+        overlay.show_wireframes = on
+        if on:
+            overlay.show_overlays = True
+            overlay.wireframe_threshold = 1.0  # every edge, like Maya
+            if space.shading.type == 'WIREFRAME':
+                space.shading.type = 'SOLID'
+        return {'FINISHED'}
+
+
 SMOOTH_PREVIEW_NAME = "Smooth Preview"
 
 
@@ -330,6 +352,7 @@ classes = (
     MAYA_OT_freeze_transforms,
     MAYA_OT_add_modifier,
     MAYA_OT_set_shading,
+    MAYA_OT_wireframe_on_shaded,
     MAYA_OT_smooth_preview,
     MAYA_OT_snap_hold,
 )

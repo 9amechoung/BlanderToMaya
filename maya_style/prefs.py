@@ -75,7 +75,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
     shelf_style: EnumProperty(
         name="Shelf Style",
         items=(
-            ('TABS', "Tabs", "Maya-style shelf tabs"),
+            ('TABS', "Tabs", "Maya-style shelf tabs (switches to a dropdown by itself when the viewport is too narrow)"),
             ('DROPDOWN', "Dropdown", "Compact dropdown to pick the shelf"),
         ),
         default='TABS',
