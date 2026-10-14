@@ -161,6 +161,9 @@ MAYA_COMPONENT_SELECTED = (1.0, 0.85, 0.0)  # selected vertices / keys (yellow)
 MAYA_EDGE_SELECTED = (1.0, 0.55, 0.0)   # selected edges (orange)
 MAYA_FACE_SELECTED = (1.0, 0.55, 0.0, 0.3)
 MAYA_KEY = (0.85, 0.1, 0.1)             # key ticks on the time slider (red)
+MAYA_UV_SELECTED = (0.2, 1.0, 0.2)      # selected UVs (green)
+MAYA_UV_FACE = (0.2, 0.4, 1.0, 0.18)    # shaded UV faces (blue)
+MAYA_UV_EDGE = (0.6, 0.75, 1.0)         # UV edges (light blue)
 
 
 def _set(owner, attr, value):
@@ -196,6 +199,17 @@ def apply_theme():
     _set(v3d, "face_mode_select", MAYA_FACE_SELECTED)
     if hasattr(v3d, "vertex_size"):
         v3d.vertex_size = 5
+    # UV Editor: purple UVs, green selection, blue shaded faces (Maya)
+    uv = theme.image_editor
+    _set(uv, "vertex", MAYA_VERTEX)
+    _set(uv, "vertex_select", MAYA_UV_SELECTED)
+    _set(uv, "edge_select", MAYA_EDGE_SELECTED)
+    _set(uv, "face", MAYA_UV_FACE)
+    _set(uv, "face_select", MAYA_FACE_SELECTED)
+    _set(uv, "wire_edit", MAYA_UV_EDGE)
+    if hasattr(uv, "vertex_size"):
+        uv.vertex_size = 4
+    _set(getattr(uv, "space", None), "back", (0.2, 0.2, 0.2))
     # Red key ticks on the time slider (theme.common.anim in Blender 5, the Dope Sheet before)
     anim = getattr(getattr(theme, "common", None), "anim", None) or theme.dopesheet_editor
     _set(anim, "keyframe", MAYA_KEY)

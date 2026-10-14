@@ -114,20 +114,6 @@ class MAYA_OT_select_only(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class MAYA_OT_open_uv_editor(bpy.types.Operator):
-    """Switch to the UV Editing workspace"""
-    bl_idname = "maya.open_uv_editor"
-    bl_label = "UV Editor"
-
-    def execute(self, context):
-        ws = bpy.data.workspaces.get("UV Editing")
-        if ws is None:
-            self.report({'WARNING'}, "No 'UV Editing' workspace in this file")
-            return {'CANCELLED'}
-        context.window.workspace = ws
-        return {'FINISHED'}
-
-
 class MAYA_OT_set_active_uv(bpy.types.Operator):
     """Make this UV set the active one"""
     bl_idname = "maya.set_active_uv"
@@ -423,7 +409,6 @@ classes = (
     MAYA_OT_rmb_click_block,
     MAYA_OT_show_attributes,
     MAYA_OT_select_only,
-    MAYA_OT_open_uv_editor,
     MAYA_OT_set_active_uv,
     MAYA_OT_assign_new_material,
     MAYA_OT_assign_existing_material,

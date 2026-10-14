@@ -188,6 +188,11 @@ def register_keymaps():
         for km_name, idname, key, value, modifiers in ANIM_KEYS:
             _new_item(_keymap(kc, km_name), idname, key, value, **modifiers)
 
+    if prefs is None or prefs.use_uv_keys:
+        from .uv_tools import UV_KEYS
+        for km_name, idname, key, value, modifiers, props in UV_KEYS:
+            _new_item(_keymap(kc, km_name), idname, key, value, props=props, **modifiers)
+
     # Script Editor: Ctrl+Enter / numpad Enter runs the script (Maya)
     from .script_editor import SCRIPT_KEYS
     for km_name, idname, key, modifiers in SCRIPT_KEYS:

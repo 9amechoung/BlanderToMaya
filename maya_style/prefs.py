@@ -196,6 +196,14 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         update=_update_keymaps,
     )
 
+    use_uv_keys: BoolProperty(
+        name="Maya UV Editor Keys",
+        description="In the UV Editor: Right-click UV / Edge / Face / Shell menu, Shift+Right-click UV tools, "
+                    "Ctrl+Right-click convert, middle-drag transform, hold X / V to snap",
+        default=True,
+        update=_update_keymaps,
+    )
+
     def draw(self, context):
         layout = self.layout
 
@@ -247,6 +255,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         row.prop(self, "shift_extrude")
         row.prop(self, "shift_duplicate")
         box.prop(self, "use_maya_hotkeys")
+        box.prop(self, "use_uv_keys")
 
 
 def register():

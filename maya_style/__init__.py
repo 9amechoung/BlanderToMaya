@@ -14,12 +14,13 @@
 - Channel Box channel selection, Lock / Hide / Key Selected, middle-drag virtual slider
 - Option boxes in the menus, panel menus in each viewport, input line, Script Editor
 - Custom shelf, Quick Select Sets, Maya FBX export / import presets, Maya scene defaults
+- Maya UV Editor: UV Toolkit, UV marking menus, texture borders, checker, texel density
 """
 
 bl_info = {
     "name": "Maya Style UI",
     "author": "BlanderToMaya",
-    "version": (0, 10, 0),
+    "version": (0, 11, 0),
     "blender": (4, 0, 0),
     "location": "3D Viewport > Tool Header (Shelf), Shift+RMB (Marking Menu), N Panel > Channel Box",
     "description": "Maya-like keymap, shelf bar, marking menus and channel box",
@@ -28,11 +29,11 @@ bl_info = {
 
 from . import (prefs, operators, maya_ops, anim_tools, script_editor, shelf, marking_menu, hotbox, rmb_menu, tool_menu,
                transform_tools, transform_panel, select_through, project, channel_box, select_sets, maya_scene,
-               input_line, modeling_toolkit, maya_menus, panel_menus, maya_ui, keymaps)
+               input_line, uv_tools, modeling_toolkit, maya_menus, panel_menus, maya_ui, keymaps)
 
 _modules = (prefs, operators, maya_ops, anim_tools, script_editor, shelf, marking_menu, hotbox, rmb_menu, tool_menu,
             transform_tools, transform_panel, select_through, project, channel_box, select_sets, maya_scene,
-            input_line, modeling_toolkit, maya_menus, panel_menus, maya_ui, keymaps)
+            input_line, uv_tools, modeling_toolkit, maya_menus, panel_menus, maya_ui, keymaps)
 
 
 def register():
