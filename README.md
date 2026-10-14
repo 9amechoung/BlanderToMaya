@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.11.0.zip`](dist/maya_style_v0.11.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.11.1.zip`](dist/maya_style_v0.11.1.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -284,8 +284,14 @@
 | Ctrl + 우클릭 | 선택 변환: To UVs / Edges / Faces / Shell / Edge Loop / Edge Ring |
 | 휠클릭 드래그 | 지금 툴로 이동 / 회전 / 스케일 |
 | X / V 누르고 있기 | 그리드 / UV 점 스냅 |
-| Ctrl + R | 90° 회전 |
+| **Shift + X** | Cut (선택한 UV 엣지 자르기) |
+| **Shift + S** | Sew (선택한 UV 엣지 붙이기) |
+| **Ctrl + L** | Layout |
+| **Ctrl + U** | Unfold |
+| **Ctrl + Shift + X** | 선택한 면으로 새 UV 셸 만들기 (Create UV Shell) |
 | F / A | 선택 / 전체 프레이밍 |
+
+Shift+X, Shift+S, Ctrl+L, Ctrl+U, Ctrl+Shift+X는 마야 UV Editor 기본 단축키와 같아요. UV Editor 안에서만 동작해요 (3D 뷰포트의 단축키는 그대로예요).
 
 - **Unfold**는 마야처럼 셸이 있던 자리와 크기를 그대로 두고 펴요. 블렌더 Unwrap은 전부 0~1로 다시 배치해 버려서 따로 만들었어요. 선택하지 않은 셸은 움직이지 않아요.
 - **Cut**은 고른 UV 엣지를 셸 경계로 만들어요 (블렌더에서는 심으로 저장돼요). 그다음 Unfold하면 그 엣지에서 갈라져요. **Sew**는 다시 붙이고 심도 지워요.

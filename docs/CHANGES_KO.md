@@ -5,7 +5,7 @@
 - "원래 블렌더에서는 이랬는데 → 마야처럼 이렇게 바꿨습니다" 순서로 적었어요.
 - 블렌더 구조상 **불가능하거나 다르게 대체한 것**은 맨 아래에 따로 모았어요.
 
-> 기준 버전: Maya Style UI v0.11.0 / 블렌더 4.0 ~ 5.2
+> 기준 버전: Maya Style UI v0.11.1 / 블렌더 4.0 ~ 5.2
 
 ---
 
@@ -178,6 +178,7 @@
 | UV 자르기는 심(Seam)을 찍고 다시 Unwrap | **Cut / Sew / Move and Sew**를 UV Editor에서 바로 해요 |
 | 셸 경계가 다른 엣지와 똑같이 보임 | **Texture Borders**: 셸 경계를 굵게 그려요 |
 | 체커는 이미지를 새로 만들어야 함 | **Checker Map** 버튼 하나로 켜고 꺼요 |
+| UV 단축키: Ctrl+L 셸 선택, Shift+S 스냅 메뉴, U 펼치기 메뉴 | 마야 UV Editor 단축키: **Shift+X Cut, Shift+S Sew, Ctrl+L Layout, Ctrl+U Unfold, Ctrl+Shift+X 새 셸 만들기** |
 | UV Editor 우클릭: 블렌더 컨텍스트 메뉴 | **우클릭** UV / Edge / Face / Shell, **Shift+우클릭** UV 도구, **Ctrl+우클릭** 선택 변환, **휠클릭 드래그** 이동, **X / V** 스냅 |
 | UV 색: 주황 선택, 회색 면 | 마야처럼 보라색 UV 점, 초록 선택, 파란 셸 면 |
 

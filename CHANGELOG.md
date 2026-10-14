@@ -2,6 +2,12 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.11.1
+[다운로드](dist/maya_style_v0.11.1.zip)
+- 마야 UV Editor 기본 단축키 추가: **Shift+X** Cut, **Shift+S** Sew, **Ctrl+L** Layout, **Ctrl+U** Unfold, **Ctrl+Shift+X** Create UV Shell
+- UV Toolkit, 마킹 메뉴, UV 메뉴 항목 옆에 단축키 표시
+- 마야에 없는 Ctrl+R(90° 회전) 단축키는 뺐어요 (UV Toolkit / Shift+우클릭 메뉴에 그대로 있어요)
+
 ## v0.11.0
 [다운로드](dist/maya_style_v0.11.0.zip)
 - **마야 UV Editor**: UV → UV Editor가 새 창으로 열리고 오른쪽에 **UV Toolkit**

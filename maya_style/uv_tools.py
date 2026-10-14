@@ -8,6 +8,8 @@
 - In the UV Editor: hold Right-click for UV / Edge / Face / UV Shell, Shift+Right-click
   for the UV tools, Ctrl+Right-click to convert the selection, middle-drag to move /
   rotate / scale with the active tool, hold X / V to snap to the grid / to UVs
+- Maya's UV Editor hotkeys: Shift+X cut, Shift+S sew, Ctrl+L layout, Ctrl+U unfold,
+  Ctrl+Shift+X create a UV shell from the selection
 - Texture borders: shell borders are drawn thick, like Maya
 - Unfold keeps each shell where it was (Blender's Unwrap would re-pack everything into 0-1)
 """
@@ -796,11 +798,11 @@ class MAYA_PT_uv_cut_sew(_ToolkitSection, bpy.types.Panel):
     def draw(self, context):
         lay = self.layout
         row = lay.row(align=True)
-        row.operator("maya.uv_cut", text="Cut", icon='SCULPTMODE_HLT')
-        row.operator("maya.uv_sew", text="Sew", icon='AUTOMERGE_ON').move = False
+        row.operator("maya.uv_cut", text="Cut  (Shift+X)", icon='SCULPTMODE_HLT')
+        row.operator("maya.uv_sew", text="Sew  (Shift+S)", icon='AUTOMERGE_ON').move = False
         row = lay.row(align=True)
         row.operator("maya.uv_sew", text="Move and Sew").move = True
-        row.operator("uv.select_split", text="Split")
+        row.operator("uv.select_split", text="Create Shell  (Ctrl+Shift+X)")
         row = lay.row(align=True)
         row.operator("uv.weld", text="Merge (Weld)")
         row.operator("uv.remove_doubles", text="Merge by Distance")
@@ -813,7 +815,7 @@ class MAYA_PT_uv_unfold(_ToolkitSection, bpy.types.Panel):
     def draw(self, context):
         lay = self.layout
         row = lay.row(align=True)
-        row.operator("maya.uv_unfold", text="Unfold", icon='UV')
+        row.operator("maya.uv_unfold", text="Unfold  (Ctrl+U)", icon='UV')
         row.operator("uv.minimize_stretch", text="Optimize").iterations = 50
         _op(lay, "uv.unwrap", "Unwrap (re-pack into 0-1)", margin=0.02)
 
@@ -825,7 +827,7 @@ class MAYA_PT_uv_arrange(_ToolkitSection, bpy.types.Panel):
     def draw(self, context):
         lay = self.layout
         row = lay.row(align=True)
-        row.operator("uv.pack_islands", text="Layout", icon='UV_ISLANDSEL').margin = 0.01
+        row.operator("uv.pack_islands", text="Layout  (Ctrl+L)", icon='UV_ISLANDSEL').margin = 0.01
         row.operator("maya.uv_stack", text="Stack")
         row = lay.row(align=True)
         row.operator("maya.uv_normalize", text="Normalize")
@@ -941,10 +943,10 @@ class MAYA_MT_uv_tools_pie(bpy.types.Menu):
 
     def draw(self, context):
         pie = self.layout.menu_pie()
-        pie.operator("maya.uv_cut", text="Cut", icon='SCULPTMODE_HLT')
-        pie.operator("maya.uv_sew", text="Sew", icon='AUTOMERGE_ON').move = False
-        pie.operator("uv.pack_islands", text="Layout", icon='UV_ISLANDSEL').margin = 0.01
-        pie.operator("maya.uv_unfold", text="Unfold", icon='UV')
+        pie.operator("maya.uv_cut", text="Cut  (Shift+X)", icon='SCULPTMODE_HLT')
+        pie.operator("maya.uv_sew", text="Sew  (Shift+S)", icon='AUTOMERGE_ON').move = False
+        pie.operator("uv.pack_islands", text="Layout  (Ctrl+L)", icon='UV_ISLANDSEL').margin = 0.01
+        pie.operator("maya.uv_unfold", text="Unfold  (Ctrl+U)", icon='UV')
         pie.operator("maya.uv_transform", text="Rotate 90°", icon='LOOP_FORWARDS').mode = 'ROT_CW'
         pie.operator("maya.uv_sew", text="Move and Sew").move = True
         pie.operator("maya.uv_transform", text="Flip U", icon='ARROW_LEFTRIGHT').mode = 'FLIP_U'
@@ -974,7 +976,12 @@ UV_KEYS = (
     ("UV Editor", "maya.uv_snap_hold", 'X', 'RELEASE', {}, {"element": 'GRID', "release": True}),
     ("UV Editor", "maya.uv_snap_hold", 'V', 'PRESS', {}, {"element": 'VERTEX'}),
     ("UV Editor", "maya.uv_snap_hold", 'V', 'RELEASE', {}, {"element": 'VERTEX', "release": True}),
-    ("UV Editor", "maya.uv_transform", 'R', 'PRESS', {"ctrl": True}, {"mode": 'ROT_CW'}),
+    # Maya's UV Editor hotkeys
+    ("UV Editor", "maya.uv_cut", 'X', 'PRESS', {"shift": True}, {}),
+    ("UV Editor", "maya.uv_sew", 'S', 'PRESS', {"shift": True}, {"move": False}),
+    ("UV Editor", "uv.pack_islands", 'L', 'PRESS', {"ctrl": True}, {"margin": 0.01}),
+    ("UV Editor", "maya.uv_unfold", 'U', 'PRESS', {"ctrl": True}, {}),
+    ("UV Editor", "uv.select_split", 'X', 'PRESS', {"ctrl": True, "shift": True}, {}),
     ("Image", "image.view_selected", 'F', 'PRESS', {}, {}),
     ("Image", "image.view_all", 'A', 'PRESS', {}, {"fit_view": True}),
 )
