@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.12.3.zip`](dist/maya_style_v0.12.3.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.12.4.zip`](dist/maya_style_v0.12.4.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -167,6 +167,7 @@
 ```
 - **Face**(아래)는 페이스만 선택해요. 아래로 휙 긋기만 해도 Face가 골라져요. **Vertex Face**(왼쪽 아래)는 버텍스와 페이스 선택을 함께 켜고, **Multi**는 버텍스, 엣지, 페이스 선택을 모두 켜요.
 - 오브젝트 메뉴 목록은 왼쪽 위에 있어요. 에딧 모드에서는 이 목록이 Select Shell, Edge Loop, Edge Ring, Grow, Shrink 같은 컴포넌트용으로 바뀌어요. 이때 Assign Material은 선택한 페이스에만 적용돼요.
+- 메뉴 항목들이 커서에서 멀리 떨어져 있어서(기본 170px, 블렌더는 100px) 잘못 고르기 어려워요. 설정의 **Marking Menu Size**로 더 넓히거나 좁힐 수 있어요. Shift+우클릭, 핫박스 같은 다른 마킹 메뉴에도 똑같이 적용돼요.
 - 오브젝트가 선택되어 있으면 **빈 공간**에서 우클릭을 누르고 있어도 선택한 오브젝트의 메뉴가 열려요. 아무것도 선택하지 않았으면 원래 블렌더 메뉴가 열려요.
 
 ![우클릭 메뉴](docs/screenshot_rmb_menu.png)
