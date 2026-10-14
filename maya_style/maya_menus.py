@@ -890,7 +890,7 @@ class MAYA_MT_display(bpy.types.Menu):
         op(lay, "object.hide_view_set", "Hide Selection  (Ctrl+H)", 'HIDE_ON', unselected=False)
         op(lay, "object.hide_view_clear", "Show All  (Shift+H)", 'HIDE_OFF')
         op(lay, "object.hide_view_set", "Isolate / Hide Unselected  (Alt+H)", unselected=True)
-        op(lay, "view3d.localview", "Isolate Select: View Selected", 'ZOOM_SELECTED')
+        op(lay, "maya.isolate_select", "Isolate Select: View Selected  (Ctrl+1)", 'ZOOM_SELECTED')
         lay.separator()
         op(lay, "maya.wireframe_color", "Wireframe Color...", 'COLOR')
         lay.menu("MAYA_MT_display_object")

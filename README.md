@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.12.0.zip`](dist/maya_style_v0.12.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.12.1.zip`](dist/maya_style_v0.12.1.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -116,6 +116,7 @@
 | Ctrl + H | 선택한 것 숨기기 |
 | Shift + H | 숨긴 것 다시 표시 |
 | Alt + H | 선택한 것만 남기고 숨기기 (Isolate) |
+| **Ctrl + 1** | **Isolate Select**: 이 뷰포트에서 선택한 것만 보기, 한 번 더 누르면 전부 다시 보기. 오브젝트 모드는 오브젝트, 컴포넌트 모드는 선택한 면·엣지·버텍스만 보여줘요. 카메라는 움직이지 않아요 (마야와 같음) |
 
 원래 블렌더 키맵으로 돌리려면 애드온 설정에서 **Restore Blender Keymap**을 누르고 **Maya Hotkeys**를 끄세요.
 

@@ -49,6 +49,53 @@ class MAYA_OT_look_through(bpy.types.Operator):
         return {'FINISHED'}
 
 
+# Viewports where Ctrl+1 hid the unselected components (edit mode), by area
+_component_isolated = set()
+
+
+class MAYA_OT_isolate_select(bpy.types.Operator):
+    """Isolate Select (Ctrl+1): show only the selection in this viewport, press again to show
+    everything. Objects in object mode, faces / edges / vertices in component mode (Maya)"""
+    bl_idname = "maya.isolate_select"
+    bl_label = "Isolate Select"
+
+    @classmethod
+    def poll(cls, context):
+        return _space(context) is not None
+
+    def execute(self, context):
+        space = _space(context)
+        key = context.area.as_pointer() if context.area else 0
+        # Already isolated: show everything again
+        if key in _component_isolated and context.mode == 'EDIT_MESH':
+            _component_isolated.discard(key)
+            bpy.ops.mesh.reveal(select=False)
+            return {'FINISHED'}
+        if space.local_view is not None:
+            bpy.ops.view3d.localview(frame_selected=False)
+            return {'FINISHED'}
+        # Isolate
+        if context.mode == 'EDIT_MESH':
+            import bmesh
+            if not any(any(v.select for v in bmesh.from_edit_mesh(o.data).verts)
+                       for o in context.objects_in_mode_unique_data if o.type == 'MESH'):
+                self.report({'WARNING'}, "Select some components to isolate")
+                return {'CANCELLED'}
+            bpy.ops.mesh.hide(unselected=True)
+            _component_isolated.add(key)
+            return {'FINISHED'}
+        if not context.selected_objects:
+            self.report({'WARNING'}, "Select some objects to isolate")
+            return {'CANCELLED'}
+        try:
+            # Maya keeps the camera where it is (no framing)
+            bpy.ops.view3d.localview(frame_selected=False)
+        except RuntimeError as ex:
+            self.report({'WARNING'}, str(ex).replace("Error: ", "").strip())
+            return {'CANCELLED'}
+        return {'FINISHED'}
+
+
 class MAYA_OT_show_all_types(bpy.types.Operator):
     """Show / hide every object type in this viewport (Maya: Show > All / None)"""
     bl_idname = "maya.show_all_types"
@@ -193,7 +240,7 @@ class MAYA_MT_panel_show(bpy.types.Menu):
     def draw(self, context):
         lay = self.layout
         space = _space(context)
-        op(lay, "view3d.localview", "Isolate Select (Local View)", 'HIDE_OFF')
+        op(lay, "maya.isolate_select", "Isolate Select  (Ctrl+1)", 'HIDE_OFF')
         lay.separator()
         op(lay, "maya.show_all_types", "All", show=True)
         op(lay, "maya.show_all_types", "None", show=False)
@@ -298,6 +345,7 @@ def _draw_editor_menus(self, context):
 
 
 classes = (
+    MAYA_OT_isolate_select,
     MAYA_OT_look_through,
     MAYA_OT_show_all_types,
     MAYA_OT_viewport_lighting,

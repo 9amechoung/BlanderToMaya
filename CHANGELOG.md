@@ -2,6 +2,13 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.12.1
+[다운로드](dist/maya_style_v0.12.1.zip)
+- **Ctrl+1 Isolate Select**: 이 뷰포트에서 선택한 것만 보기, 다시 누르면 전부 보기
+  - 오브젝트 모드는 선택한 오브젝트, 컴포넌트 모드는 선택한 면·엣지·버텍스만
+  - 마야처럼 카메라는 움직이지 않아요 (블렌더 Local View는 선택한 것으로 화면을 옮겨요)
+  - 패널 메뉴 Show → Isolate Select, Display 메뉴도 같은 기능으로 바꿨어요
+
 ## v0.12.0
 [다운로드](dist/maya_style_v0.12.0.zip)
 - **Connect** (Edit Mesh → Connect, 엣지 Shift+우클릭 메뉴, Edit Poly 셸프, Modeling Toolkit)

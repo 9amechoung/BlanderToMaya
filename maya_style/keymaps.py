@@ -39,6 +39,9 @@ MAYA_HOTKEYS = (
     *((km, "maya.smooth_preview", key, {}, {"level": level})
       for km in ("Object Mode", "Mesh")
       for key, level in (('ONE', '1'), ('TWO', '2'), ('THREE', '3'))),
+    # Ctrl+1: Isolate Select in this viewport (press again to show everything)
+    # (also in the mode keymaps, which come before "3D View" and use Ctrl+1 for subdivision levels)
+    *((km, "maya.isolate_select", 'ONE', {"ctrl": True}, {}) for km in ("3D View", "Object Mode", "Mesh")),
     # Visibility: Ctrl+H hide (already in Industry Compatible), Shift+H show, Alt+H isolate
     ("Object Mode", "object.hide_view_clear", 'H', {"shift": True}, {"select": False}),
     ("Object Mode", "object.hide_view_set", 'H', {"alt": True}, {"unselected": True}),
