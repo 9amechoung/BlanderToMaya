@@ -148,8 +148,9 @@ def gizmo_frame(context):
     return center, c2, size_px / px_per_unit, size_px, orient, axes
 
 
-def gizmo_hit(context, event, kind, tolerance=HIT_PX):
-    """Which handle is under the mouse: 'X'/'Y'/'Z', 'XY'/'YZ'/'XZ', 'VIEW', 'CENTER' or None."""
+def gizmo_hit(context, event, kind, tolerance=HIT_PX, at_press=False):
+    """Which handle is under the mouse: 'X'/'Y'/'Z', 'XY'/'YZ'/'XZ', 'VIEW', 'CENTER' or None.
+    at_press: test where the button went down (a drag event arrives some pixels later)."""
     frame = gizmo_frame(context)
     if frame is None:
         return None, None
@@ -157,6 +158,8 @@ def gizmo_hit(context, event, kind, tolerance=HIT_PX):
     region, rv3d = context.region, context.region_data
     to2d = lambda co: view3d_utils.location_3d_to_region_2d(region, rv3d, co)
     mouse = Vector((event.mouse_region_x, event.mouse_region_y))
+    if at_press and hasattr(event, "mouse_prev_press_x") and region is not None:
+        mouse = Vector((event.mouse_prev_press_x - region.x, event.mouse_prev_press_y - region.y))
     names = ("X", "Y", "Z")
     from_center = (mouse - c2).length
 
@@ -469,18 +472,30 @@ class MAYA_OT_shift_gizmo_drag(bpy.types.Operator):
 
     def invoke(self, context, event):
         kind = active_tool_kind(context) if self.kind == 'AUTO' else self.kind
-        if kind is None:
-            return {'PASS_THROUGH'}
-        # The drag event fires a few pixels after the press: allow for that.
-        hit, orient = gizmo_hit(context, event, kind, tolerance=HIT_PX + 6)
-        if hit is None:
+        if not shift_drag_on_gizmo(context, event, kind):
             return {'PASS_THROUGH'}  # not on the manipulator: Shift box select etc.
-        settings = _settings_for_hit(kind, hit, orient)
-        _shift_extrude_or_duplicate(context)
-        _invoke_transform(kind, settings)
-        op = _last_transform_op(context, kind)
-        _picked[kind] = (settings, op.as_pointer() if op else 0)
         return {'FINISHED'}
+
+
+def shift_drag_on_gizmo(context, event, kind=None):
+    """Shift+drag that started on a manipulator handle: extrude / duplicate, then transform along it.
+    Returns False (doing nothing) when the drag did not start on the manipulator."""
+    if kind is None:
+        kind = active_tool_kind(context)
+    if kind is None:
+        return False
+    # Test where the button went down; fall back to the current position with some slack.
+    hit, orient = gizmo_hit(context, event, kind, tolerance=HIT_PX + 4, at_press=True)
+    if hit is None:
+        hit, orient = gizmo_hit(context, event, kind, tolerance=HIT_PX + 6)
+    if hit is None:
+        return False
+    settings = _settings_for_hit(kind, hit, orient)
+    _shift_extrude_or_duplicate(context)
+    _invoke_transform(kind, settings)
+    op = _last_transform_op(context, kind)
+    _picked[kind] = (settings, op.as_pointer() if op else 0)
+    return True
 
 
 class MAYA_OT_mmb_axis_drag(bpy.types.Operator):
