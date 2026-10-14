@@ -1030,7 +1030,7 @@ class MAYA_MT_edit_mesh(bpy.types.Menu):
         op(lay, "mesh.bridge_edge_loops", "Bridge", 'MOD_LATTICE')
         op(lay, "transform.tosphere", "Circularize", value=1.0)
         op(lay, "mesh.merge", "Collapse", type='COLLAPSE')
-        op(lay, "mesh.vert_connect_path", "Connect")
+        op(lay, "maya.connect", "Connect", 'LINKED')
         op(lay, "mesh.split", "Detach")
         op(lay, "view3d.edit_mesh_extrude_move_normal", "Extrude  (Ctrl+E)", 'FACESEL')
         op(lay, "mesh.merge", "Merge", 'AUTOMERGE_ON', type='CENTER')
@@ -1065,7 +1065,7 @@ class MAYA_MT_mesh_tools(bpy.types.Menu):
     def draw(self, context):
         lay = self.layout
         op(lay, "mesh.edge_face_add", "Append to Polygon (Fill Face)")
-        op(lay, "mesh.vert_connect_path", "Connect")
+        op(lay, "maya.connect", "Connect", 'LINKED')
         op(lay, "transform.edge_crease", "Crease", 'SHARPCURVE')
         op(lay, "wm.tool_set_by_id", "Create Polygon (Poly Build)", name="builtin.poly_build")
         op(lay, "mesh.loopcut_slide", "Insert Edge Loop", 'MOD_MULTIRES')

@@ -49,7 +49,7 @@ _COMPONENT_MENUS = {
     'VERT': (
         ("mesh.remove_doubles", "Merge Vertices", 'AUTOMERGE_ON', {}),
         ("mesh.bevel", "Chamfer Vertex", 'MOD_BEVEL', {"affect": 'VERTICES'}),
-        ("mesh.vert_connect_path", "Connect", 'LINKED', {}),
+        ("maya.connect", "Connect", 'LINKED', {}),
         ("mesh.knife_tool", "Multi-Cut", 'SCULPTMODE_HLT', {}),
         ("maya.target_weld", "Target Weld", 'PIVOT_ACTIVE', {}),
         ("mesh.extrude_vertices_move", "Extrude Vertex", 'VERTEXSEL', {}),
@@ -72,6 +72,7 @@ _COMPONENT_MENUS = {
         ("mesh.dissolve_edges", "Delete Edge", 'X', {}),
         ("transform.edge_slide", "Slide Edge", 'ARROW_LEFTRIGHT', {}),
         (
+            ("maya.connect", "Connect", 'LINKED', {}),
             ("mesh.merge", "Collapse", 'NONE', {"type": 'COLLAPSE'}),
             ("mesh.fill_holes", "Fill Hole", 'SNAP_FACE', {}),
             ("mesh.offset_edge_loops_slide", "Offset Edge Loop", 'NONE', {}),
@@ -92,6 +93,7 @@ _COMPONENT_MENUS = {
             ("mesh.spin", "Wedge (Spin)", 'NONE', {}),
             ("mesh.quads_convert_to_tris", "Triangulate", 'MOD_TRIANGULATE', {}),
             ("mesh.tris_convert_to_quads", "Quadrangulate", 'NONE', {}),
+            ("maya.connect", "Connect", 'LINKED', {}),
             ("mesh.subdivide", "Smooth / Add Divisions", 'MESH_GRID', {"smoothness": 1.0}),
             ("mesh.flip_normals", "Reverse Normals", 'NORMALS_FACE', {}),
             ("mesh.delete", "Delete Face", 'X', {"type": 'FACE'}),

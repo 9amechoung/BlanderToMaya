@@ -72,7 +72,7 @@ class MAYA_PT_modeling_toolkit(bpy.types.Panel):
         _button(grid, "view3d.edit_mesh_extrude_move_normal", "Extrude", 'FACESEL')
         _button(grid, "mesh.bevel", "Bevel", 'MOD_BEVEL')
         _button(grid, "mesh.bridge_edge_loops", "Bridge", 'MOD_LATTICE')
-        _button(grid, "mesh.vert_connect_path", "Connect", 'LINKED')
+        _button(grid, "maya.connect", "Connect", 'LINKED')
         _button(grid, "mesh.merge", "Merge", 'AUTOMERGE_ON', type='CENTER')
         _button(grid, "maya.target_weld", "Target Weld", 'PIVOT_ACTIVE')
         _button(grid, "mesh.dissolve_mode", "Delete Edge/Vertex", 'X')

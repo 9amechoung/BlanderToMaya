@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.11.1.zip`](dist/maya_style_v0.11.1.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.12.0.zip`](dist/maya_style_v0.12.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -209,6 +209,13 @@
 - **Shift + 휠클릭 드래그**: 처음 드래그한 방향에 가까운 축으로 고정해서 움직여요.
 - **선택**: Shift+클릭은 토글, Ctrl+클릭은 선택 해제, Ctrl+Shift+클릭은 추가예요. 박스 선택도 똑같이 동작해요.
 - **뒤에 있는 것도 선택**: 박스나 올가미로 드래그하면 X-ray를 켜지 않아도 가려진 오브젝트와 뒤쪽 버텍스·엣지·페이스까지 선택돼요. 화면은 X-ray 없이 그대로예요 (드래그하는 동안에도 투명해지지 않아요). 클릭은 앞에 보이는 것만 골라요.
+
+### Connect (엣지를 잡고 연결)
+`Edit Mesh → Connect`, 엣지 모드 **Shift+우클릭 메뉴**, Edit Poly 셸프, Modeling Toolkit에 있어요. 고른 것에 따라 동작이 달라요 (마야와 같음).
+- **엣지**: 같은 면에 있는 엣지끼리 가운데를 이어요. 엣지 링(나란한 엣지들)을 고르면 한 바퀴 새 루프가 생기고, 코너의 두 엣지는 대각선으로 이어져요. 새로 생긴 엣지가 선택돼요.
+- **버텍스**: 고른 버텍스끼리 면을 가로질러 이어요.
+- **페이스**: 면의 엣지 가운데를 이어서 나눠요.
+- **Segments**(몇 줄 넣을지)와 **Slide**(한쪽으로 밀기)는 옵션 박스(□)나 F9(Adjust Last Operation)에서 바로 바꿔요. Slide는 링 전체가 같은 방향으로 움직여요.
 
 ### 4. 마킹 메뉴 (Shift+우클릭)
 - **오브젝트 모드**: 기본 도형 생성, 아래쪽에 Smooth, Combine, Center Pivot, Freeze, Delete History 같은 버튼 묶음

@@ -56,6 +56,7 @@ SHELVES = {
             ("mesh.bevel", 'MOD_BEVEL', "Bevel", {}),
             ("mesh.inset", 'FULLSCREEN_EXIT', "Inset", {}),
             ("mesh.loopcut_slide", 'MOD_MULTIRES', "Insert Edge Loop", {}),
+            ("maya.connect", 'LINKED', "Connect", {}),
             ("mesh.knife_tool", 'SCULPTMODE_HLT', "Multi-Cut", {}),
             ("mesh.bridge_edge_loops", 'MOD_LATTICE', "Bridge", {}),
             ("mesh.fill", 'SNAP_FACE', "Fill Hole", {}),

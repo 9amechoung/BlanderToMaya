@@ -20,18 +20,18 @@
 bl_info = {
     "name": "Maya Style UI",
     "author": "BlanderToMaya",
-    "version": (0, 11, 1),
+    "version": (0, 12, 0),
     "blender": (4, 0, 0),
     "location": "3D Viewport > Tool Header (Shelf), Shift+RMB (Marking Menu), N Panel > Channel Box",
     "description": "Maya-like keymap, shelf bar, marking menus and channel box",
     "category": "Interface",
 }
 
-from . import (prefs, operators, maya_ops, anim_tools, script_editor, shelf, marking_menu, hotbox, rmb_menu, tool_menu,
+from . import (prefs, operators, maya_ops, mesh_connect, anim_tools, script_editor, shelf, marking_menu, hotbox, rmb_menu, tool_menu,
                transform_tools, transform_panel, select_through, project, channel_box, select_sets, maya_scene,
                input_line, uv_tools, modeling_toolkit, maya_menus, panel_menus, maya_ui, keymaps)
 
-_modules = (prefs, operators, maya_ops, anim_tools, script_editor, shelf, marking_menu, hotbox, rmb_menu, tool_menu,
+_modules = (prefs, operators, maya_ops, mesh_connect, anim_tools, script_editor, shelf, marking_menu, hotbox, rmb_menu, tool_menu,
             transform_tools, transform_panel, select_through, project, channel_box, select_sets, maya_scene,
             input_line, uv_tools, modeling_toolkit, maya_menus, panel_menus, maya_ui, keymaps)
 

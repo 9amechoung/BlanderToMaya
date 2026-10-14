@@ -2,6 +2,14 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.12.0
+[다운로드](dist/maya_style_v0.12.0.zip)
+- **Connect** (Edit Mesh → Connect, 엣지 Shift+우클릭 메뉴, Edit Poly 셸프, Modeling Toolkit)
+  - 엣지: 같은 면의 엣지 가운데를 이어요. 엣지 링을 고르면 새 루프, 코너는 대각선
+  - 버텍스: 버텍스끼리 연결, 페이스: 엣지 가운데로 나누기
+  - **Segments / Slide**를 옵션 박스나 F9에서 조절 (Slide는 링 전체가 같은 방향으로)
+  - 전에는 버텍스 연결(Connect Vertex Path)만 돼서 엣지를 골라도 아무 일이 없었어요
+
 ## v0.11.1
 [다운로드](dist/maya_style_v0.11.1.zip)
 - 마야 UV Editor 기본 단축키 추가: **Shift+X** Cut, **Shift+S** Sew, **Ctrl+L** Layout, **Ctrl+U** Unfold, **Ctrl+Shift+X** Create UV Shell
