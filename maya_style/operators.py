@@ -296,6 +296,12 @@ class MAYA_OT_smooth_preview(bpy.types.Operator):
             obj.show_wire = cage
             if hasattr(mod, "use_limit_surface"):
                 mod.use_limit_surface = True
+        # show_wire now belongs to the smooth preview cage, not to the selection wireframe
+        from .maya_scene import WIRE_KEY, update_selection_wire
+        for obj in self._targets(context):
+            if WIRE_KEY in obj:
+                del obj[WIRE_KEY]
+        update_selection_wire(force=True)
         return {'FINISHED'}
 
 

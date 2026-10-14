@@ -5,7 +5,7 @@
 - "원래 블렌더에서는 이랬는데 → 마야처럼 이렇게 바꿨습니다" 순서로 적었어요.
 - 블렌더 구조상 **불가능하거나 다르게 대체한 것**은 맨 아래에 따로 모았어요.
 
-> 기준 버전: Maya Style UI v0.9.0 / 블렌더 4.0 ~ 5.2
+> 기준 버전: Maya Style UI v0.10.0 / 블렌더 4.0 ~ 5.2
 
 ---
 
@@ -17,6 +17,13 @@
 | 오른쪽 속성 창 Object 탭 맨 위가 Transform 패널 | 맨 위에 **Channel Box**가 들어가요. Translate X/Y/Z, Rotate, Scale, Visibility, SHAPES, INPUTS(히스토리)와 사용자 속성을 보여주고, 아래쪽에 **Layer Editor**가 있어요. |
 | 월드 좌표는 따로 볼 곳이 없음 (부모가 있으면 Transform 패널은 부모 기준 값만 보여줌) | 채널 박스 아래에 **World Space (Global)** 섹션을 넣었어요. 월드 기준 위치·회전·스케일을 보고 직접 입력할 수 있어요. 컴포넌트 모드에서는 선택한 버텍스 중심의 Local / World 위치도 보여줘요. |
 | 사용자 속성(Custom Property)은 속성 창 맨 아래에 숨어 있음 | Modify → Add Attribute로 만들면 마야처럼 채널 박스에 바로 나와요. |
+| 속성 칸은 숫자를 드래그하거나 입력만 가능, 채널을 골라서 한꺼번에 다루는 방법이 없음 | 채널 박스에서 **채널 이름을 클릭해서 선택**(Ctrl 토글, Shift 범위)하고, 뷰포트에서 **휠클릭 드래그(버추얼 슬라이더)**로 값을 바꿔요. 위쪽 **Channels / Edit / Show 메뉴**로 Key Selected, Break Connections, Mute, **Lock / Hide**, Delete Attributes를 해요. |
+| 회전 순서(Rotation Mode)는 Transform 패널 안에 있음 | 채널 박스 Rotate 아래에 **Rotate Order**가 있어요. |
+| 컬렉션은 보이기 / 선택 / 렌더 토글이 따로 있음 | Layer Editor에 마야의 **T(Template) / R(Reference)** 칸을 넣었어요. T는 회색 와이어 + 선택 안 됨, R은 셰이딩 그대로 + 선택 안 됨이에요. |
+| 선택하면 외곽선만 표시됨 | 마야처럼 **선택한 오브젝트에 와이어프레임**이 겹쳐 보여요 (마지막 선택은 초록, 나머지는 흰색). |
+| 버텍스는 검은 점, 선택은 주황색 | 마야처럼 **버텍스는 보라색 점(크게), 선택하면 노랑**, 선택한 엣지와 페이스는 주황색이에요. |
+| 새 파일: 단위 m, 프레임 1~250, 카메라 50mm | 마야처럼 **cm 표시, 1~120 프레임, 24fps, 카메라와 뷰포트 35mm**로 시작해요. (블렌더 1 유닛 = 1m는 그대로라서 마야로 보내도 크기가 같아요.) |
+| 뷰포트 헤더에 View / Select / Add / Object 메뉴 | 마야 **패널 메뉴 View / Shading / Lighting / Show / Renderer / Panels**로 바꿨어요. 원래 메뉴는 맨 끝 Blender 메뉴 안에 있어요. Panels에는 카메라 Look Through, Tear Off Copy(새 창)가 있어요. |
 | 타임라인 높이가 크고 채널 목록이 같이 보임 | 마야 타임 슬라이더처럼 얇게 바꾸고 채널 목록을 숨겼어요. |
 | 커맨드 라인 없음 | 타임라인 아래에 한 줄짜리 **커맨드 라인**(파이썬)을 넣었어요. MEL 대신 파이썬 명령을 입력해요. |
 | 사이드바(N)에 Item / Tool / View 탭만 있음 | **Channel Box** 탭과 **Modeling Toolkit** 탭을 추가했어요. Modeling Toolkit에는 선택 모드, 소프트 선택, 대칭, 컴포넌트 툴이 들어 있어요. |
@@ -34,7 +41,9 @@
 | 가운데에 워크스페이스 탭(Layout, Modeling, Sculpting...) | 그 자리에 마야 **상태줄**이 들어가요. 새 파일/열기/저장, 실행 취소/다시 실행, 오브젝트/버텍스/엣지/페이스 선택 모드, 그리드/커브/점/면 스냅, Symmetry, 렌더/IPR/렌더 설정 버튼이 있어요. |
 | 오른쪽 위에 Scene / View Layer 선택 | 마야처럼 **Workspace:** 드롭다운이 있어요. |
 | 블렌더 File·Edit 메뉴 | 마야 File·Edit 메뉴로 바꿨어요. 원래 블렌더 메뉴는 각 메뉴 맨 아래 "Blender File Menu / Blender Edit Menu"에 남겨 뒀어요. |
-| 메뉴 항목은 해당 창 안에서만 동작 | 위쪽 메뉴에서 고른 명령도 **3D 뷰포트에서 실행**되게 했어요. |
+| 메뉴 항목은 해당 창 안에서만 동작 | 위쪽 메뉴에서 고른 명령도 **3D 뷰포트에서 실행**되게 했어요. 실행한 명령은 Adjust Last Operation(F9)에서 바로 조절할 수 있어요. |
+| 메뉴에서 실행한 뒤 왼쪽 아래 패널에서 설정을 바꿈 | 마야처럼 메뉴 항목 옆에 **옵션 박스(□)**가 있어요. 누르면 실행하면서 설정 창이 바로 떠요. |
+| 이름으로 선택하거나 이름을 바꾸려면 아웃라이너로 가야 함 | 상태줄 오른쪽에 마야 **Input Line**을 넣었어요. Select by Name(`*` 가능), Rename(여러 개면 번호 붙임), Absolute / Relative 이동·회전·스케일 입력. |
 
 메뉴셋별 메뉴는 다음과 같아요.
 
@@ -52,13 +61,14 @@
 
 | 메뉴 | 마야 항목 → 블렌더 동작 |
 |---|---|
-| File | New/Open/Save Scene, **Increment and Save**, Archive(리소스 패킹), Optimize Scene Size(사용하지 않는 데이터 삭제), Import / Export All / **Export Selection(FBX)**, Create Reference(링크), Recent Files, Exit |
+| File | New/Open/Save Scene, **Increment and Save**, Archive(리소스 패킹), Optimize Scene Size(사용하지 않는 데이터 삭제), Import / Export All / **Export Selection(FBX)**, **Export to Maya / Import from Maya (FBX)**, Create Reference(링크), Project Window / Set Project, Maya Scene Defaults, Recent Files, Exit |
+| Edit / Create | **Quick Select Sets**: Create → Sets로 선택을 저장하고, Edit → Quick Select Sets에서 다시 선택 |
 | Edit | Undo/Redo/Repeat Last, Recent Commands, Cut/Copy/Paste, **Delete by Type**(History, Channels, Constraints, Motion Paths, Rigid Bodies, Attributes), **Delete All by Type**(Cameras, Lights, Curves, Joints...), Duplicate / Duplicate Special(인스턴스) / **Duplicate with Transform**, **Group / Ungroup**, Parent / Unparent |
 | Create | NURBS Primitives, Polygon Primitives(Pyramid, Prism 포함), Lights, Cameras, Curve Tools, Type, Locator, Empty Group, Joint, Measure Tools |
 | Select | All, All by Type, Hierarchy, Inverse, Similar, Grow/Shrink, Shell, Edge Loop/Ring, Border Edge, **Convert Selection**(To Vertices/Edges/Faces/UVs/Vertex Faces/Shell/Border/Loop/Ring/Contained) |
 | Modify | **Freeze**(값만 0/0/1, 피벗은 제자리 — 블렌더 Apply는 피벗을 월드 중심으로 옮겨서 따로 구현), Reset Transformations(마지막 Freeze 위치로), **Match Transformations**, Center Pivot, Edit Pivot, Snap Align, **Add Attribute**, Replace Objects, Search and Replace Names(일괄 이름 변경), Convert, Combine, Delete History |
 | Display | Grid, Heads Up Display, UI Elements, Hide/Show/Isolate, Wireframe Color, Object Display(Template, Bounding Box, X-Ray, Local Axes), Polygons 표시 옵션, 셰이딩 4~7, 스무스 1~3, 배경색 바꾸기 |
-| Windows | Outliner, Attribute Editor, Spreadsheet(Component Editor), Content Browser(에셋 브라우저), UV Editor, Node Editor, 애니메이션 에디터(Graph, Dope Sheet, NLA, Drivers, Shape), 렌더링 에디터(Hypershade, Render View, Render Settings), Script Editor, Hotkey Editor, Playblast |
+| Windows | Outliner, Attribute Editor, Spreadsheet(Component Editor), Content Browser(에셋 브라우저), UV Editor, Node Editor, 애니메이션 에디터(Graph, Dope Sheet, NLA, Drivers, Shape), 렌더링 에디터(Hypershade, Render View, Render Settings), **Script Editor**(위: 히스토리, 아래: 입력, Ctrl+Enter 실행), Hotkey Editor, Playblast |
 | Mesh | **Booleans**(Union/Difference/Intersection, 실제로 합쳐짐), Combine, Separate, Conform, Fill Hole, Reduce, Remesh, **Retopologize**(QuadriFlow), Smooth, Mirror, Triangulate, Quadrangulate, Clean Up, Transfer Attributes |
 | Edit Mesh | Add Divisions, Bevel, Bridge, **Circularize**, Collapse, Connect, Detach, Extrude, Merge, Flip, Symmetrize, Average Vertices, **Chamfer Vertex**, Delete Edge/Vertex, Spin Edge, Duplicate, Extract, Poke, Wedge, Slide Edge, Offset Edge Loop, **Target Weld** |
 | Mesh Tools | Append to Polygon, Connect, Crease, Create Polygon, Insert Edge Loop, Make Hole, Multi-Cut, **Quad Draw**, Slide Edge, Target Weld |
@@ -144,7 +154,26 @@
 
 | 원래 블렌더 | 마야처럼 바꾼 것 |
 |---|---|
-| 셸프 없음 (툴바와 메뉴만 있음) | 뷰포트 위에 **셸프 탭**(Poly Modeling, Edit Poly, Curves, UV, Rigging, Animation, Rendering)과 아이콘 버튼 줄이 있어요. |
+| 셸프 없음 (툴바와 메뉴만 있음) | 뷰포트 위에 **셸프 탭**(Poly Modeling, Edit Poly, Curves, UV, Rigging, Animation, Rendering, Custom)과 아이콘 버튼 줄이 있어요. |
+| 자주 쓰는 명령은 Quick Favorites(Q) 메뉴에 모음 | **Custom 셸프**: 아무 버튼이나 메뉴 항목에서 우클릭 → Add to Shelf, + 버튼으로 파이썬 명령, Text → Add Script to Shelf로 스크립트를 버튼으로 만들어요. 블렌더 설정 폴더에 저장돼서 모든 파일에서 같아요. |
+
+## 6-2. 애니메이션
+
+| 원래 블렌더 | 마야처럼 바꾼 것 |
+|---|---|
+| 타임라인 우클릭: 블렌더 컨텍스트 메뉴 | 마야 **타임 슬라이더 메뉴**: Set Key, Delete, Copy / Paste, Tangents, Range Slider 설정, Auto Key, 프레임 레이트, Playblast |
+| 타임라인에서 키 범위를 고르려면 박스 선택 | **Shift+드래그**로 그 프레임 범위의 키를 선택 |
+| 키 보간은 T(Interpolation), 핸들은 V 메뉴 | Graph Editor 헤더에 마야 **탄젠트 버튼**: Auto, Spline, Linear, Flat, Stepped, Break, Unify |
+| 키 이동은 G | Graph Editor / Dope Sheet에서 **휠클릭 드래그**로 선택한 키 이동 |
+| 타임라인 키는 흰색/주황색 마름모 | 마야처럼 **빨간색** (선택하면 노랑) |
+
+## 6-3. 마야와 파일 주고받기
+
+| 원래 블렌더 | 마야처럼 바꾼 것 |
+|---|---|
+| FBX 기본값으로 내보내면 마야에서 오브젝트마다 Rotate X -90, Scale 100이 붙음 | **File → Export to Maya (FBX)**: Y-up, cm, 오브젝트 회전 0 / 스케일 1, 스무딩 그룹, `_end` 조인트 없음. (아마추어가 있으면 블렌더의 Apply Transform 옵션이 리깅을 깨뜨려서 자동으로 꺼요. 이때는 최상위에 축 변환이 남을 수 있어요.) |
+| FBX 가져오기 기본값은 조인트 방향이 마야와 다르게 보임 | **File → Import from Maya (FBX)**: 조인트 방향 자동 맞춤, 끝 본 무시, 노멀 유지 |
+| USD 내보내기는 Z-up | **Cache → USD: Export to Maya (Y-up)** |
 
 ---
 
@@ -168,8 +197,12 @@
 | 마야식 컨스트럭션 히스토리 (노드 그래프) | 블렌더 히스토리는 모디파이어 쌓기 방식이에요. INPUTS = 모디파이어, Delete History = 모디파이어 적용으로 대체했어요. |
 | Paint Effects, Bifrost, MASH, XGen 원본 | 블렌더에 없는 시스템이에요. 메뉴에서는 지오메트리 노드, 헤어 커브, Array로 연결해 뒀어요. |
 | Arnold 렌더러 | 블렌더는 Cycles / EEVEE를 써요. |
-| 프로젝트 창 / Set Project | 블렌더에는 프로젝트 폴더 개념이 없어요. 파일 기준 상대 경로를 써요. |
-| Character Set, Quick Select Set (완전한 형태) | 대신 버텍스 그룹으로 선택 세트를 만들 수 있어요. |
+| Character Set | 블렌더에 해당 개념이 없어요. (Quick Select Set은 v0.10.0에서 만들었어요.) |
+| 컴포넌트 미리 선택 하이라이트 (마우스를 올린 버텍스·엣지가 밝아짐) | 블렌더 편집 모드에는 이 기능이 없어요. 애드온으로 그리려면 마우스가 움직일 때마다 모든 버텍스를 검사해야 해서 큰 메시에서 느려지므로 넣지 않았어요. |
+| 블렌더 축을 Y-up으로 바꾸기 | 블렌더는 Z-up이 고정이에요 (그리드, 중력, 뷰, 모디파이어 축 전부). 블렌더 안에서는 Z-up으로 쓰고, 마야로 보낼 때 **Export to Maya (FBX)**가 Y-up으로 바꿔요. |
+| 메뉴 Tear-off (메뉴 위 점선을 눌러 창으로 떼기) | 블렌더 메뉴는 떼어낼 수 없어요. 뷰포트는 Panels → Tear Off Copy로 새 창에 복사할 수 있어요. |
+| 타임 슬라이더에서 빨간 범위를 드래그해서 키 옮기기 | 블렌더 타임라인에는 그 손잡이가 없어요. Shift+드래그로 범위를 고른 뒤 G 또는 Dope Sheet에서 옮겨요. |
+| Layer Editor의 P(Playback) 칸 | 재생할 때만 숨기는 기능이 블렌더에 없어요. |
 | Tension, Wrinkle 디포머, Hammer Weights, Paint Reduce/Transfer Weights | 블렌더에 해당 기능이 없어요. |
 | 메쉬 고스팅 (Ghost Selected) | 블렌더 어니언 스킨은 그리스 펜슬에만 있어요. Motion Trail로 대체해요. |
 | 오른쪽 패널에서 블렌더 Transform 패널 숨기기 | 블렌더 기본 패널이라 숨길 수 없어요. 접어두면 그 상태가 유지돼요. |
@@ -197,12 +230,24 @@
 | 메뉴에서 모달 툴 실행 | 메뉴를 클릭한 위치에서 시작해요 (블렌더 메뉴와 같은 방식) |
 | Alembic / USD (리눅스 배포판 블렌더 일부) | 공식 블렌더에는 있고, 일부 리눅스 패키지에는 빠져 있어서 메뉴에 "(not available)"로 표시돼요. |
 
+### 구조가 달라서 남는 차이
+
+애드온으로 감출 수는 있지만 블렌더의 기본 구조가 달라서 가끔 드러나는 것들이에요.
+
+| 마야 | 블렌더 |
+|---|---|
+| 오브젝트를 고른 채로 바로 컴포넌트를 잡아요. 여러 오브젝트의 컴포넌트를 섞어서 골라도 돼요. | 컴포넌트는 **Edit Mode** 안에서만 다뤄요 (F8 / F9~F11이 모드를 바꿔 줘요). 편집 모드에 들어간 오브젝트끼리만 컴포넌트를 섞을 수 있고, 모드를 바꾸는 것도 실행 취소 단계에 들어가요. |
+| 조인트는 그냥 오브젝트라서 아웃라이너에서 하나씩 고르고 옮겨요. | 본은 **아마추어** 오브젝트 안에 있어요. 위치를 바꾸려면 Edit Mode, 포즈를 잡으려면 Pose Mode에 들어가야 해요. 스킨도 조인트가 아니라 아마추어에 바인딩돼요. |
+| Y축이 위예요. | **Z축이 위**예요. Top / Front / Side 뷰 이름은 마야와 같게 맞췄지만, 높이 값은 Translate Z에 들어가요. 마야로 보낼 때 FBX 프리셋이 바꿔 줘요. |
+| 장면 단위는 cm예요. | 장면 단위는 m예요. 새 파일은 cm로 **표시**만 해요 (1 유닛 = 100cm). |
+| 히스토리는 노드 연결이에요. | 모디파이어 쌓기예요 (INPUTS = 모디파이어, Delete History = 모디파이어 적용). |
+
 ---
 
 ## 원래 블렌더로 돌아가기
 
 - **화면**: 오른쪽 위 `Workspace:`에서 `Layout`을 고르세요.
 - **키맵**: `Edit → Preferences → Add-ons → Maya Style UI`에서 **Restore Blender Keymap**을 누르세요.
-- **기능 하나씩 끄기**: 같은 설정 화면에서 메뉴바, 우클릭 메뉴, 마킹 메뉴, 툴 설정 메뉴, 휠클릭 축 고정, 마야 단축키, 커맨드 라인을 각각 끌 수 있어요.
+- **기능 하나씩 끄기**: 같은 설정 화면에서 메뉴바, 우클릭 메뉴, 마킹 메뉴, 툴 설정 메뉴, 휠클릭 축 고정, 마야 단축키, 커맨드 라인, Input Line, 패널 메뉴, 옵션 박스, 선택 와이어프레임, 새 씬 기본값, 애니메이션 편집을 각각 끌 수 있어요.
 - **색상**: Reset Blender Colors를 누르세요.
 - **완전히 원래대로**: 애드온을 끄면(체크 해제) 메뉴바와 단축키가 모두 원래대로 돌아가요.

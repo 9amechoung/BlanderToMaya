@@ -183,6 +183,20 @@ def register_keymaps():
                 _new_item(km, "maya.snap_hold", key, props={"element": element})
                 _new_item(km, "maya.snap_hold", key, 'RELEASE', props={"element": element, "release": True})
 
+    if prefs is None or prefs.use_anim_tools:
+        from .anim_tools import ANIM_KEYS
+        for km_name, idname, key, value, modifiers in ANIM_KEYS:
+            _new_item(_keymap(kc, km_name), idname, key, value, **modifiers)
+
+    # Script Editor: Ctrl+Enter / numpad Enter runs the script (Maya)
+    from .script_editor import SCRIPT_KEYS
+    for km_name, idname, key, modifiers in SCRIPT_KEYS:
+        _new_item(_keymap(kc, km_name), idname, key, **modifiers)
+
+    # Channel Box virtual slider when the Move / Rotate / Scale tools are not active
+    # (with them, maya.mmb_transform hands the drag over to it)
+    _new_item(_keymap(kc, "Object Mode"), "maya.channel_drag", 'MIDDLEMOUSE')
+
     if use_mmb_transform:
         # The tools' fallback (box select) keymap sees Shift+drag before the tool keymap.
         # Added last on purpose: when several add-on items match, the last added one wins.

@@ -2,6 +2,28 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.10.0
+[다운로드](dist/maya_style_v0.10.0.zip)
+- **채널 박스**
+  - 채널 이름을 클릭해서 선택 (Ctrl 토글, Shift 범위) → 뷰포트에서 **휠클릭 드래그로 값 바꾸기**(버추얼 슬라이더, Ctrl 느리게 / Shift 빠르게)
+  - 위쪽 **Channels / Edit / Show** 메뉴: Key Selected, Key All, Break Connections, Mute, **Lock / Unlock / Hide / Lock and Hide**, Delete Attributes, Show All
+  - **Rotate Order** 추가, 잠긴 채널은 회색
+  - Layer Editor에 **T(Template) / R(Reference)** 칸
+- **옵션 박스(□)**: 메뉴 항목 옆 □를 누르면 실행하면서 설정 창이 바로 떠요
+- 위쪽 메뉴에서 실행한 명령도 **F9(Adjust Last Operation)**로 조절돼요 (전에는 안 됐어요)
+- **뷰포트 패널 메뉴**: View / Shading / Lighting / Show / Renderer / Panels (블렌더 메뉴는 Blender 메뉴 안으로)
+- 상태줄 **Input Line**: Select by Name, Rename, Absolute / Relative 변환
+- **Script Editor**: 히스토리 + 입력 창, Ctrl+Enter로 실행
+- **Custom 셸프**: 우클릭 → Add to Shelf, 파이썬 명령 버튼, 스크립트를 버튼으로
+- **Quick Select Sets** (Create → Sets, Edit → Quick Select Sets)
+- **Export to Maya / Import from Maya (FBX)**: Y-up, cm, 오브젝트 회전 0 / 스케일 1로 깨끗하게. USD Y-up 내보내기도 추가
+- **애니메이션**: 타임 슬라이더 우클릭 메뉴, Shift+드래그 범위 선택, Graph Editor 탄젠트 버튼, 휠클릭 드래그로 키 이동, 빨간 키 표시
+- **선택한 오브젝트에 와이어프레임** (마야처럼 초록 / 흰색)
+- 새 파일은 **cm, 1~120 프레임, 24fps, 35mm**로 시작 (설정에서 끌 수 있어요)
+- 마야 컴포넌트 색: 보라색 버텍스, 노랑 / 주황 선택
+- 블렌더 5에서 FX → Fields 메뉴가 중간에 끊기던 문제 수정 (Curve Guide, Magnet 아이콘이 없어짐)
+- 문서: 블렌더와 구조가 달라서 남는 차이(Edit Mode, 아마추어, Z-up, 단위) 정리, 이미 만든 Project Window를 "불가능" 목록에서 지움
+
 ## v0.9.0
 [다운로드](dist/maya_style_v0.9.0.zip)
 - **마야 프로젝트 기능** (File 메뉴)

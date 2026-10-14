@@ -25,6 +25,11 @@ def _update_keymaps(self, context):
     keymaps.register_keymaps()
 
 
+def _update_selection_wire(self, context):
+    from . import maya_scene
+    maya_scene.update_selection_wire(force=True)
+
+
 class MAYA_AP_preferences(bpy.types.AddonPreferences):
     bl_idname = __package__
 
@@ -151,6 +156,46 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         update=_update_keymaps,
     )
 
+    use_scene_defaults: BoolProperty(
+        name="Maya Scene Defaults for New Files",
+        description="New files start like Maya: lengths in centimeters, frames 1-120 at 24 fps, "
+                    "35 mm camera and viewport",
+        default=True,
+    )
+    use_selection_wire: BoolProperty(
+        name="Wireframe on Selected Objects",
+        description="Draw the wireframe of the selected objects on top of the shading "
+                    "(green lead selection, white others), like Maya",
+        default=True,
+        update=_update_selection_wire,
+    )
+    use_option_boxes: BoolProperty(
+        name="Option Boxes in Menus",
+        description="Maya's option box next to menu items: runs the command and opens its settings",
+        default=True,
+        update=_redraw,
+    )
+    use_panel_menus: BoolProperty(
+        name="Panel Menus in Viewports",
+        description="View / Shading / Lighting / Show / Renderer / Panels menus in each viewport header "
+                    "(Blender's own menus move to the Blender menu)",
+        default=True,
+        update=_redraw,
+    )
+    use_input_line: BoolProperty(
+        name="Input Line",
+        description="Select by name / rename / absolute / relative transform field in the status line",
+        default=True,
+        update=_redraw,
+    )
+    use_anim_tools: BoolProperty(
+        name="Maya Animation Editing",
+        description="Tangent buttons in the Graph Editor, time slider right-click menu, Shift+drag range "
+                    "selection on the time slider, middle-drag to move keys",
+        default=True,
+        update=_update_keymaps,
+    )
+
     def draw(self, context):
         layout = self.layout
 
@@ -174,6 +219,14 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box.prop(self, "auto_setup_ui")
         box.prop(self, "workspace_in_every_file")
         box.prop(self, "use_command_line")
+        box.prop(self, "use_input_line")
+        box.prop(self, "use_panel_menus")
+        box.prop(self, "use_option_boxes")
+        box.prop(self, "use_selection_wire")
+        row = box.row(align=True)
+        row.prop(self, "use_scene_defaults")
+        row.operator("maya.scene_defaults", text="Apply to This Scene", icon='SCENE_DATA')
+        box.prop(self, "use_anim_tools")
 
         box = layout.box()
         box.label(text="Shelf", icon='TOOL_SETTINGS')

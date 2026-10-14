@@ -275,6 +275,11 @@ class MAYA_OT_mmb_transform(bpy.types.Operator):
     )
 
     def invoke(self, context, event):
+        # Channel names picked in the Channel Box: middle-drag is Maya's virtual slider instead
+        from .channel_box import channel_drag_available
+        if channel_drag_available(context):
+            bpy.ops.maya.channel_drag('INVOKE_DEFAULT')
+            return {'FINISHED'}
         op_name, _idname = KINDS[self.kind]
         settings = last_axis_settings(context, self.kind) or {}
         operator = getattr(bpy.ops.transform, op_name)

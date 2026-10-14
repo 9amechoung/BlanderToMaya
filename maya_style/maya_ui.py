@@ -90,6 +90,13 @@ def _draw_status_line(layout, context):
     row.operator("maya.set_shading", text="", icon='SHADING_RENDERED').shading = 'RENDERED'
     row.operator("maya.show_attributes", text="", icon='PROPERTIES').tab = 'RENDER'
 
+    # Input line: select by name / rename / absolute / relative transform
+    prefs = get_prefs(context)
+    if prefs is None or prefs.use_input_line:
+        from .input_line import draw_input_line
+        _sep(layout)
+        draw_input_line(layout, context)
+
 
 def _draw_left(self, context):
     if not _use_maya_topbar(context):
@@ -149,6 +156,11 @@ MAYA_VIEWPORT = (0.365, 0.365, 0.365)   # viewport background
 MAYA_GRID = (0.22, 0.22, 0.22, 1.0)
 MAYA_ACTIVE = (0.26, 1.0, 0.64)         # lead selection (green)
 MAYA_SELECTED = (1.0, 1.0, 1.0)         # other selection (white)
+MAYA_VERTEX = (0.55, 0.0, 0.55)         # unselected vertices (purple)
+MAYA_COMPONENT_SELECTED = (1.0, 0.85, 0.0)  # selected vertices / keys (yellow)
+MAYA_EDGE_SELECTED = (1.0, 0.55, 0.0)   # selected edges (orange)
+MAYA_FACE_SELECTED = (1.0, 0.55, 0.0, 0.3)
+MAYA_KEY = (0.85, 0.1, 0.1)             # key ticks on the time slider (red)
 
 
 def _set(owner, attr, value):
@@ -174,6 +186,20 @@ def apply_theme():
     _set(v3d, "object_active", MAYA_ACTIVE)
     _set(v3d, "object_selected", MAYA_SELECTED)
     _set(v3d, "wire", (0.0, 0.0, 0.0))
+    # Components: purple vertices, yellow / orange selection (Maya)
+    _set(v3d, "vertex", MAYA_VERTEX)
+    _set(v3d, "vertex_select", MAYA_COMPONENT_SELECTED)
+    _set(v3d, "vertex_active", (1.0, 1.0, 1.0))
+    _set(v3d, "edge_select", MAYA_EDGE_SELECTED)
+    _set(v3d, "edge_mode_select", MAYA_EDGE_SELECTED)
+    _set(v3d, "face_select", MAYA_FACE_SELECTED)
+    _set(v3d, "face_mode_select", MAYA_FACE_SELECTED)
+    if hasattr(v3d, "vertex_size"):
+        v3d.vertex_size = 5
+    # Red key ticks on the time slider (theme.common.anim in Blender 5, the Dope Sheet before)
+    anim = getattr(getattr(theme, "common", None), "anim", None) or theme.dopesheet_editor
+    _set(anim, "keyframe", MAYA_KEY)
+    _set(anim, "keyframe_selected", MAYA_COMPONENT_SELECTED)
     for editor in ("outliner", "properties", "dopesheet_editor", "topbar", "statusbar"):
         space = getattr(getattr(theme, editor, None), "space", None)
         _set(space, "back", MAYA_GREY)
@@ -301,6 +327,9 @@ def build_layout(window):
         for area in screen.areas:
             space = area.spaces.active
             if area.type == 'VIEW_3D':
+                prefs = get_prefs()
+                if prefs is None or prefs.use_scene_defaults:
+                    space.lens = 35.0  # Maya's persp camera
                 space.show_region_toolbar = True
                 space.show_region_tool_header = True
                 space.show_region_ui = False

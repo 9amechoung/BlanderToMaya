@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.9.0.zip`](dist/maya_style_v0.9.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.10.0.zip`](dist/maya_style_v0.10.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -32,13 +32,29 @@
     - **FX**: nParticles, Fluids, nCloth, nHair, Fields/Solvers, Effects, Cache
     - **Rendering**: Lighting/Shading, Texturing, Render, Toon, Stereo
   - 원래 블렌더 메뉴는 File / Edit / Help 맨 아래에 "Blender ... Menu"로 남겨 뒀어요.
+  - **옵션 박스(□)**: 설정이 있는 메뉴 항목 오른쪽에 □ 버튼이 있어요. 누르면 명령을 실행하고 설정 창(Adjust Last Operation)이 바로 떠요. 값을 바꾸면 결과에 바로 반영돼요.
   - **Space를 누르고 있으면 핫박스**가 떠요. 모든 메뉴와 뷰 전환(Top / Front / Side / Perspective)을 커서 근처에서 쓸 수 있어요.
 - **상태줄**: 메뉴바 옆
   - 새 파일, 열기, 저장, 실행 취소, 다시 실행
   - 오브젝트, 버텍스, 엣지, 페이스 모드
   - 그리드, 커브, 점, 면 스냅 토글
   - Symmetry X, 렌더, IPR, 렌더 설정
-- **마야 색상**: 회색 뷰포트, 선택한 오브젝트는 초록색. 블렌더 색으로 돌아가려면 설정에서 **Reset Blender Colors**를 누르세요.
+  - **Input Line** (맨 오른쪽): 왼쪽 아이콘으로 모드를 고르고 입력한 뒤 Enter
+    - Select by Name: `pCube*` 처럼 이름으로 선택 (`*`, `?` 가능, 띄어서 여러 개)
+    - Rename: 선택한 오브젝트 이름 바꾸기. 여러 개면 `name1, name2...`, `#`을 넣으면 그 자리에 번호 (`leg_##` → `leg_01`)
+    - Absolute / Relative: `1 2 3`처럼 입력하면 지금 툴(이동/회전/스케일)에 따라 그 값으로 / 그만큼 바꿔요. `.`은 그 축을 그대로 둬요.
+- **뷰포트 패널 메뉴**: 뷰포트마다 위쪽에 마야처럼 `View Shading Lighting Show Renderer Panels` 메뉴가 있어요.
+  - View: 프레이밍, Top/Front/Side 뷰, Focal Length, Near/Far Clip, Image Plane
+  - Shading: 4~7 셰이딩, Wireframe on Shaded, X-Ray, X-Ray Joints, Backface Culling, 스무스 프리뷰
+  - Lighting: Use Default Lighting / Use All Lights / Flat, Shadows
+  - Show: 오브젝트 종류별 표시(Polygons, NURBS, Joints, Locators, Lights, Cameras...), All / None, Grid, HUD, Isolate Select
+  - Renderer: Solid / Material Preview / Rendered, 렌더 엔진
+  - Panels: Perspective(카메라 목록에서 Look Through), Orthographic, Look Through Selected, 4분할, **Tear Off Copy**(새 창으로 복사)
+  - 블렌더 원래 메뉴(View, Select, Add, Object...)는 맨 끝 **Blender** 메뉴 안에 있어요.
+- **Script Editor** (`Windows → Script Editor`): 새 창 위쪽은 히스토리(Info), 아래쪽은 입력(Text Editor)이에요. **Ctrl+Enter** 또는 숫자패드 Enter로 실행해요. 일부를 선택하면 선택한 줄만 실행하고, `print` 결과와 오류는 위쪽 히스토리에 나와요.
+- **선택한 오브젝트에 와이어프레임**: 마야처럼 선택한 오브젝트는 셰이딩 위에 와이어가 겹쳐 보여요. 마지막에 선택한 것은 초록색, 나머지는 흰색이에요.
+- **새 씬 기본값**: 새 파일은 마야처럼 길이 단위 **cm**, 프레임 **1~120**, **24fps**, 카메라와 뷰포트 **35mm**로 시작해요. 블렌더 1 유닛은 그대로 1m라서 화면에는 100cm로 보이고, FBX로 마야에 보내면 크기가 똑같이 나와요. 이미 있는 파일은 바꾸지 않아요 (`File → Maya Scene Defaults`로 지금 씬에 적용할 수 있어요).
+- **마야 색상**: 회색 뷰포트, 선택한 오브젝트는 초록색, 버텍스는 보라색 점(선택하면 노랑), 선택한 엣지와 페이스는 주황색, 타임 슬라이더의 키는 빨간색. 블렌더 색으로 돌아가려면 설정에서 **Reset Blender Colors**를 누르세요.
 - **셸프**: 마야처럼 탭으로 되어 있어요.
 
 ### 1. 마야식 단축키
@@ -115,8 +131,16 @@
 | Rigging | 조인트, 로케이터, Parent, Bind Skin, IK, 각종 Constraint, 포즈/웨이트 페인트 모드 |
 | Animation | Set Key, Delete Key, 재생과 키프레임 이동, Motion Trail, Bake |
 | Rendering | 카메라, 라이트, 와이어프레임/셰이딩/텍스처/렌더 뷰, 렌더 |
+| **Custom** | 내가 만드는 셸프 (아래 참고) |
 
 아이콘에 마우스를 올리면 설명이 나와요. 글자를 같이 보고 싶으면 설정에서 **Show Button Labels**를 켜세요.
+
+**Custom 셸프에 버튼 추가하기** (마야의 Ctrl+Shift+클릭 / 스크립트를 셸프로 드래그)
+- 메뉴 항목이나 아무 버튼 위에서 **우클릭 → Add to Shelf (Custom)**
+- Custom 셸프의 **+** 버튼: 파이썬 한 줄 명령으로 버튼 만들기
+- Text Editor / Script Editor에서 **Text → Add Script to Shelf**: 지금 열린 스크립트 전체를 버튼으로
+- Custom 셸프 버튼 위에서 우클릭: **Remove from Shelf**, Move Left / Move Right
+- 블렌더 설정 폴더(`maya_style_shelf.json`)에 저장돼서 어떤 파일을 열어도 같은 셸프가 나와요.
 
 ### 3. 우클릭 메뉴 (오브젝트 위에서 우클릭을 누르고 있기)
 마야처럼 오브젝트 위에서 우클릭을 **누르고 있으면** 메뉴가 열려요. 원하는 항목 위에서 버튼을 떼면 실행돼요. 짧게 클릭하면 메뉴가 열린 채로 남아 있어요.
@@ -191,9 +215,17 @@
 - **에딧 모드**: Extrude, Bevel, Insert Edge Loop, Multi-Cut, Target Weld, Inset, Edge Slide, 아래쪽에 Bridge, Fill, Merge 같은 버튼 묶음
 
 ### 5. 채널 박스 (N 패널 → Channel Box 탭)
-- Translate, Rotate, Scale, Visibility를 마야처럼 한 줄씩 보여줘요.
+- Translate, Rotate, Scale, Visibility를 마야처럼 한 줄씩 보여줘요. Rotate 아래에 **Rotate Order**가 있어요.
 - SHAPES(메시 이름)와 INPUTS(모디파이어 = 마야의 히스토리)도 함께 보여줘요.
+- **채널 선택**: 채널 이름(Translate X...)을 클릭하면 선택돼요. Ctrl+클릭은 토글, Shift+클릭은 범위 선택, 선택한 채널을 다시 클릭하면 해제돼요.
+- **버추얼 슬라이더**: 채널을 고른 뒤 뷰포트에서 **휠클릭 드래그**(좌우)하면 값이 바뀌어요. Ctrl은 천천히, Shift는 빠르게. 선택한 오브젝트 모두에 적용돼요.
+- 채널 박스 위쪽 메뉴
+  - **Channels**: Key Selected, Key All, Break Connections(키와 드라이버 삭제), Mute / Unmute, **Lock / Unlock**, **Hide**, Lock and Hide
+  - **Edit**: Add Attribute, Delete Attributes, Set Driven Key(드라이버), Graph Editor
+  - **Show**: 숨긴 채널 다시 보이기
+  - 잠긴 채널은 회색으로 바뀌고 입력이 막혀요. 키가 있는 채널은 블렌더가 칸 색으로 보여줘요 (키 있음: 초록 / 지금 프레임에 키: 노랑 / 드라이버: 보라).
 - **Layer Editor**: 컬렉션 숨기기와 렌더 토글, 선택한 오브젝트로 새 레이어 만들기
+  - 이름 앞의 칸을 누르면 마야처럼 **빈칸(보통) → T(Template: 회색 와이어, 선택 안 됨) → R(Reference: 셰이딩 그대로, 선택 안 됨)** 순서로 바뀌어요.
 - **World Space (Global)**: 채널 박스 아래에 월드 기준 Translate / Rotate / Scale이 있어요. 채널 박스 값은 부모 기준(Local)이고, 여기 값은 장면 기준이에요. 둘 다 직접 입력해서 바꿀 수 있어요.
 - 컴포넌트 모드에서는 선택한 버텍스들의 중심 위치를 Local / World로 보여주고, 숫자를 입력해서 옮길 수 있어요.
 
@@ -209,6 +241,26 @@
   - 자동 저장 → `autosave`
 - 프로젝트 안에 있는 .blend 파일을 열면 그 프로젝트로 자동 설정돼요.
 
+### 7. 애니메이션
+- **타임 슬라이더 우클릭 메뉴**: Set Key, Delete, Copy, Paste, Tangents, Range Slider 설정, Auto Key, 프레임 레이트, Playblast
+- 타임 슬라이더에서 **Shift+드래그**: 그 프레임 범위의 키를 선택해요 (마야와 같음). 선택한 키는 우클릭 메뉴나 Dope Sheet에서 옮겨요.
+- **Graph Editor 탄젠트 버튼** (헤더 오른쪽): Auto, Spline, Linear, Flat, Stepped, Break Tangents, Unify Tangents
+- Graph Editor / Dope Sheet에서 **휠클릭 드래그**: 선택한 키 이동
+- Range Slider는 블렌더 타임라인의 Preview Range(시계 아이콘 옆 Start / End)예요.
+
+### 8. Quick Select Set
+- `Create → Sets: Quick Select Set...`: 선택한 오브젝트를 이름 붙여 저장해요. 컴포넌트 모드에서는 선택한 버텍스로 만들어요 (버텍스 그룹).
+- `Edit → Quick Select Sets`: 목록에서 고르면 다시 선택돼요. Shift를 누르고 고르면 지금 선택에 추가해요.
+
+### 9. 마야로 보내기 / 마야에서 가져오기 (FBX)
+블렌더는 Z축이 위고 마야는 Y축이 위예요. 블렌더 안에서는 그대로 쓰고, 마야로 보낼 때만 맞추면 돼요.
+- `File → Export to Maya (FBX: Y-up, cm)...` / `Export Selection to Maya...`: 마야에서 열면 **Y-up, cm**, 오브젝트 **회전 0 / 스케일 1**로 깨끗하게 들어가요.
+  - 그냥 FBX로 내보내면 마야에서 오브젝트마다 Rotate X -90, Scale 100이 붙는데, 이 설정은 그 값을 지오메트리 쪽으로 넣어요.
+  - 스무딩 그룹 포함, 조인트 끝의 `_end` 본 없음, 지금 애니메이션만 내보내요.
+  - 조인트(아마추어)가 있으면 리깅이 깨지지 않게 "Apply Transform"은 자동으로 꺼요 (블렌더가 아마추어에서는 깨진다고 경고하는 옵션이에요). 이때는 최상위 오브젝트에 축 변환(Rotate X -90)과 스케일이 남을 수 있어요.
+- `File → Import from Maya (FBX)...`: 조인트 방향 자동 맞춤, 끝 본 무시, 노멀 유지. 축은 파일에 적힌 대로 자동으로 바뀌어요.
+- `Cache → USD: Export to Maya (Y-up)...`도 있어요.
+
 ## 설정
 `Edit → Preferences → Add-ons → Maya Style UI`를 펼치면 다음을 바꿀 수 있어요.
 - 키맵 적용 및 복원 버튼
@@ -216,6 +268,7 @@
 - Maya 워크스페이스 다시 만들기, 마야 색상 적용 및 블렌더 색상 복원
 - 셸프 위치: Tool Header / Header / 숨김, 셸프 모양: 탭 / 드롭다운
 - 우클릭 메뉴, 마킹 메뉴, 툴 설정 메뉴, 휠클릭 축 고정, 마야 단축키 켜기/끄기
+- Input Line, 뷰포트 패널 메뉴, 옵션 박스, 선택 오브젝트 와이어프레임, 새 씬 기본값, 애니메이션 편집(탄젠트 버튼, 타임 슬라이더 메뉴) 켜기/끄기
 
 ## 설치할 때 "Permission denied" / "lock could not be created" 오류가 날 때
 `C:\Program Files\Blender Foundation\Blender 5.0\portable\...` 같은 경로가 오류에 나오면, 블렌더가 설정과 확장을
@@ -228,7 +281,7 @@
 포터블 모드를 계속 쓰고 싶다면 블렌더 폴더를 `C:\Blender\` 처럼 쓰기 가능한 곳으로 옮겨서 실행해도 돼요.
 
 ## 셸프가 안 보일 때
-뷰포트 헤더에서 `View → Tool Settings`를 체크하거나, 애드온 설정에서 **Show Shelf in All Viewports**를 누르세요.
+뷰포트 헤더에서 `Blender → View → Tool Settings`를 체크하거나, 애드온 설정에서 **Show Shelf in All Viewports**를 누르세요.
 
 ## 직접 빌드
 ```

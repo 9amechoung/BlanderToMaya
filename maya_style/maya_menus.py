@@ -74,6 +74,46 @@ def _poll_in_view3d(idname, override):
         return True
 
 
+# Operators that get a Maya option box: they must be redoable (Adjust Last Operation) and have settings.
+OPTION_BOX_MODULES = {"mesh", "object", "curve", "surface", "uv", "armature", "pose", "maya", "anim", "nla",
+                      "particle", "rigidbody", "graph", "action"}
+NO_OPTION_BOX = {"mesh.knife_tool", "mesh.loopcut_slide", "mesh.polybuild_face_at_cursor_move",
+                 "mesh.select_mode", "object.mode_set", "object.select_all", "mesh.select_all",
+                 "maya.call_in_view3d", "maya.open_editor", "maya.component_mode", "maya.set_shading",
+                 "maya.smooth_preview", "maya.select_set", "maya.look_through", "maya.select_object",
+                 "maya.channel_select", "anim.keyframe_insert_menu", "object.duplicate_move",
+                 "object.duplicate_move_linked", "maya.duplicate_with_transform", "object.paths_calculate",
+                 "maya.create_select_set", "maya.project_window", "maya.set_project", "maya.open_scene",
+                 "maya.save_scene", "object.constraint_add_with_targets", "maya.show_attributes",
+                 "maya.toggle_attribute_editor", "maya.import_audio", "maya.wireframe_color", "maya.add_attribute",
+                 "object.text_add"}
+_option_box_cache = {}
+
+
+def has_option_box(idname):
+    if idname not in _option_box_cache:
+        ok = False
+        module = idname.split(".")[0]
+        if module in OPTION_BOX_MODULES and idname not in NO_OPTION_BOX:
+            try:
+                fn = _get_op(idname)
+                options = fn.bl_options
+                props = [p for p in fn.get_rna_type().properties
+                         if p.identifier != "rna_type" and not p.is_hidden and not p.is_skip_save]
+                ok = ('REGISTER' in options and 'UNDO' in options and bool(props)
+                      and not any(p.identifier in {"filepath", "directory", "files"} for p in props))
+            except Exception:
+                ok = False
+        _option_box_cache[idname] = ok
+    return _option_box_cache[idname]
+
+
+def _use_option_boxes():
+    from .prefs import get_prefs
+    prefs = get_prefs()
+    return prefs is None or prefs.use_option_boxes
+
+
 def op(layout, idname, text, icon='NONE', **props):
     if not op_exists(idname):
         row = layout.row()
@@ -82,17 +122,34 @@ def op(layout, idname, text, icon='NONE', **props):
         return None
     area = bpy.context.area
     override = _view3d_override() if (area is None or area.type != 'VIEW_3D') else None
+    box = _use_option_boxes() and has_option_box(idname)
+    row = layout.row(align=True) if box or override is not None else layout
     if override is not None:
         # Drawn in the top bar: run the command in the 3D viewport, like Maya's main menus do.
-        row = layout.row()
         row.enabled = _poll_in_view3d(idname, override)
         o = row.operator("maya.call_in_view3d", text=text, icon=icon)
         o.idname = idname
         o.props = repr(props)
-        return None
-    o = layout.operator(idname, text=text, icon=icon)
-    set_props(o, props)
-    return o
+        result = None
+    else:
+        o = row.operator(idname, text=text, icon=icon)
+        set_props(o, props)
+        result = o
+    if box:
+        # Maya's option box: run with the settings window open (Adjust Last Operation)
+        b = row.operator("maya.option_box", text="", icon='CHECKBOX_DEHLT')
+        b.idname = idname
+        b.props = repr(props)
+    return result
+
+
+def _known_props(fn, props):
+    """Drop settings this Blender version's operator doesn't have."""
+    try:
+        known = set(fn.get_rna_type().properties.keys())
+    except Exception:
+        return props
+    return {k: v for k, v in props.items() if k in known}
 
 
 def prop(layout, data, name, text):
@@ -123,7 +180,9 @@ class MAYA_OT_call_in_view3d(bpy.types.Operator):
     """Run a command in the 3D viewport (used by the menu bar)"""
     bl_idname = "maya.call_in_view3d"
     bl_label = "Run in 3D Viewport"
-    bl_options = {'REGISTER', 'UNDO', 'INTERNAL'}
+    # No REGISTER / UNDO here: then the command itself does its undo step and shows up in
+    # Adjust Last Operation (F9), instead of this wrapper.
+    bl_options = {'INTERNAL'}
 
     idname: StringProperty(options={'HIDDEN'})
     props: StringProperty(default="{}", options={'HIDDEN'})
@@ -140,6 +199,7 @@ class MAYA_OT_call_in_view3d(bpy.types.Operator):
         props = ast.literal_eval(self.props) if self.props else {}
         override = _view3d_override()
         fn = _get_op(self.idname)
+        props = _known_props(fn, props)
         try:
             if override is None:
                 fn('INVOKE_DEFAULT', **props)
@@ -149,6 +209,46 @@ class MAYA_OT_call_in_view3d(bpy.types.Operator):
                     fn('INVOKE_DEFAULT', **props)
         except RuntimeError as ex:
             self.report({'WARNING'}, str(ex).replace("Error: ", "").strip())
+            return {'CANCELLED'}
+        return {'FINISHED'}
+
+
+class MAYA_OT_option_box(bpy.types.Operator):
+    """Option box: run the command and open its settings to change them (Maya's □)"""
+    bl_idname = "maya.option_box"
+    bl_label = "Option Box"
+    bl_options = {'INTERNAL'}
+
+    idname: StringProperty(options={'HIDDEN'})
+    props: StringProperty(default="{}", options={'HIDDEN'})
+
+    @classmethod
+    def description(cls, context, properties):
+        try:
+            name = _get_op(properties.idname).get_rna_type().name
+        except Exception:
+            name = properties.idname
+        return "%s options: run it and open its settings (Adjust Last Operation)" % name
+
+    def invoke(self, context, event):
+        import ast
+        props = ast.literal_eval(self.props) if self.props else {}
+        fn = _get_op(self.idname)
+        props = _known_props(fn, props)
+        area = context.area
+        override = _view3d_override() if (area is None or area.type != 'VIEW_3D') else None
+        try:
+            if override is None:
+                fn('EXEC_DEFAULT', **props)
+                bpy.ops.screen.redo_last('INVOKE_DEFAULT')
+            else:
+                window, area, region = override
+                with context.temp_override(window=window, area=area, region=region):
+                    fn('EXEC_DEFAULT', **props)
+                    bpy.ops.screen.redo_last('INVOKE_DEFAULT')
+        except RuntimeError as ex:
+            message = str(ex).replace("Error: ", "").strip()
+            self.report({'WARNING'}, message or "Change the settings with Adjust Last Operation (F9)")
             return {'CANCELLED'}
         return {'FINISHED'}
 
@@ -361,6 +461,39 @@ class MAYA_OT_open_url(bpy.types.Operator):
 # File / Edit
 # ---------------------------------------------------------------------------
 
+# FBX settings that come out clean in Maya: Y-up, centimeters, no -90 rotation / 100 scale on the
+# objects, smoothing groups, no extra end joints, only the active animation.
+MAYA_FBX_EXPORT = {
+    "axis_forward": '-Z',
+    "axis_up": 'Y',
+    "apply_unit_scale": True,
+    "apply_scale_options": 'FBX_SCALE_NONE',
+    "bake_space_transform": True,
+    "mesh_smooth_type": 'FACE',
+    "use_mesh_modifiers": True,
+    "add_leaf_bones": False,
+    "bake_anim_use_all_actions": False,
+    "bake_anim_use_nla_strips": False,
+}
+
+MAYA_FBX_IMPORT = {
+    "use_custom_normals": True,
+    "use_anim": True,
+    "ignore_leaf_bones": True,
+    "automatic_bone_orientation": True,
+}
+
+
+def maya_fbx_export(context, selection):
+    props = dict(MAYA_FBX_EXPORT, use_selection=selection)
+    # "Apply Transform" (bake_space_transform) is known to break armatures / skinned animation:
+    # with joints, the axis change stays on the objects instead.
+    objs = context.selected_objects if selection else context.scene.objects
+    if any(o.type == 'ARMATURE' for o in objs):
+        props["bake_space_transform"] = False
+    return props
+
+
 class MAYA_MT_file(bpy.types.Menu):
     bl_label = "File"
 
@@ -377,6 +510,12 @@ class MAYA_MT_file(bpy.types.Menu):
         lay.menu("TOPBAR_MT_file_import", text="Import", icon='IMPORT')
         lay.menu("TOPBAR_MT_file_export", text="Export All", icon='EXPORT')
         op(lay, "export_scene.fbx", "Export Selection (FBX)...", use_selection=True)
+        lay.separator()
+        op(lay, "export_scene.fbx", "Export to Maya (FBX: Y-up, cm)...", 'EXPORT',
+           **maya_fbx_export(context, selection=False))
+        op(lay, "export_scene.fbx", "Export Selection to Maya (FBX: Y-up, cm)...", 'EXPORT',
+           **maya_fbx_export(context, selection=True))
+        op(lay, "import_scene.fbx", "Import from Maya (FBX)...", 'IMPORT', **MAYA_FBX_IMPORT)
         op(lay, "wm.append", "Import Scene (Append .blend)...", 'APPEND_BLEND')
         lay.separator()
         op(lay, "wm.link", "Create Reference (Link .blend)...", 'LINK_BLEND')
@@ -386,6 +525,7 @@ class MAYA_MT_file(bpy.types.Menu):
         lay.separator()
         from .project import current_project
         lay.label(text="Project: " + (current_project() or "(none)"), icon='FILE_FOLDER')
+        op(lay, "maya.scene_defaults", "Maya Scene Defaults (cm, 1-120, 24 fps, 35 mm)", 'SCENE_DATA')
         op(lay, "maya.project_window", "Project Window...", 'NEWFOLDER')
         op(lay, "maya.set_project", "Set Project...", 'FILEBROWSER')
         lay.separator()
@@ -446,6 +586,8 @@ class MAYA_MT_edit(bpy.types.Menu):
         op(lay, "object.duplicate_move", "Duplicate  (Ctrl+D)", 'DUPLICATE')
         op(lay, "object.duplicate_move_linked", "Duplicate Special: Instance  (Ctrl+Shift+D)", 'LINKED')
         op(lay, "maya.duplicate_with_transform", "Duplicate with Transform  (Shift+D)")
+        lay.separator()
+        lay.menu("MAYA_MT_select_sets", icon='RESTRICT_SELECT_OFF')
         lay.separator()
         op(lay, "maya.group", "Group  (Ctrl+G)", 'GROUP')
         op(lay, "maya.ungroup", "Ungroup")
@@ -542,6 +684,7 @@ class MAYA_MT_create(bpy.types.Menu):
         lay.separator()
         op(lay, "object.empty_add", "Locator", 'OUTLINER_OB_EMPTY', type='PLAIN_AXES')
         op(lay, "maya.group", "Empty Group", 'EMPTY_AXIS')
+        op(lay, "maya.create_select_set", "Sets: Quick Select Set...", 'RESTRICT_SELECT_OFF')
         op(lay, "object.armature_add", "Joint", 'BONE_DATA')
         op(lay, "object.empty_add", "Annotation / Arrow", 'EMPTY_ARROWS', type='SINGLE_ARROW')
         op(lay, "wm.tool_set_by_id", "Measure Tools", 'DRIVER_DISTANCE', name="builtin.measure")
@@ -815,8 +958,8 @@ class MAYA_MT_windows(bpy.types.Menu):
         lay.menu("MAYA_MT_windows_animation", icon='ANIM')
         lay.menu("MAYA_MT_windows_rendering", icon='RENDER_STILL')
         lay.separator()
-        op(lay, "maya.open_editor", "Script Editor (Python Console)", 'CONSOLE', ui_type='CONSOLE')
-        op(lay, "maya.open_editor", "Script Editor (Text Editor)", 'TEXT', ui_type='TEXT_EDITOR')
+        op(lay, "maya.script_editor", "Script Editor  (Ctrl+Enter runs)", 'TEXT')
+        op(lay, "maya.open_editor", "Python Console", 'CONSOLE', ui_type='CONSOLE')
         op(lay, "maya.open_editor", "Info / History", 'INFO', ui_type='INFO')
         lay.separator()
         op(lay, "screen.userpref_show", "Settings / Preferences", 'PREFERENCES')
@@ -1072,6 +1215,8 @@ class MAYA_MT_cache(bpy.types.Menu):
         op(lay, "wm.alembic_export", "Alembic Cache: Export Selection...", selected=True)
         op(lay, "wm.alembic_import", "Alembic Cache: Import...", 'IMPORT')
         op(lay, "wm.usd_export", "USD: Export...")
+        op(lay, "wm.usd_export", "USD: Export to Maya (Y-up)...", convert_orientation=True,
+           export_global_forward_selection='NEGATIVE_Z', export_global_up_selection='Y')
         op(lay, "wm.usd_import", "USD: Import...")
         lay.separator()
         op(lay, "ptcache.bake_all", "Create Simulation Cache (Bake All)", bake=True)
@@ -1283,10 +1428,16 @@ class MAYA_MT_fields(bpy.types.Menu):
 
     def draw(self, context):
         lay = self.layout
+        # Field types and icons differ between Blender versions (Blender 5 has no Curve Guide / Magnet icon)
+        types = bpy.ops.object.effector_add.get_rna_type().properties["type"].enum_items.keys()
+        icons = bpy.types.UILayout.bl_rna.functions["prop"].parameters["icon"].enum_items.keys()
         for key, text in (('WIND', "Air / Uniform (Wind)"), ('DRAG', "Drag"), ('FORCE', "Newton / Radial (Force)"),
                           ('TURBULENCE', "Turbulence"), ('VORTEX', "Vortex"), ('MAGNET', "Magnet"),
                           ('HARMONIC', "Harmonic"), ('CHARGE', "Charge"), ('CURVE_GUIDE', "Curve Guide")):
-            op(lay, "object.effector_add", text, 'FORCE_' + ('WIND' if key == 'CURVE_GUIDE' else key), type=key)
+            if key not in types:
+                continue
+            icon = 'FORCE_' + key
+            op(lay, "object.effector_add", text, icon if icon in icons else 'FORCE_FORCE', type=key)
         lay.separator()
         lay.prop(context.scene, "use_gravity", text="Gravity")
         op(lay, "ptcache.bake_all", "Solver: Bake All", bake=True)
@@ -1388,6 +1539,7 @@ def draw_menu_bar(layout, context):
 
 classes = (
     MAYA_OT_call_in_view3d,
+    MAYA_OT_option_box,
     MAYA_OT_open_editor,
     MAYA_OT_select_all,
     MAYA_OT_delete,
