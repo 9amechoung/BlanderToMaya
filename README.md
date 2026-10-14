@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.12.4.zip`](dist/maya_style_v0.12.4.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.12.7.zip`](dist/maya_style_v0.12.7.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -203,7 +203,7 @@
 | Move Options | 속성 창의 툴 설정 탭 열기 |
 
 ### Shift + 드래그 (마야와 같은 동작)
-- **Shift + 기즈모 화살표(또는 링, 스케일 핸들) 좌클릭 드래그**
+- **Shift + 기즈모 화살표(또는 링, 스케일 핸들, 스케일 툴의 바깥 흰 원) 좌클릭 드래그**
   - 컴포넌트 모드: 선택한 면이나 엣지를 **익스트루드**하면서 그 축으로 이동해요.
   - 오브젝트 모드: 오브젝트를 **복제**하면서 그 축으로 이동해요.
   - 툴 설정 메뉴(Ctrl+Shift+우클릭)의 Shift Extrude / Shift Duplicate로 끌 수 있어요.

@@ -197,6 +197,10 @@ def gizmo_hit(context, event, kind, tolerance=HIT_PX):
         p = to2d(center + (axes.col[i] + axes.col[j]) * length * 0.33)
         if p is not None and (p - mouse).length < tolerance:
             return name, orient
+    # Scale tool: the big white circle around the gizmo is uniform scale (Shift+drag it to
+    # extrude and scale evenly, like Maya)
+    if kind == 'RESIZE' and size_px * 0.85 - tolerance < from_center < size_px * 1.45 + tolerance:
+        return 'VIEW', orient
     return None, orient
 
 

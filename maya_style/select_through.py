@@ -107,7 +107,8 @@ def _combine(old, hit, mode):
 
 def _select_mesh_components(context, region, rv3d, shape, mode):
     vert_mode, edge_mode, face_mode = context.tool_settings.mesh_select_mode
-    objects = list(getattr(context, "objects_in_mode_unique_data", None) or [context.edit_object])
+    objects = [o for o in (getattr(context, "objects_in_mode_unique_data", None) or [context.edit_object])
+               if o is not None and _in_viewport(o, context)]
     for obj in objects:
         if obj is None or obj.type != 'MESH':
             continue
@@ -160,9 +161,23 @@ def _object_hit(depsgraph, region, rv3d, obj, shape):
     return False
 
 
+def _in_viewport(obj, context):
+    """Shown in this viewport: respects Isolate Select (Ctrl+1 / Local View) and the
+    viewport's own collection visibility, which context.visible_objects ignores."""
+    space = context.space_data
+    if space is None or space.type != 'VIEW_3D':
+        return True
+    if space.local_view is not None and not obj.local_view_get(space):
+        return False
+    try:
+        return obj.visible_get(view_layer=context.view_layer, viewport=space)
+    except (TypeError, RuntimeError):
+        return True
+
+
 def _select_objects(context, region, rv3d, shape, mode):
     depsgraph = context.evaluated_depsgraph_get()
-    candidates = [o for o in context.visible_objects if not o.hide_select]
+    candidates = [o for o in context.visible_objects if not o.hide_select and _in_viewport(o, context)]
     for obj in candidates:
         old = obj.select_get()
         new = _combine(old, _object_hit(depsgraph, region, rv3d, obj, shape), mode)
