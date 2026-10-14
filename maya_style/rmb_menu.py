@@ -388,17 +388,17 @@ class MAYA_MT_rmb_object(bpy.types.Menu):
         else:
             pie.separator()
 
-        bottom = pie.column()                                      # S
-        _component(bottom, "Face", 'FACE')
-        bottom.separator()
-        box = bottom.box()
+        # S is a plain button: a flick down picks Face (inside a column it would not,
+        # and the release landed on Vertex Face next to it)
+        _component(pie, "Face", 'FACE')                             # S
+        _component(pie, "Edge", 'EDGE')                             # N
+
+        box = pie.column().box()                                   # NW: object / component menu
         if context.mode == 'EDIT_MESH':
             _draw_edit_list(box, context)
         else:
             _draw_object_list(box, context)
 
-        _component(pie, "Edge", 'EDGE')                             # N
-        pie.separator()                                            # NW
         _component(pie, "Object Mode", 'OBJECT')                    # NE
         _component(pie, "Vertex Face", 'VERT_FACE')                 # SW
         _component(pie, "Multi", 'MULTI')                           # SE
