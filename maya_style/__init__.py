@@ -20,7 +20,7 @@
 bl_info = {
     "name": "Maya Style UI",
     "author": "BlanderToMaya",
-    "version": (0, 12, 2),
+    "version": (0, 12, 3),
     "blender": (4, 0, 0),
     "location": "3D Viewport > Tool Header (Shelf), Shift+RMB (Marking Menu), N Panel > Channel Box",
     "description": "Maya-like keymap, shelf bar, marking menus and channel box",
