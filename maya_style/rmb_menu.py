@@ -24,10 +24,18 @@ def _object_under_mouse(context, event):
     origin = view3d_utils.region_2d_to_origin_3d(region, rv3d, coord)
     direction = view3d_utils.region_2d_to_vector_3d(region, rv3d, coord)
     depsgraph = context.evaluated_depsgraph_get()
-    hit, _loc, _normal, _index, obj, _matrix = context.scene.ray_cast(depsgraph, origin, direction)
-    if not hit or obj is None:
-        return None
-    return obj.original
+    from .select_through import _in_viewport
+    # The scene ray cast also hits objects hidden by Isolate Select (Ctrl+1) or not selectable:
+    # skip those and keep looking behind them.
+    for _attempt in range(64):
+        hit, loc, _normal, _index, obj, _matrix = context.scene.ray_cast(depsgraph, origin, direction)
+        if not hit or obj is None:
+            return None
+        obj = obj.original
+        if _in_viewport(obj, context) and not obj.hide_select:
+            return obj
+        origin = loc + direction * 1e-4
+    return None
 
 
 class MAYA_OT_rmb_menu(bpy.types.Operator):
