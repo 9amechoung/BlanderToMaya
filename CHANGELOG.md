@@ -2,6 +2,17 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.11.0
+[다운로드](dist/maya_style_v0.11.0.zip)
+- **마야 UV Editor**: UV → UV Editor가 새 창으로 열리고 오른쪽에 **UV Toolkit**
+  - Select, Transform(90° 회전, Flip, **Align Min/Avg/Max**, Straighten, Orient), Create, **Cut / Sew / Move and Sew**,
+    **Unfold(셸 위치 그대로)**, Optimize, Layout, **Stack**, **Normalize**, **Texel Density Get / Set**
+  - **Checker Map**, **Texture Borders**(셸 경계 굵게), Distortion, Shaded UVs
+- UV Editor 단축키: 우클릭 UV / Edge / Face / Shell 메뉴, Shift+우클릭 UV 도구, Ctrl+우클릭 선택 변환, 휠클릭 드래그 이동, X / V 스냅, Ctrl+R 90° 회전
+- 마야 UV 색 (보라색 UV, 초록 선택, 파란 면)
+- UV 셸프와 UV 메뉴에 새 도구 추가
+- 블렌더 4.x와 5.x의 UV 선택 방식 차이를 둘 다 지원
+
 ## v0.10.0
 [다운로드](dist/maya_style_v0.10.0.zip)
 - **채널 박스**

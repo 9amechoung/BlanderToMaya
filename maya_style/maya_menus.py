@@ -86,7 +86,7 @@ NO_OPTION_BOX = {"mesh.knife_tool", "mesh.loopcut_slide", "mesh.polybuild_face_a
                  "maya.create_select_set", "maya.project_window", "maya.set_project", "maya.open_scene",
                  "maya.save_scene", "object.constraint_add_with_targets", "maya.show_attributes",
                  "maya.toggle_attribute_editor", "maya.import_audio", "maya.wireframe_color", "maya.add_attribute",
-                 "object.text_add"}
+                 "object.text_add", "maya.uv_component_mode", "maya.uv_texel_density"}
 _option_box_cache = {}
 
 
@@ -953,7 +953,7 @@ class MAYA_MT_windows(bpy.types.Menu):
         op(lay, "maya.open_editor", "Component Editor / Spreadsheet", 'SPREADSHEET', ui_type='SPREADSHEET')
         op(lay, "maya.open_editor", "Content Browser (Asset Browser)", 'ASSET_MANAGER', ui_type='ASSETS')
         lay.separator()
-        op(lay, "maya.open_editor", "UV Editor", 'UV', ui_type='UV')
+        op(lay, "maya.open_uv_editor", "UV Editor", 'UV')
         op(lay, "maya.open_editor", "Node Editor (Geometry Nodes)", 'NODETREE', ui_type='GeometryNodeTree')
         lay.menu("MAYA_MT_windows_animation", icon='ANIM')
         lay.menu("MAYA_MT_windows_rendering", icon='RENDER_STILL')
@@ -1187,12 +1187,19 @@ class MAYA_MT_uv(bpy.types.Menu):
         op(lay, "uv.follow_active_quads", "Contour Stretch (Follow Active Quads)")
         op(lay, "uv.lightmap_pack", "Lightmap Pack")
         lay.separator()
-        op(lay, "uv.unwrap", "Unfold", 'UV')
-        op(lay, "uv.pack_islands", "Layout")
-        op(lay, "uv.average_islands_scale", "Normalize (Average Scale)")
+        op(lay, "maya.uv_unfold", "Unfold (in place)", 'UV')
+        op(lay, "uv.unwrap", "Unwrap (re-pack into 0-1)")
+        op(lay, "uv.minimize_stretch", "Optimize", iterations=50)
+        op(lay, "uv.pack_islands", "Layout", margin=0.01)
+        op(lay, "maya.uv_stack", "Stack Shells")
+        op(lay, "maya.uv_normalize", "Normalize")
+        op(lay, "uv.average_islands_scale", "Match Scale (Average)")
         lay.separator()
-        op(lay, "mesh.mark_seam", "Cut", clear=False)
-        op(lay, "mesh.mark_seam", "Sew", clear=True)
+        op(lay, "maya.uv_cut", "Cut UV Edges")
+        op(lay, "maya.uv_sew", "Sew UV Edges", move=False)
+        op(lay, "maya.uv_sew", "Move and Sew UV Edges", move=True)
+        op(lay, "mesh.mark_seam", "Cut (Mark Seam in Viewport)", clear=False)
+        op(lay, "mesh.mark_seam", "Sew (Clear Seam in Viewport)", clear=True)
 
 
 class MAYA_MT_generate(bpy.types.Menu):

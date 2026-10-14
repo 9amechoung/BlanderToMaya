@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.10.0.zip`](dist/maya_style_v0.10.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.11.0.zip`](dist/maya_style_v0.11.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -261,6 +261,36 @@
 - `File → Import from Maya (FBX)...`: 조인트 방향 자동 맞춤, 끝 본 무시, 노멀 유지. 축은 파일에 적힌 대로 자동으로 바뀌어요.
 - `Cache → USD: Export to Maya (Y-up)...`도 있어요.
 
+### 10. UV Editor
+`UV → UV Editor`(또는 오브젝트 우클릭 메뉴, UV 셸프)를 누르면 마야처럼 **UV Editor가 새 창으로** 열리고 오른쪽에 **UV Toolkit**이 있어요. 오브젝트 모드에서 열면 자동으로 컴포넌트 모드로 들어가고, 아무것도 선택 안 했으면 전체 UV를 보여줘요.
+
+**UV Toolkit** (UV Editor 오른쪽, N 패널의 UV Toolkit 탭)
+| 섹션 | 내용 |
+|---|---|
+| Select | UV / Edge / Face / Shell 선택 방식, Select Shell, Overlapping, Similar, Grow / Shrink, Select in Viewport too(동기화) |
+| Transform | 90° 회전, Flip U / V, **Align U·V Min / Avg / Max**, Straighten, Orient Shells, 픽셀에 스냅 |
+| Create | Automatic, Planar, Cube, Cylindrical, Spherical, Contour Stretch |
+| Cut and Sew | **Cut**, **Sew**, **Move and Sew**, Split, Merge |
+| Unfold | **Unfold**(셸 위치 그대로), Optimize, Unwrap(0~1로 다시 배치) |
+| Arrange and Layout | Layout, **Stack**(셸 겹치기), **Normalize**(0~1 채우기), Match Scale |
+| Texel Density | 맵 크기(px)를 넣고 **Get / Set** (px/cm). Set은 선택한 셸마다 크기를 맞춰요 |
+| Display | **Checker Map**, **Texture Borders**(셸 경계 굵게), Distortion, Shaded UVs |
+
+**UV Editor 단축키**
+| 키 | 기능 |
+|---|---|
+| 우클릭 누르고 있기 | UV / Edge / Face / UV Shell / Object Mode 마킹 메뉴 |
+| Shift + 우클릭 | Cut, Sew, Unfold, Layout, Rotate 90°, Move and Sew, Flip U, Straighten |
+| Ctrl + 우클릭 | 선택 변환: To UVs / Edges / Faces / Shell / Edge Loop / Edge Ring |
+| 휠클릭 드래그 | 지금 툴로 이동 / 회전 / 스케일 |
+| X / V 누르고 있기 | 그리드 / UV 점 스냅 |
+| Ctrl + R | 90° 회전 |
+| F / A | 선택 / 전체 프레이밍 |
+
+- **Unfold**는 마야처럼 셸이 있던 자리와 크기를 그대로 두고 펴요. 블렌더 Unwrap은 전부 0~1로 다시 배치해 버려서 따로 만들었어요. 선택하지 않은 셸은 움직이지 않아요.
+- **Cut**은 고른 UV 엣지를 셸 경계로 만들어요 (블렌더에서는 심으로 저장돼요). 그다음 Unfold하면 그 엣지에서 갈라져요. **Sew**는 다시 붙이고 심도 지워요.
+- 색은 마야처럼 UV 점은 보라색(선택하면 초록), 셸 면은 파란색으로 칠해져요.
+
 ## 설정
 `Edit → Preferences → Add-ons → Maya Style UI`를 펼치면 다음을 바꿀 수 있어요.
 - 키맵 적용 및 복원 버튼
@@ -268,6 +298,7 @@
 - Maya 워크스페이스 다시 만들기, 마야 색상 적용 및 블렌더 색상 복원
 - 셸프 위치: Tool Header / Header / 숨김, 셸프 모양: 탭 / 드롭다운
 - 우클릭 메뉴, 마킹 메뉴, 툴 설정 메뉴, 휠클릭 축 고정, 마야 단축키 켜기/끄기
+- UV Editor 단축키(마킹 메뉴, 휠클릭, X/V 스냅) 켜기/끄기
 - Input Line, 뷰포트 패널 메뉴, 옵션 박스, 선택 오브젝트 와이어프레임, 새 씬 기본값, 애니메이션 편집(탄젠트 버튼, 타임 슬라이더 메뉴) 켜기/끄기
 
 ## 설치할 때 "Permission denied" / "lock could not be created" 오류가 날 때
