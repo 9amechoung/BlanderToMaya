@@ -2,6 +2,33 @@
 
 예전 버전 파일은 모두 [`dist/`](dist/) 폴더에 남아 있어요.
 
+## v0.12.2
+[다운로드](dist/maya_style_v0.12.2.zip)
+- **Connect 수정**: 버텍스 선택 모드에서 엣지 링을 고르고 Connect하면 버텍스끼리 경로로 이어 붙이던 문제를 고쳤어요.
+  이제 선택 모드와 상관없이, 같은 면에 고른 엣지가 2개 이상 있으면 항상 **가로질러 잘라요(슬라이스)**.
+- 버텍스 Connect도 경로 연결 대신 면을 똑바로 자르는 방식으로 바꿨어요 (마야와 같음).
+
+## v0.12.1
+[다운로드](dist/maya_style_v0.12.1.zip)
+- **Ctrl+1 Isolate Select**: 이 뷰포트에서 선택한 것만 보기, 다시 누르면 전부 보기
+  - 오브젝트 모드는 선택한 오브젝트, 컴포넌트 모드는 선택한 면·엣지·버텍스만
+  - 마야처럼 카메라는 움직이지 않아요 (블렌더 Local View는 선택한 것으로 화면을 옮겨요)
+  - 패널 메뉴 Show → Isolate Select, Display 메뉴도 같은 기능으로 바꿨어요
+
+## v0.12.0
+[다운로드](dist/maya_style_v0.12.0.zip)
+- **Connect** (Edit Mesh → Connect, 엣지 Shift+우클릭 메뉴, Edit Poly 셸프, Modeling Toolkit)
+  - 엣지: 같은 면의 엣지 가운데를 이어요. 엣지 링을 고르면 새 루프, 코너는 대각선
+  - 버텍스: 버텍스끼리 연결, 페이스: 엣지 가운데로 나누기
+  - **Segments / Slide**를 옵션 박스나 F9에서 조절 (Slide는 링 전체가 같은 방향으로)
+  - 전에는 버텍스 연결(Connect Vertex Path)만 돼서 엣지를 골라도 아무 일이 없었어요
+
+## v0.11.1
+[다운로드](dist/maya_style_v0.11.1.zip)
+- 마야 UV Editor 기본 단축키 추가: **Shift+X** Cut, **Shift+S** Sew, **Ctrl+L** Layout, **Ctrl+U** Unfold, **Ctrl+Shift+X** Create UV Shell
+- UV Toolkit, 마킹 메뉴, UV 메뉴 항목 옆에 단축키 표시
+- 마야에 없는 Ctrl+R(90° 회전) 단축키는 뺐어요 (UV Toolkit / Shift+우클릭 메뉴에 그대로 있어요)
+
 ## v0.11.0
 [다운로드](dist/maya_style_v0.11.0.zip)
 - **마야 UV Editor**: UV → UV Editor가 새 창으로 열리고 오른쪽에 **UV Toolkit**

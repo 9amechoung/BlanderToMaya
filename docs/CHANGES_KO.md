@@ -5,7 +5,7 @@
 - "원래 블렌더에서는 이랬는데 → 마야처럼 이렇게 바꿨습니다" 순서로 적었어요.
 - 블렌더 구조상 **불가능하거나 다르게 대체한 것**은 맨 아래에 따로 모았어요.
 
-> 기준 버전: Maya Style UI v0.11.0 / 블렌더 4.0 ~ 5.2
+> 기준 버전: Maya Style UI v0.12.2 / 블렌더 4.0 ~ 5.2
 
 ---
 
@@ -70,7 +70,7 @@
 | Display | Grid, Heads Up Display, UI Elements, Hide/Show/Isolate, Wireframe Color, Object Display(Template, Bounding Box, X-Ray, Local Axes), Polygons 표시 옵션, 셰이딩 4~7, 스무스 1~3, 배경색 바꾸기 |
 | Windows | Outliner, Attribute Editor, Spreadsheet(Component Editor), Content Browser(에셋 브라우저), UV Editor, Node Editor, 애니메이션 에디터(Graph, Dope Sheet, NLA, Drivers, Shape), 렌더링 에디터(Hypershade, Render View, Render Settings), **Script Editor**(위: 히스토리, 아래: 입력, Ctrl+Enter 실행), Hotkey Editor, Playblast |
 | Mesh | **Booleans**(Union/Difference/Intersection, 실제로 합쳐짐), Combine, Separate, Conform, Fill Hole, Reduce, Remesh, **Retopologize**(QuadriFlow), Smooth, Mirror, Triangulate, Quadrangulate, Clean Up, Transfer Attributes |
-| Edit Mesh | Add Divisions, Bevel, Bridge, **Circularize**, Collapse, Connect, Detach, Extrude, Merge, Flip, Symmetrize, Average Vertices, **Chamfer Vertex**, Delete Edge/Vertex, Spin Edge, Duplicate, Extract, Poke, Wedge, Slide Edge, Offset Edge Loop, **Target Weld** |
+| Edit Mesh | Add Divisions, Bevel, Bridge, **Circularize**, Collapse, **Connect**(엣지 링을 가로질러 새 루프를 잘라 넣기, Segments / Slide), Detach, Extrude, Merge, Flip, Symmetrize, Average Vertices, **Chamfer Vertex**, Delete Edge/Vertex, Spin Edge, Duplicate, Extract, Poke, Wedge, Slide Edge, Offset Edge Loop, **Target Weld** |
 | Mesh Tools | Append to Polygon, Connect, Crease, Create Polygon, Insert Edge Loop, Make Hole, Multi-Cut, **Quad Draw**, Slide Edge, Target Weld |
 | Mesh Display | Conform/Reverse/Average Normals, Set to Face, Soften/Harden Edge, Apply Color, 표시 토글 |
 | Curves / Surfaces | Reverse, Insert Knot, Open/Close, Rebuild, Attach/Detach, **Loft**, **Planar**, **Revolve**, **Extrude(경로를 따라)** |
@@ -109,6 +109,7 @@
 | B / B + 휠클릭 드래그 | B: 박스 선택 | **소프트 선택 켜기·끄기 / 반경 조절** |
 | D (누르고 있기) / Insert | D+드래그: 주석 그리기 | **피벗 편집** (오브젝트는 그대로, 피벗만 이동) |
 | Ctrl+H / Shift+H / Alt+H | H: 숨기기, Alt+H: 보이기 | 숨기기 / 다시 표시 / Isolate (나머지 숨기기) |
+| Ctrl+1 | 서브디비전 레벨 1 | **Isolate Select** 켜기·끄기 (이 뷰포트만, 오브젝트 또는 선택한 컴포넌트, 카메라 그대로) |
 | Ctrl+E / Ctrl+B | 엣지 메뉴 / 베벨 | 익스트루드 / 베벨 |
 | > / < (Shift+. / Shift+,) | 없음 | 선택 늘리기 / 줄이기 |
 | Ctrl+Shift+I | 없음 | 선택 반전 |
@@ -178,6 +179,7 @@
 | UV 자르기는 심(Seam)을 찍고 다시 Unwrap | **Cut / Sew / Move and Sew**를 UV Editor에서 바로 해요 |
 | 셸 경계가 다른 엣지와 똑같이 보임 | **Texture Borders**: 셸 경계를 굵게 그려요 |
 | 체커는 이미지를 새로 만들어야 함 | **Checker Map** 버튼 하나로 켜고 꺼요 |
+| UV 단축키: Ctrl+L 셸 선택, Shift+S 스냅 메뉴, U 펼치기 메뉴 | 마야 UV Editor 단축키: **Shift+X Cut, Shift+S Sew, Ctrl+L Layout, Ctrl+U Unfold, Ctrl+Shift+X 새 셸 만들기** |
 | UV Editor 우클릭: 블렌더 컨텍스트 메뉴 | **우클릭** UV / Edge / Face / Shell, **Shift+우클릭** UV 도구, **Ctrl+우클릭** 선택 변환, **휠클릭 드래그** 이동, **X / V** 스냅 |
 | UV 색: 주황 선택, 회색 면 | 마야처럼 보라색 UV 점, 초록 선택, 파란 셸 면 |
 

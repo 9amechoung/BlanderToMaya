@@ -8,7 +8,7 @@
 
 ## 다운로드 및 설치
 
-1. 최신 버전 [`dist/maya_style_v0.11.0.zip`](dist/maya_style_v0.11.0.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
+1. 최신 버전 [`dist/maya_style_v0.12.2.zip`](dist/maya_style_v0.12.2.zip)을 다운로드합니다. 파일을 연 뒤 **Download raw file** 버튼을 누르면 돼요. **압축은 풀지 마세요.**
    - 예전 버전은 [`dist/`](dist/) 폴더에, 버전별 변경 내용은 [CHANGELOG.md](CHANGELOG.md)에 있어요.
 2. 블렌더를 엽니다. **4.0 이상**을 지원해요.
 3. `Edit → Preferences → Get Extensions` 화면에서 오른쪽 위 `⌄` 메뉴를 열고 **Install from Disk...**를 누른 뒤 zip을 선택합니다.
@@ -116,6 +116,7 @@
 | Ctrl + H | 선택한 것 숨기기 |
 | Shift + H | 숨긴 것 다시 표시 |
 | Alt + H | 선택한 것만 남기고 숨기기 (Isolate) |
+| **Ctrl + 1** | **Isolate Select**: 이 뷰포트에서 선택한 것만 보기, 한 번 더 누르면 전부 다시 보기. 오브젝트 모드는 오브젝트, 컴포넌트 모드는 선택한 면·엣지·버텍스만 보여줘요. 카메라는 움직이지 않아요 (마야와 같음) |
 
 원래 블렌더 키맵으로 돌리려면 애드온 설정에서 **Restore Blender Keymap**을 누르고 **Maya Hotkeys**를 끄세요.
 
@@ -210,6 +211,13 @@
 - **선택**: Shift+클릭은 토글, Ctrl+클릭은 선택 해제, Ctrl+Shift+클릭은 추가예요. 박스 선택도 똑같이 동작해요.
 - **뒤에 있는 것도 선택**: 박스나 올가미로 드래그하면 X-ray를 켜지 않아도 가려진 오브젝트와 뒤쪽 버텍스·엣지·페이스까지 선택돼요. 화면은 X-ray 없이 그대로예요 (드래그하는 동안에도 투명해지지 않아요). 클릭은 앞에 보이는 것만 골라요.
 
+### Connect (엣지를 잡고 슬라이스)
+`Edit Mesh → Connect`, 엣지 모드 **Shift+우클릭 메뉴**, Edit Poly 셸프, Modeling Toolkit에 있어요. 아무것도 합치지 않고, 고른 엣지를 **가로질러 새 엣지를 잘라 넣어요** (마야와 같음).
+- **엣지**: 엣지 링(나란한 엣지들)을 고르면 그 가운데를 지나는 새 루프가 한 바퀴 잘려 들어가요. 코너의 두 엣지는 대각선으로 잘려요. 새로 생긴 엣지가 선택돼요. 버텍스 선택 모드에서 엣지 링을 골라도 똑같이 잘라요.
+- **버텍스**: 같은 면에 있는 버텍스끼리 면을 똑바로 잘라요.
+- **페이스**: 면을 엣지 가운데로 잘라서 나눠요.
+- **Segments**(몇 줄 넣을지)와 **Slide**(한쪽으로 밀기)는 옵션 박스(□)나 F9(Adjust Last Operation)에서 바로 바꿔요. Slide는 링 전체가 같은 방향으로 움직여요.
+
 ### 4. 마킹 메뉴 (Shift+우클릭)
 - **오브젝트 모드**: 기본 도형 생성, 아래쪽에 Smooth, Combine, Center Pivot, Freeze, Delete History 같은 버튼 묶음
 - **에딧 모드**: Extrude, Bevel, Insert Edge Loop, Multi-Cut, Target Weld, Inset, Edge Slide, 아래쪽에 Bridge, Fill, Merge 같은 버튼 묶음
@@ -284,8 +292,14 @@
 | Ctrl + 우클릭 | 선택 변환: To UVs / Edges / Faces / Shell / Edge Loop / Edge Ring |
 | 휠클릭 드래그 | 지금 툴로 이동 / 회전 / 스케일 |
 | X / V 누르고 있기 | 그리드 / UV 점 스냅 |
-| Ctrl + R | 90° 회전 |
+| **Shift + X** | Cut (선택한 UV 엣지 자르기) |
+| **Shift + S** | Sew (선택한 UV 엣지 붙이기) |
+| **Ctrl + L** | Layout |
+| **Ctrl + U** | Unfold |
+| **Ctrl + Shift + X** | 선택한 면으로 새 UV 셸 만들기 (Create UV Shell) |
 | F / A | 선택 / 전체 프레이밍 |
+
+Shift+X, Shift+S, Ctrl+L, Ctrl+U, Ctrl+Shift+X는 마야 UV Editor 기본 단축키와 같아요. UV Editor 안에서만 동작해요 (3D 뷰포트의 단축키는 그대로예요).
 
 - **Unfold**는 마야처럼 셸이 있던 자리와 크기를 그대로 두고 펴요. 블렌더 Unwrap은 전부 0~1로 다시 배치해 버려서 따로 만들었어요. 선택하지 않은 셸은 움직이지 않아요.
 - **Cut**은 고른 UV 엣지를 셸 경계로 만들어요 (블렌더에서는 심으로 저장돼요). 그다음 Unfold하면 그 엣지에서 갈라져요. **Sew**는 다시 붙이고 심도 지워요.
