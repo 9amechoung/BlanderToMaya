@@ -1,5 +1,5 @@
 import bpy
-from bpy.props import BoolProperty, EnumProperty
+from bpy.props import BoolProperty, EnumProperty, IntProperty
 
 
 def get_prefs(context=None):
@@ -23,6 +23,34 @@ def _update_keymaps(self, context):
     from . import keymaps
     keymaps.unregister_keymaps()
     keymaps.register_keymaps()
+
+
+def apply_pie_radius(prefs=None):
+    """Spread the marking menu items further from the cursor (Blender's pie radius setting).
+    Blender's own value is remembered and put back when the add-on is turned off."""
+    prefs = prefs or get_prefs()
+    view = bpy.context.preferences.view
+    if prefs is None:
+        return
+    if prefs.original_pie_radius < 0:
+        prefs.original_pie_radius = view.pie_menu_radius
+        prefs.original_pie_threshold = view.pie_menu_threshold
+    view.pie_menu_radius = prefs.marking_menu_radius
+    view.pie_menu_threshold = max(view.pie_menu_threshold, prefs.marking_menu_radius // 8)
+
+
+def restore_pie_radius():
+    prefs = get_prefs()
+    if prefs is None or prefs.original_pie_radius < 0:
+        return
+    view = bpy.context.preferences.view
+    view.pie_menu_radius = prefs.original_pie_radius
+    view.pie_menu_threshold = prefs.original_pie_threshold
+    prefs.original_pie_radius = -1
+
+
+def _update_pie_radius(self, context):
+    apply_pie_radius(self)
 
 
 def _update_selection_wire(self, context):
@@ -196,6 +224,23 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         update=_update_keymaps,
     )
 
+    marking_menu_radius: IntProperty(
+        name="Marking Menu Size",
+        description="How far the marking menu items sit from the cursor (Blender's pie radius; "
+                    "Blender's default is 100)",
+        default=170, min=80, max=400, subtype='PIXEL',
+        update=_update_pie_radius,
+    )
+    original_pie_radius: IntProperty(
+        name="Blender Pie Radius",
+        description="Internal: Blender's own pie radius, put back when the add-on is turned off",
+        default=-1,
+    )
+    original_pie_threshold: IntProperty(
+        name="Blender Pie Threshold",
+        description="Internal: Blender's own pie threshold, put back when the add-on is turned off",
+        default=12,
+    )
     use_uv_keys: BoolProperty(
         name="Maya UV Editor Keys",
         description="In the UV Editor: Right-click UV / Edge / Face / Shell menu, Shift+Right-click UV tools, "
@@ -246,6 +291,7 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box = layout.box()
         box.label(text="Hotkeys", icon='EVENT_SHIFT')
         box.prop(self, "use_rmb_menu")
+        box.prop(self, "marking_menu_radius")
         box.prop(self, "use_marking_menu")
         box.prop(self, "use_tool_menu")
         box.prop(self, "use_mmb_transform")
@@ -258,9 +304,24 @@ class MAYA_AP_preferences(bpy.types.AddonPreferences):
         box.prop(self, "use_uv_keys")
 
 
+def _apply_later():
+    try:
+        apply_pie_radius()
+    except (AttributeError, RuntimeError):
+        pass
+    return None
+
+
 def register():
     bpy.utils.register_class(MAYA_AP_preferences)
+    bpy.app.timers.register(_apply_later, first_interval=0.3)
 
 
 def unregister():
+    if bpy.app.timers.is_registered(_apply_later):
+        bpy.app.timers.unregister(_apply_later)
+    try:
+        restore_pie_radius()
+    except (AttributeError, RuntimeError):
+        pass
     bpy.utils.unregister_class(MAYA_AP_preferences)
