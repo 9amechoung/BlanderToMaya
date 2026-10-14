@@ -1,10 +1,10 @@
 """Maya Edit Mesh > Connect.
 
 Works on what is selected, like Maya:
-  Edges     a new edge through the selected edges of each face (an edge ring becomes a new
+  Edges     slices a new edge through the selected edges of each face (an edge ring becomes a new
             loop, two edges on a corner are joined straight across). Segments adds more
             edges, Slide moves them along the selected edges.
-  Vertices  joins the selected vertices across their faces.
+  Vertices  cuts each face straight between its selected vertices.
   Faces     splits each face through the middle of its edges (Segments: more splits).
 
 Change Segments / Slide afterwards in Adjust Last Operation (F9) or with the option box,
@@ -65,8 +65,9 @@ def _faces_with_two_edges(edges):
 
 
 class MAYA_OT_connect(bpy.types.Operator):
-    """Connect: new edges through the selected edges (an edge ring becomes a loop),
-    between the selected vertices, or across the selected faces (Maya Edit Mesh > Connect)"""
+    """Connect: slice new edges through the selected edges (an edge ring becomes a new loop),
+    between the selected vertices, or across the selected faces. Nothing is merged
+    (Maya Edit Mesh > Connect)"""
     bl_idname = "maya.connect"
     bl_label = "Connect"
     bl_options = {'REGISTER', 'UNDO'}
@@ -81,11 +82,25 @@ class MAYA_OT_connect(bpy.types.Operator):
 
     def execute(self, context):
         mode = tuple(context.tool_settings.mesh_select_mode)
-        if mode[1]:
-            return self._edges(context)
-        if mode[2]:
+        if mode == (False, False, True):
             return self._faces(context)
+        # Decide by what is selected, not by the select mode: an edge ring picked in vertex
+        # mode is still sliced through, never joined vertex to vertex along a path.
+        if self._has_edge_pairs(context):
+            return self._edges(context)
+        if mode[1]:
+            self.report({'WARNING'}, "Select two or more edges on the same face (an edge ring or a corner)")
+            return {'CANCELLED'}
         return self._vertices(context)
+
+    @staticmethod
+    def _has_edge_pairs(context):
+        for obj in context.objects_in_mode_unique_data:
+            if obj.type == 'MESH':
+                bm = bmesh.from_edit_mesh(obj.data)
+                if _faces_with_two_edges([e for e in bm.edges if e.select]):
+                    return True
+        return False
 
     def _edges(self, context):
         made = 0
@@ -134,7 +149,8 @@ class MAYA_OT_connect(bpy.types.Operator):
 
     def _vertices(self, context):
         try:
-            bpy.ops.mesh.vert_connect_path()
+            # Split the faces between the selected vertices (a straight cut, like Maya)
+            bpy.ops.mesh.vert_connect()
         except RuntimeError as ex:
             self.report({'WARNING'}, str(ex).replace("Error: ", "").strip() or "Select two or more vertices")
             return {'CANCELLED'}
