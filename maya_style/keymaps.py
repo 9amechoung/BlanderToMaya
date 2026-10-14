@@ -177,13 +177,6 @@ def register_keymaps():
             _new_item(km, "maya.shift_gizmo_drag", 'LEFTMOUSE', 'CLICK_DRAG', shift=True, props={"kind": kind})
             _new_item(km, "maya.gizmo_pick", 'LEFTMOUSE', 'CLICK', props={"kind": kind})
 
-    # Shift+drag on a highlighted manipulator handle: the gizmo's own key maps see it first,
-    # so the Shift extrude / duplicate goes there too (then Blender's handle does the transform)
-    for km_name in ("Generic Gizmo Maybe Drag", "Generic Gizmo Drag", "Generic Gizmo Click Drag"):
-        km = _keymap(kc, km_name)
-        _new_item(km, "maya.shift_gizmo_tweak", 'LEFTMOUSE', 'CLICK_DRAG', shift=True)
-        _new_item(km, "maya.shift_gizmo_tweak", 'LEFTMOUSE', 'PRESS', shift=True)
-
     if use_maya_hotkeys:
         for km_name, idname, key, modifiers, props in MAYA_HOTKEYS:
             _new_item(_keymap(kc, km_name), idname, key, props=props, **modifiers)
