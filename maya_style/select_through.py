@@ -239,6 +239,15 @@ class MAYA_OT_select_through(bpy.types.Operator):
 
     def invoke(self, context, event):
         prefs = get_prefs(context)
+        # Shift+drag that starts on the Move / Rotate / Scale manipulator is Maya's Shift extrude /
+        # duplicate, not a box selection (whatever keymap item Blender picked first)
+        if event.shift and (prefs is None or prefs.use_mmb_transform):
+            from .transform_tools import shift_drag_on_gizmo
+            try:
+                if shift_drag_on_gizmo(context, event):
+                    return {'FINISHED'}
+            except Exception as ex:  # never block the box selection
+                print("Maya Style UI: shift drag:", ex)
         space = context.space_data
         if (prefs is not None and not prefs.use_select_through) or space is None or space.type != 'VIEW_3D' \
                 or context.region_data is None or not _handled_here(context):
